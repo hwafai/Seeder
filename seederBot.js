@@ -2,9 +2,7 @@ require("./loadEnv");
 const { Manager } = require("socket.io-client");
 
 const {
-  convertToDecimal,
-  convertToPercent,
-  convertDecimalToAmerican,
+  newSeeds,
   findOtherSide,
   properOrders,
 } = require("./seederUtils");
@@ -57,9 +55,6 @@ login(password, url, username)
         );
       } else {
         const gameID = formattedMessage.gameID;
-        const desiredVig = 0.04;
-        const equityToLockIn = 0.01;
-        const priceMove = desiredVig - equityToLockIn;
         const orderAmount = formattedMessage.unmatched.offered;
         const odds = formattedMessage.unmatched.odds;
         const number = formattedMessage.unmatched.number;
@@ -67,7 +62,6 @@ login(password, url, username)
         const event = formattedMessage.eventName;
         const fillAmount = formattedMessage.unmatched.filled;
         const seedAmount = 100;
-        const newSeeds = [];
         if (formattedMessage.unmatched.filled === 0 && orderAmount > 0) {
           console.log(
             `${username} created offer on `,
@@ -99,19 +93,9 @@ login(password, url, username)
             "at",
             odds
           );
-          const price = -1 * (odds / 100);
-          const percentOfBet = convertToPercent(price);
-          const roundedPercent = Math.round(percentOfBet * 100) / 100;
-          const otherSide = roundedPercent + priceMove;
           const side1 = formattedMessage.unmatched.side;
-          const secondSeed = 1 + desiredVig - otherSide;
-          const newSeed = convertToDecimal(otherSide);
-          const newSeedA = -1 * Math.round(convertDecimalToAmerican(newSeed));
-          const secondNew = convertToDecimal(secondSeed);
-          const secondNewA =
-            -1 * Math.round(convertDecimalToAmerican(secondNew));
-          newSeeds.push(newSeedA, secondNewA);
-          console.log("New Seed prices", newSeeds);
+          const {newSeedA, secondNewA} = newSeeds(odds)
+          console.log({newSeedA, secondNewA})
           await cancelAllOrdersForGame(gameID, token, type, url);
           const orderBook = await getOrderbook(gameID, url, token);
           const orderParticipants = orderBook.data.games[0].participants;

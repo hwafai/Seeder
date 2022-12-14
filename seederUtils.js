@@ -72,11 +72,27 @@ function properOrders(
   }
   return [firstOrder, comebackOrders];
 }
+function newSeeds(odds){
+  const desiredVig = 0.04;
+  const equityToLockIn = 0.01;
+  const priceMove = desiredVig - equityToLockIn;
+  const price = -1 * (odds / 100);
+  const percentOfBet = convertToPercent(price);
+  const roundedPercent = Math.round(percentOfBet * 100) / 100;
+  const otherSide = roundedPercent + priceMove;
+  const secondSeed = 1 + desiredVig - otherSide;
+  const newSeed = convertToDecimal(otherSide);
+  const newSeedA = -1 * Math.round(convertDecimalToAmerican(newSeed));
+  const secondNew = convertToDecimal(secondSeed);
+  const secondNewA = -1 * Math.round(convertDecimalToAmerican(secondNew));
+  return {newSeedA, secondNewA}
+}
 
 module.exports = {
   convertToDecimal,
   convertToPercent,
   convertDecimalToAmerican,
   findOtherSide,
+  newSeeds,
   properOrders,
 };
