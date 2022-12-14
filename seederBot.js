@@ -31,19 +31,16 @@ login(password, url, username)
     console.log(runningUser);
     const manager = new Manager(wsUrl, {
       reconnectionDelayMax: 1000,
-      query: {
-        token: token,
-      },
+      query: { token },
     });
     const socket = manager.socket(`/v2/user/${username}`, {
-      query: {
-        token: token,
-      },
+      query: { token },
     });
 
     socket.on("connect", () => {
       console.log(`message: ${username} connected to userFeed`);
     });
+
     socket.on("positionUpdate", async (msg) => {
       const formattedMessage = JSON.parse(msg);
       if (!formattedMessage.unmatched) {
