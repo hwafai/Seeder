@@ -1,6 +1,5 @@
 require("./loadEnv");
 const { Manager } = require("socket.io-client");
-const callApi = require("./callApi");
 
 const {
   convertToDecimal,
@@ -10,19 +9,19 @@ const {
   properOrders,
 } = require("./seederUtils");
 
+const {
+  cancelAllOrdersForGame,
+  getOrderbook,
+  login,
+  placeOrders,
+} = require("./apiUtils");
+
 const url = process.env.FOURCASTER_API_URI;
 const wsUrl = process.env.FOURCASTER_WS_API_URI;
 const username = process.env.FOURCASTER_USERNAME;
 const password = process.env.FOURCASTER_PASSWORD;
 
-callApi({
-  url: `${url}/user/login`,
-  method: "POST",
-  data: {
-    username,
-    password,
-  },
-})
+login(password, url, username)
   .then((response) => {
     const { user } = response.data;
     const username = user.username;
@@ -49,7 +48,7 @@ callApi({
       const formattedMessage = JSON.parse(msg);
       if (!formattedMessage.unmatched) {
         console.log(
-          "user took offer on",
+          `${username} took offer on`,
           formattedMessage.eventName,
           "for",
           formattedMessage.matched.risk,
@@ -61,9 +60,9 @@ callApi({
         );
       } else {
         const gameID = formattedMessage.gameID;
-        const DesiredVig = 0.04;
+        const desiredVig = 0.04;
         const equityToLockIn = 0.01;
-        const priceMove = DesiredVig - equityToLockIn;
+        const priceMove = desiredVig - equityToLockIn;
         const orderAmount = formattedMessage.unmatched.offered;
         const odds = formattedMessage.unmatched.odds;
         const number = formattedMessage.unmatched.number;
@@ -74,7 +73,7 @@ callApi({
         const newSeeds = [];
         if (formattedMessage.unmatched.filled === 0 && orderAmount > 0) {
           console.log(
-            "user created offer on ",
+            `${username} created offer on `,
             event,
             "on",
             type,
@@ -84,10 +83,17 @@ callApi({
             odds
           );
         } else if (orderAmount === 0) {
-          console.log("user canceled offer on", event, "on", type, "at", odds);
+          console.log(
+            `${username} canceled offer on`,
+            event,
+            "on",
+            type,
+            "at",
+            odds
+          );
         } else {
           console.log(
-            "user order on",
+            `${username} order on`,
             event,
             "matched for",
             fillAmount,
@@ -101,7 +107,7 @@ callApi({
           const roundedPercent = Math.round(percentOfBet * 100) / 100;
           const otherSide = roundedPercent + priceMove;
           const side1 = formattedMessage.unmatched.side;
-          const secondSeed = 1 + DesiredVig - otherSide;
+          const secondSeed = 1 + desiredVig - otherSide;
           const newSeed = convertToDecimal(otherSide);
           const newSeedA = -1 * Math.round(convertDecimalToAmerican(newSeed));
           const secondNew = convertToDecimal(secondSeed);
@@ -109,23 +115,8 @@ callApi({
             -1 * Math.round(convertDecimalToAmerican(secondNew));
           newSeeds.push(newSeedA, secondNewA);
           console.log("New Seed prices", newSeeds);
-          await callApi({
-            url: `${url}/session/cancelAllOrdersForGame`,
-            method: "POST",
-            data: {
-              gameID,
-              type,
-            },
-            headers: { authorization: token },
-          });
-          const orderBook = await callApi({
-            url: `${url}/exchange/v2/getOrderbook`,
-            method: "GET",
-            params: {
-              gameID,
-            },
-            headers: { authorization: token },
-          });
+          await cancelAllOrdersForGame(gameID, token, type, url);
+          const orderBook = await getOrderbook(gameID, url, token);
           const orderParticipants = orderBook.data.games[0].participants;
           console.log(side1);
           const side2 = findOtherSide(orderParticipants, side1, type);
@@ -140,15 +131,7 @@ callApi({
             newSeedA,
             secondNewA
           );
-          await callApi({
-            url: `${url}/session/v2/place`,
-            method: "POST",
-            data: {
-              token: token,
-              orders,
-              gameID,
-            },
-          });
+          await placeOrders(gameID, orders, token, url);
         }
       }
     });
