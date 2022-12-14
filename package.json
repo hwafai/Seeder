@@ -4,11 +4,13 @@
   "description": "Reseeding bot for the 4casters exchange",
   "scripts": {
     "seeder": "nodemon seederBot.js",
+    "start": "node seederBot.js",
     "lint:fix": "eslint --fix --ext .js --ignore-path .gitignore ."
   },
   "dependencies": {
     "axios": "^1.2.0",
     "dotenv": "^16.0.3",
+    "pm2": "^5.2.2",
     "socket.io-client": "^4.5.4"
   },
   "devDependencies": {
