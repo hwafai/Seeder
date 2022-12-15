@@ -36,6 +36,8 @@ function findOtherSide(participants, orderSide, type) {
   return ["over", "under"].find((side) => side !== orderSide);
 }
 
+
+
 function properOrders(
   type,
   number,
@@ -72,20 +74,25 @@ function properOrders(
   }
   return [firstOrder, comebackOrders];
 }
+
+// equityToLockIn must be lower than desiredVig
 function newSeeds(odds){
-  const desiredVig = 0.015;
-  const equityToLockIn = 0.015;
-  const priceMove = desiredVig - equityToLockIn;
+  const desiredVig = 0.04;
+  const equityToLockIn = 0.02;
+  const priceMove = desiredVig - equityToLockIn
   const price = -1 * (odds / 100);
   const percentOfBet = convertToPercent(price);
-  const roundedPercent = Math.round(percentOfBet * 100) / 100;
-  const otherSide = roundedPercent + priceMove;
-  const secondSeed = 1 + desiredVig - otherSide;
-  const newSeed = convertToDecimal(otherSide);
-  const newSeedA = -1 * Math.round(convertDecimalToAmerican(newSeed));
-  const secondNew = convertToDecimal(secondSeed);
-  const secondNewA = -1 * Math.round(convertDecimalToAmerican(secondNew));
-  return {newSeedA, secondNewA}
+  const otherSide = percentOfBet + priceMove;
+  if (priceMove === 0){
+    throw new Error('Will seed at same price')
+  } else {
+    const secondSeed = 1 + desiredVig - otherSide;
+    const newSeed = convertToDecimal(otherSide);
+    const newSeedA = -1 * Math.round(convertDecimalToAmerican(newSeed));
+    const secondNew = convertToDecimal(secondSeed);
+    const secondNewA = -1 * Math.round(convertDecimalToAmerican(secondNew));
+    return {newSeedA, secondNewA}
+  }
 }
 
 module.exports = {
