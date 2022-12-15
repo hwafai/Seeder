@@ -73,8 +73,8 @@ function properOrders(
   return [firstOrder, comebackOrders];
 }
 function newSeeds(odds){
-  const desiredVig = 0.04;
-  const equityToLockIn = 0.01;
+  const desiredVig = 0.015;
+  const equityToLockIn = 0.015;
   const priceMove = desiredVig - equityToLockIn;
   const price = -1 * (odds / 100);
   const percentOfBet = convertToPercent(price);
