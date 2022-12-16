@@ -78,7 +78,7 @@ function properOrders(
 // equityToLockIn must be lower than desiredVig
 function newSeeds(odds){
   const desiredVig = 0.04;
-  const equityToLockIn = 0.02;
+  const equityToLockIn = 0.01;
   const priceMove = desiredVig - equityToLockIn
   const price = -1 * (odds / 100);
   const percentOfBet = convertToPercent(price);
