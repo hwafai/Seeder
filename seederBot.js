@@ -13,7 +13,6 @@ const {
   login,
   placeOrders,
 } = require("./apiUtils");
-const { format } = require("prettier");
 
 const url = process.env.FOURCASTER_API_URI;
 const wsUrl = process.env.FOURCASTER_WS_API_URI;
@@ -62,7 +61,7 @@ login(password, url, username)
         const type = formattedMessage.unmatched.type;
         const event = formattedMessage.eventName;
         const fillAmount = formattedMessage.unmatched.filled;
-        const seedAmount = 100;
+        const seedAmount = 25;
         const fillThreshold = .8;
         if (formattedMessage.unmatched.filled === 0 && orderAmount > 0) {
           console.log(
