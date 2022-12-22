@@ -95,7 +95,7 @@ function newSeeds(odds, league){
       return {newSeedA, secondNewA}
     }
   } else if (league === 'PREMIER-LEAGUE'){
-    const desiredVig = 0.05;
+    const desiredVig = 0.03;
     const equityToLockIn = 0.01;
     const priceMove = desiredVig - equityToLockIn
     const price = -1 * (odds / 100);
@@ -112,7 +112,7 @@ function newSeeds(odds, league){
       return {newSeedA, secondNewA}
     }
   } else {
-    const desiredVig = 0.04;
+    const desiredVig = 0.03;
     const equityToLockIn = 0.01;
     const priceMove = desiredVig - equityToLockIn
     const price = -1 * (odds / 100);
