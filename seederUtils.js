@@ -76,22 +76,58 @@ function properOrders(
 }
 
 // equityToLockIn must be lower than desiredVig
-function newSeeds(odds){
-  const desiredVig = 0.04;
-  const equityToLockIn = 0.01;
-  const priceMove = desiredVig - equityToLockIn
-  const price = -1 * (odds / 100);
-  const percentOfBet = convertToPercent(price);
-  const otherSide = percentOfBet + priceMove;
-  if (priceMove === 0){
-    throw new Error('Will seed at same price')
+function newSeeds(odds, league){
+  if (league === 'NCAAF'){
+    const desiredVig = 0.03;
+    const equityToLockIn = 0.01;
+    const priceMove = desiredVig - equityToLockIn
+    const price = -1 * (odds / 100);
+    const percentOfBet = convertToPercent(price);
+    const otherSide = percentOfBet + priceMove;
+    if (priceMove === 0){
+      throw new Error('Will seed at same price')
+    } else {
+      const secondSeed = 1 + desiredVig - otherSide;
+      const newSeed = convertToDecimal(otherSide);
+      const newSeedA = -1 * Math.round(convertDecimalToAmerican(newSeed));
+      const secondNew = convertToDecimal(secondSeed);
+      const secondNewA = -1 * Math.round(convertDecimalToAmerican(secondNew));
+      return {newSeedA, secondNewA}
+    }
+  } else if (league === 'PREMIER-LEAGUE'){
+    const desiredVig = 0.05;
+    const equityToLockIn = 0.01;
+    const priceMove = desiredVig - equityToLockIn
+    const price = -1 * (odds / 100);
+    const percentOfBet = convertToPercent(price);
+    const otherSide = percentOfBet + priceMove;
+    if (priceMove === 0){
+      throw new Error('Will seed at same price')
+    } else {
+      const secondSeed = 1 + desiredVig - otherSide;
+      const newSeed = convertToDecimal(otherSide);
+      const newSeedA = -1 * Math.round(convertDecimalToAmerican(newSeed));
+      const secondNew = convertToDecimal(secondSeed);
+      const secondNewA = -1 * Math.round(convertDecimalToAmerican(secondNew));
+      return {newSeedA, secondNewA}
+    }
   } else {
-    const secondSeed = 1 + desiredVig - otherSide;
-    const newSeed = convertToDecimal(otherSide);
-    const newSeedA = -1 * Math.round(convertDecimalToAmerican(newSeed));
-    const secondNew = convertToDecimal(secondSeed);
-    const secondNewA = -1 * Math.round(convertDecimalToAmerican(secondNew));
-    return {newSeedA, secondNewA}
+    const desiredVig = 0.04;
+    const equityToLockIn = 0.01;
+    const priceMove = desiredVig - equityToLockIn
+    const price = -1 * (odds / 100);
+    const percentOfBet = convertToPercent(price);
+    const otherSide = percentOfBet + priceMove;
+    if (priceMove === 0){
+      throw new Error('Will seed at same price')
+    } else {
+      const secondSeed = 1 + desiredVig - otherSide;
+      const newSeed = convertToDecimal(otherSide);
+      const newSeedA = -1 * Math.round(convertDecimalToAmerican(newSeed));
+      const secondNew = convertToDecimal(secondSeed);
+      const secondNewA = -1 * Math.round(convertDecimalToAmerican(secondNew));
+      return {newSeedA, secondNewA}
+    }
   }
 }
 

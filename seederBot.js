@@ -13,11 +13,10 @@ const {
   login,
   placeOrders,
 } = require("./apiUtils");
-const { format } = require("prettier");
 
 const url = process.env.FOURCASTER_API_URI;
 const wsUrl = process.env.FOURCASTER_WS_API_URI;
-const username = process.env.FOURCASTER_USERNAME;
+const username = process.env.FOURCASTER_USERNAME
 const password = process.env.FOURCASTER_PASSWORD;
 
 login(password, url, username)
@@ -62,8 +61,8 @@ login(password, url, username)
         const type = formattedMessage.unmatched.type;
         const event = formattedMessage.eventName;
         const fillAmount = formattedMessage.unmatched.filled;
-        const seedAmount = 100;
-        const fillThreshold = .8;
+        const seedAmount = 40;
+        const fillThreshold = .8; //(1 is 100%)
         if (formattedMessage.unmatched.filled === 0 && orderAmount > 0) {
           console.log(
             `${username} created offer on `,
@@ -95,12 +94,12 @@ login(password, url, username)
             "at",
             odds
           );
-          console.log(formattedMessage)
+          const league = formattedMessage.league
           console.log((formattedMessage.unmatched.offered - formattedMessage.unmatched.remaining)/formattedMessage.unmatched.offered)
           console.log(fillThreshold)
           if (!(((formattedMessage.unmatched.offered - formattedMessage.unmatched.remaining)/formattedMessage.unmatched.offered) < fillThreshold)){
             const side1 = formattedMessage.unmatched.side;
-            const {newSeedA, secondNewA} = newSeeds(odds)
+            const {newSeedA, secondNewA} = newSeeds(odds, league)
             console.log({newSeedA, secondNewA})
             await cancelAllOrdersForGame(gameID, token, type, url);
             const orderBook = await getOrderbook(gameID, url, token);
