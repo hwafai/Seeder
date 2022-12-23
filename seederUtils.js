@@ -75,6 +75,19 @@ function properOrders(
   return [firstOrder, comebackOrders];
 }
 
+function seedByLeague (league) {
+  if (league === 'NCAAF'){
+    const seedAmount = 25
+    return seedAmount
+  } else if (league === 'PREMIER-LEAGUE'){
+    const seedAmount = 50
+    return seedAmount
+  } else {
+    const seedAmount = 100
+    return seedAmount
+  }
+}
+
 // equityToLockIn must be lower than desiredVig
 function newSeeds(odds, league){
   if (league === 'NCAAF'){
@@ -137,5 +150,6 @@ module.exports = {
   convertDecimalToAmerican,
   findOtherSide,
   newSeeds,
+  seedByLeague,
   properOrders,
 };

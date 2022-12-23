@@ -5,6 +5,7 @@ const {
   newSeeds,
   findOtherSide,
   properOrders,
+  seedByLeague,
 } = require("./seederUtils");
 
 const {
@@ -61,7 +62,8 @@ login(password, url, username)
         const type = formattedMessage.unmatched.type;
         const event = formattedMessage.eventName;
         const fillAmount = formattedMessage.unmatched.filled;
-        const seedAmount = 25;
+        const league = formattedMessage.league
+        const seedAmount = seedByLeague(league)
         const fillThreshold = .8;
         if (formattedMessage.unmatched.filled === 0 && orderAmount > 0) {
           console.log(
@@ -94,7 +96,6 @@ login(password, url, username)
             "at",
             odds
           );
-          const league = formattedMessage.league
           console.log((formattedMessage.unmatched.offered - formattedMessage.unmatched.remaining)/formattedMessage.unmatched.offered)
           console.log(fillThreshold)
           if (!(((formattedMessage.unmatched.offered - formattedMessage.unmatched.remaining)/formattedMessage.unmatched.offered) < fillThreshold)){
