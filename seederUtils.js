@@ -75,72 +75,40 @@ function properOrders(
   return [firstOrder, comebackOrders];
 }
 
-function seedByLeague (league) {
+function vigMap(league) {
   if (league === 'NCAAF'){
-    const seedAmount = 25
-    return seedAmount
+    const seedAmount = 30
+    const desiredVig = .04
+    const equityToLockIn = .01
+    return {seedAmount, desiredVig, equityToLockIn}
   } else if (league === 'PREMIER-LEAGUE'){
     const seedAmount = 50
-    return seedAmount
+    const desiredVig = .05
+    const equityToLockIn = .01
+    return {seedAmount, desiredVig, equityToLockIn}
   } else {
-    const seedAmount = 100
-    return seedAmount
+    const seedAmount = 25
+    const desiredVig = .03
+    const equityToLockIn = .01
+    return {seedAmount, desiredVig, equityToLockIn}
   }
 }
 
 // equityToLockIn must be lower than desiredVig
-function newSeeds(odds, league){
-  if (league === 'NCAAF'){
-    const desiredVig = 0.03;
-    const equityToLockIn = 0.01;
-    const priceMove = desiredVig - equityToLockIn
-    const price = -1 * (odds / 100);
-    const percentOfBet = convertToPercent(price);
-    const otherSide = percentOfBet + priceMove;
-    if (priceMove === 0){
-      throw new Error('Will seed at same price')
-    } else {
-      const secondSeed = 1 + desiredVig - otherSide;
-      const newSeed = convertToDecimal(otherSide);
-      const newSeedA = -1 * Math.round(convertDecimalToAmerican(newSeed));
-      const secondNew = convertToDecimal(secondSeed);
-      const secondNewA = -1 * Math.round(convertDecimalToAmerican(secondNew));
-      return {newSeedA, secondNewA}
-    }
-  } else if (league === 'PREMIER-LEAGUE'){
-    const desiredVig = 0.03;
-    const equityToLockIn = 0.01;
-    const priceMove = desiredVig - equityToLockIn
-    const price = -1 * (odds / 100);
-    const percentOfBet = convertToPercent(price);
-    const otherSide = percentOfBet + priceMove;
-    if (priceMove === 0){
-      throw new Error('Will seed at same price')
-    } else {
-      const secondSeed = 1 + desiredVig - otherSide;
-      const newSeed = convertToDecimal(otherSide);
-      const newSeedA = -1 * Math.round(convertDecimalToAmerican(newSeed));
-      const secondNew = convertToDecimal(secondSeed);
-      const secondNewA = -1 * Math.round(convertDecimalToAmerican(secondNew));
-      return {newSeedA, secondNewA}
-    }
+function newSeeds(odds, desiredVig, equityToLockIn){
+  const priceMove = desiredVig - equityToLockIn
+  const price = -1 * (odds / 100);
+  const percentOfBet = convertToPercent(price);
+  const otherSide = percentOfBet + priceMove;
+  if (priceMove === 0){
+    throw new Error('Will seed at same price')
   } else {
-    const desiredVig = 0.03;
-    const equityToLockIn = 0.01;
-    const priceMove = desiredVig - equityToLockIn
-    const price = -1 * (odds / 100);
-    const percentOfBet = convertToPercent(price);
-    const otherSide = percentOfBet + priceMove;
-    if (priceMove === 0){
-      throw new Error('Will seed at same price')
-    } else {
-      const secondSeed = 1 + desiredVig - otherSide;
-      const newSeed = convertToDecimal(otherSide);
-      const newSeedA = -1 * Math.round(convertDecimalToAmerican(newSeed));
-      const secondNew = convertToDecimal(secondSeed);
-      const secondNewA = -1 * Math.round(convertDecimalToAmerican(secondNew));
-      return {newSeedA, secondNewA}
-    }
+    const secondSeed = 1 + desiredVig - otherSide;
+    const newSeed = convertToDecimal(otherSide);
+    const newSeedA = -1 * Math.round(convertDecimalToAmerican(newSeed));
+    const secondNew = convertToDecimal(secondSeed);
+    const secondNewA = -1 * Math.round(convertDecimalToAmerican(secondNew));
+    return {newSeedA, secondNewA}
   }
 }
 
@@ -150,6 +118,6 @@ module.exports = {
   convertDecimalToAmerican,
   findOtherSide,
   newSeeds,
-  seedByLeague,
+  vigMap,
   properOrders,
 };
