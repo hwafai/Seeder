@@ -17,7 +17,7 @@ const {
 
 const url = process.env.FOURCASTER_API_URI;
 const wsUrl = process.env.FOURCASTER_WS_API_URI;
-const username = process.env.FOURCASTER_USERNAME
+const username = process.env.FOURCASTER_USERNAME;
 const password = process.env.FOURCASTER_PASSWORD;
 
 login(password, url, username)
@@ -62,7 +62,7 @@ login(password, url, username)
         const type = formattedMessage.unmatched.type;
         const event = formattedMessage.eventName;
         const fillAmount = formattedMessage.unmatched.filled;
-        const fillThreshold = .8;
+        const fillThreshold = 0.8;
         if (formattedMessage.unmatched.filled === 0 && orderAmount > 0) {
           console.log(
             `${username} created offer on `,
@@ -94,12 +94,23 @@ login(password, url, username)
             "at",
             odds
           );
-          const league = formattedMessage.league
-          const {seedAmount, desiredVig, equityToLockIn} = vigMap(league)
-          if (!(((formattedMessage.unmatched.offered - formattedMessage.unmatched.remaining)/formattedMessage.unmatched.offered) < fillThreshold)){
+          const league = formattedMessage.league;
+          const { seedAmount, desiredVig, equityToLockIn } = vigMap(league);
+          if (
+            !(
+              (formattedMessage.unmatched.offered -
+                formattedMessage.unmatched.remaining) /
+                formattedMessage.unmatched.offered <
+              fillThreshold
+            )
+          ) {
             const side1 = formattedMessage.unmatched.side;
-            const {newSeedA, secondNewA} = newSeeds(odds, desiredVig, equityToLockIn)
-            console.log({newSeedA, secondNewA})
+            const { newSeedA, secondNewA } = newSeeds(
+              odds,
+              desiredVig,
+              equityToLockIn
+            );
+            console.log({ newSeedA, secondNewA });
             await cancelAllOrdersForGame(gameID, token, type, url);
             const orderBook = await getOrderbook(gameID, url, token);
             const orderParticipants = orderBook.data.games[0].participants;
