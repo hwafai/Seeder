@@ -75,20 +75,26 @@ function properOrders(
   return [firstOrder, comebackOrders];
 }
 
+function closeStartTime(seedAmount, desiredVig){
+  const tighterSeed = 3 * seedAmount
+  const tighterVig = .5 * desiredVig
+  return {tighterSeed, tighterVig}
+}
+
 function vigMap(league) {
   if (league === 'NCAAF'){
-    const seedAmount = 30
+    const seedAmount = 50
     const desiredVig = .04
     const equityToLockIn = .01
     return {seedAmount, desiredVig, equityToLockIn}
   } else if (league === 'PREMIER-LEAGUE'){
     const seedAmount = 50
-    const desiredVig = .05
+    const desiredVig = .03
     const equityToLockIn = .01
     return {seedAmount, desiredVig, equityToLockIn}
   } else {
-    const seedAmount = 25
-    const desiredVig = .03
+    const seedAmount = 50
+    const desiredVig = .035
     const equityToLockIn = .01
     return {seedAmount, desiredVig, equityToLockIn}
   }
@@ -118,6 +124,7 @@ module.exports = {
   convertDecimalToAmerican,
   findOtherSide,
   newSeeds,
+  closeStartTime,
   vigMap,
   properOrders,
 };
