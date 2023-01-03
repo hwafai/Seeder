@@ -15,11 +15,10 @@ const {
   login,
   placeOrders,
 } = require("./apiUtils");
-const { start } = require("repl");
 
 const url = process.env.FOURCASTER_API_URI;
 const wsUrl = process.env.FOURCASTER_WS_API_URI;
-const username = process.env.FOURCASTER_USERNAME
+const username = process.env.FOURCASTER_USERNAME;
 const password = process.env.FOURCASTER_PASSWORD;
 
 login(password, url, username)
@@ -64,7 +63,7 @@ login(password, url, username)
         const type = formattedMessage.unmatched.type;
         const event = formattedMessage.eventName;
         const fillAmount = formattedMessage.unmatched.filled;
-        const fillThreshold = .8;
+        const fillThreshold = 0.8;
         if (formattedMessage.unmatched.filled === 0 && orderAmount > 0) {
           console.log(
             `${username} created offer on `,
@@ -106,7 +105,7 @@ login(password, url, username)
             console.log(rightNow)
             console.log(startTime)
             const timeToStart = ((startTime - rightNow)/ 1000)
-            if (timeToStart < 10000){
+            if (timeToStart < 400000){
               const {tighterSeed, tighterVig} = closeStartTime(seedAmount, desiredVig)
               const side1 = formattedMessage.unmatched.side;
               const {newSeedA, secondNewA} = newSeeds(odds, tighterVig, equityToLockIn)
