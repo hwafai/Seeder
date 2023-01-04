@@ -35,7 +35,6 @@ login(password, url, username)
     const socket = manager.socket(`/v2/user/${username}`, {
       query: { token },
     });
-
     socket.on("connect", () => {
       console.log(`message: ${username} connected to userFeed`);
     });
@@ -103,42 +102,6 @@ login(password, url, username)
           console.log(seedAmount, desiredVig, equityToLockIn)
           if (!(((formattedMessage.unmatched.offered - formattedMessage.unmatched.remaining)/formattedMessage.unmatched.offered) < fillThreshold)){
             await cancelAllOrdersForGame(gameID, token, type, url);
-            // if (timeToStart < 0){
-            //   const {tighterSeed, tighterVig} = closeStartTime(seedAmount, desiredVig)
-            //   const side1 = formattedMessage.unmatched.side;
-            //   const {newSeedA, secondNewA} = newSeeds(odds, tighterVig, equityToLockIn)
-            //   console.log({newSeedA, secondNewA})
-            //   const orderParticipants = orderBook.data.games[0].participants;
-            //   const side2 = findOtherSide(orderParticipants, side1, type);
-            //   const orders = properOrders(
-            //     type,
-            //     number,
-            //     gameID,
-            //     side1,
-            //     side2,
-            //     tighterSeed,
-            //     newSeedA,
-            //     secondNewA
-            //   );
-            //   await placeOrders(gameID, orders, token, url)
-            // } else {
-            //   const side1 = formattedMessage.unmatched.side;
-            //   const {newSeedA, secondNewA} = newSeeds(odds, desiredVig, equityToLockIn)
-            //   console.log({newSeedA, secondNewA})
-            //   const orderParticipants = orderBook.data.games[0].participants;
-            //   const side2 = findOtherSide(orderParticipants, side1, type);
-            //   const orders = properOrders(
-            //     type,
-            //     number,
-            //     gameID,
-            //     side1,
-            //     side2,
-            //     seedAmount,
-            //     newSeedA,
-            //     secondNewA
-            //   );
-            //   await placeOrders(gameID, orders, token, url);
-            // }
             const side1 = formattedMessage.unmatched.side;
             const {newSeedA, secondNewA} = newSeeds(odds, desiredVig, equityToLockIn)
             console.log({newSeedA, secondNewA})
