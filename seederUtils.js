@@ -86,6 +86,16 @@ function vigMap(league, timeToStart) {
       const desiredVig = 0.02;
       const equityToLockIn = 0.01;
       return { seedAmount, desiredVig, equityToLockIn };
+    } else if (league === "NFL") {
+      const seedAmount = 400;
+      const desiredVig = .02;
+      const equityToLockIn = .01;
+      return {seedAmount, desiredVig, equityToLockIn}
+    } else if (league === "NBA") {
+      const seedAmount = 250;
+      const desiredVig = .025;
+      const equityToLockIn = .01;
+      return {seedAmount, desiredVig, equityToLockIn}
     } else {
       const seedAmount = 200;
       const desiredVig = 0.02;
@@ -102,7 +112,17 @@ function vigMap(league, timeToStart) {
       const seedAmount = 100;
       const desiredVig = 0.04;
       const equityToLockIn = 0.01;
-      return { seedAmount, desiredVig, equityToLockIn };
+      return { seedAmount, desiredVig, equityToLockIn }
+    } else if (league === "NFL") {
+      const seedAmount = 100;
+      const desiredVig = .04;
+      const equityToLockIn = .01;
+      return {seedAmount, desiredVig, equityToLockIn}
+    } else if (league === "NBA") {
+      const seedAmount = 100;
+      const desiredVig = .04;
+      const equityToLockIn = .01;
+      return {seedAmount, desiredVig, equityToLockIn}
     } else {
       const seedAmount = 100;
       const desiredVig = 0.04;
