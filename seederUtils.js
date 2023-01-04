@@ -73,28 +73,42 @@ function properOrders(
   return [firstOrder, comebackOrders];
 }
 
-function closeStartTime(seedAmount, desiredVig){
-  const tighterSeed = 3 * seedAmount
-  const tighterVig = .5 * desiredVig
-  return {tighterSeed, tighterVig}
-}
 
-function vigMap(league) {
-  if (league === "NCAAF") {
-    const seedAmount = 100;
-    const desiredVig = 0.04;
-    const equityToLockIn = 0.01;
-    return { seedAmount, desiredVig, equityToLockIn };
-  } else if (league === "PREMIER-LEAGUE") {
-    const seedAmount = 100;
-    const desiredVig = 0.04;
-    const equityToLockIn = 0.01;
-    return { seedAmount, desiredVig, equityToLockIn };
+function vigMap(league, timeToStart) {
+  if (timeToStart < 200000){
+    if (league === "NCAAF") {
+      const seedAmount = 400;
+      const desiredVig = 0.02;
+      const equityToLockIn = 0.01;
+      return { seedAmount, desiredVig, equityToLockIn };
+    } else if (league === "PREMIER-LEAGUE") {
+      const seedAmount = 300;
+      const desiredVig = 0.02;
+      const equityToLockIn = 0.01;
+      return { seedAmount, desiredVig, equityToLockIn };
+    } else {
+      const seedAmount = 200;
+      const desiredVig = 0.02;
+      const equityToLockIn = 0.01;
+      return { seedAmount, desiredVig, equityToLockIn };
+    }
   } else {
-    const seedAmount = 100;
-    const desiredVig = 0.04;
-    const equityToLockIn = 0.01;
-    return { seedAmount, desiredVig, equityToLockIn };
+    if (league === "NCAAF") {
+      const seedAmount = 100;
+      const desiredVig = 0.04;
+      const equityToLockIn = 0.01;
+      return { seedAmount, desiredVig, equityToLockIn };
+    } else if (league === "PREMIER-LEAGUE") {
+      const seedAmount = 100;
+      const desiredVig = 0.04;
+      const equityToLockIn = 0.01;
+      return { seedAmount, desiredVig, equityToLockIn };
+    } else {
+      const seedAmount = 100;
+      const desiredVig = 0.04;
+      const equityToLockIn = 0.01;
+      return { seedAmount, desiredVig, equityToLockIn };
+    }
   }
 }
 
@@ -122,7 +136,6 @@ module.exports = {
   convertDecimalToAmerican,
   findOtherSide,
   newSeeds,
-  closeStartTime,
   vigMap,
   properOrders,
 };

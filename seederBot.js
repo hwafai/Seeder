@@ -5,7 +5,6 @@ const {
   newSeeds,
   findOtherSide,
   properOrders,
-  closeStartTime,
   vigMap,
 } = require("./seederUtils");
 
@@ -95,68 +94,67 @@ login(password, url, username)
             "at",
             odds
           );
+          const orderBook = await getOrderbook(gameID, url, token);
+          const startTime = (new Date(orderBook.data.games[0].start))
+          const rightNow = new Date()
+          const timeToStart = ((startTime - rightNow)/ 1000)
           const league = formattedMessage.league
-          const {seedAmount, desiredVig, equityToLockIn} = vigMap(league)
+          const {seedAmount, desiredVig, equityToLockIn} = vigMap(league, timeToStart)
+          console.log(seedAmount, desiredVig, equityToLockIn)
           if (!(((formattedMessage.unmatched.offered - formattedMessage.unmatched.remaining)/formattedMessage.unmatched.offered) < fillThreshold)){
             await cancelAllOrdersForGame(gameID, token, type, url);
-            const orderBook = await getOrderbook(gameID, url, token);
-            const startTime = (new Date(orderBook.data.games[0].start))
-            const rightNow = new Date()
-            console.log(rightNow)
-            console.log(startTime)
-            const timeToStart = ((startTime - rightNow)/ 1000)
-            if (timeToStart < 400000){
-              const {tighterSeed, tighterVig} = closeStartTime(seedAmount, desiredVig)
-              const side1 = formattedMessage.unmatched.side;
-              const {newSeedA, secondNewA} = newSeeds(odds, tighterVig, equityToLockIn)
-              console.log({newSeedA, secondNewA})
-              const orderParticipants = orderBook.data.games[0].participants;
-              const side2 = findOtherSide(orderParticipants, side1, type);
-              const orders = properOrders(
-                type,
-                number,
-                gameID,
-                side1,
-                side2,
-                tighterSeed,
-                newSeedA,
-                secondNewA
-              );
-              await placeOrders(gameID, orders, token, url)
-            } else {
-              const side1 = formattedMessage.unmatched.side;
-              const {newSeedA, secondNewA} = newSeeds(odds, desiredVig, equityToLockIn)
-              console.log({newSeedA, secondNewA})
-              const orderParticipants = orderBook.data.games[0].participants;
-              const side2 = findOtherSide(orderParticipants, side1, type);
-              const orders = properOrders(
-                type,
-                number,
-                gameID,
-                side1,
-                side2,
-                seedAmount,
-                newSeedA,
-                secondNewA
-              );
-              await placeOrders(gameID, orders, token, url);
-            }
-            // const side1 = formattedMessage.unmatched.side;
-            // const {newSeedA, secondNewA} = newSeeds(odds, desiredVig, equityToLockIn)
-            // console.log({newSeedA, secondNewA})
-            // const orderParticipants = orderBook.data.games[0].participants;
-            // const side2 = findOtherSide(orderParticipants, side1, type);
-            // const orders = properOrders(
-            //   type,
-            //   number,
-            //   gameID,
-            //   side1,
-            //   side2,
-            //   seedAmount,
-            //   newSeedA,
-            //   secondNewA
-            // );
-            // await placeOrders(gameID, orders, token, url);
+            // if (timeToStart < 0){
+            //   const {tighterSeed, tighterVig} = closeStartTime(seedAmount, desiredVig)
+            //   const side1 = formattedMessage.unmatched.side;
+            //   const {newSeedA, secondNewA} = newSeeds(odds, tighterVig, equityToLockIn)
+            //   console.log({newSeedA, secondNewA})
+            //   const orderParticipants = orderBook.data.games[0].participants;
+            //   const side2 = findOtherSide(orderParticipants, side1, type);
+            //   const orders = properOrders(
+            //     type,
+            //     number,
+            //     gameID,
+            //     side1,
+            //     side2,
+            //     tighterSeed,
+            //     newSeedA,
+            //     secondNewA
+            //   );
+            //   await placeOrders(gameID, orders, token, url)
+            // } else {
+            //   const side1 = formattedMessage.unmatched.side;
+            //   const {newSeedA, secondNewA} = newSeeds(odds, desiredVig, equityToLockIn)
+            //   console.log({newSeedA, secondNewA})
+            //   const orderParticipants = orderBook.data.games[0].participants;
+            //   const side2 = findOtherSide(orderParticipants, side1, type);
+            //   const orders = properOrders(
+            //     type,
+            //     number,
+            //     gameID,
+            //     side1,
+            //     side2,
+            //     seedAmount,
+            //     newSeedA,
+            //     secondNewA
+            //   );
+            //   await placeOrders(gameID, orders, token, url);
+            // }
+            const side1 = formattedMessage.unmatched.side;
+            const {newSeedA, secondNewA} = newSeeds(odds, desiredVig, equityToLockIn)
+            console.log({newSeedA, secondNewA})
+            const orderParticipants = orderBook.data.games[0].participants;
+            const side2 = findOtherSide(orderParticipants, side1, type);
+            const orders = properOrders(
+              type,
+              number,
+              gameID,
+              side1,
+              side2,
+              seedAmount,
+              newSeedA,
+              secondNewA
+            );
+            await placeOrders(gameID, orders, token, url);
           }
         }
       }
