@@ -1,5 +1,4 @@
 require("./loadEnv");
-const { format } = require("path");
 const { Manager } = require("socket.io-client");
 const { login } = require("./apiUtils")
 
