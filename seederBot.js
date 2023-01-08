@@ -61,7 +61,7 @@ login(password, url, username)
         const type = formattedMessage.unmatched.type;
         const event = formattedMessage.eventName;
         const fillAmount = formattedMessage.unmatched.filled;
-        const fillThreshold = 0.8;
+        const fillThreshold = 0.67;
         if (formattedMessage.unmatched.filled === 0 && orderAmount > 0) {
           console.log(
             `${username} created offer on `,
