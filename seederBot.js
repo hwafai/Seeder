@@ -105,7 +105,11 @@ login(password, url, username)
             const {seedAmount, desiredVig, equityToLockIn} = vigMap(league, timeToStart)
             console.log(seedAmount, desiredVig, equityToLockIn)
             if (!(((formattedMessage.unmatched.offered - formattedMessage.unmatched.remaining)/formattedMessage.unmatched.offered) < fillThreshold)){
-              await cancelAllOrdersForGame(gameID, token, type, url);
+              try {
+                await cancelAllOrdersForGame(gameID, token, type, url);
+              } catch (e) {
+                console.log('Error cancelling orders:', e);
+              }
               const side1 = formattedMessage.unmatched.side;
               const {newSeedA, secondNewA} = newSeeds(odds, desiredVig, equityToLockIn)
               console.log({newSeedA, secondNewA})
