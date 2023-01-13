@@ -11,6 +11,18 @@ async function getOrderbook(gameID, url, token) {
   });
 }
 
+async function getGameLiability(url, token, gameID) {
+  return callApi({
+    url: `${url}/user/getGameLiability`,
+    method: 'GET',
+    params: {
+      gameID
+    },
+    headers: { authorization: token }
+  });
+}
+
+
 async function login(password, url, username) {
   return callApi({
     url: `${url}/user/login`,
@@ -48,6 +60,7 @@ async function placeOrders(gameID, orders, token, url) {
 
 module.exports = {
   cancelAllOrdersForGame,
+  getGameLiability,
   getOrderbook,
   login,
   placeOrders,

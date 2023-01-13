@@ -124,7 +124,7 @@ function vigMap(league, timeToStart) {
       const equityToLockIn = .01;
       return {seedAmount, desiredVig, equityToLockIn}
     } else {
-      const seedAmount = 100;
+      const seedAmount = 250;
       const desiredVig = 0.04;
       const equityToLockIn = 0.01;
       return { seedAmount, desiredVig, equityToLockIn };

@@ -9,6 +9,7 @@ const linesPassword = process.env.LINES_PASSWORD;
 
 login(linesPassword, url, linesUsername)
   .then((response) => {
+    console.log(response)
     const { user } = response.data;
     const username = user.username;
     const token = user.auth;
