@@ -73,9 +73,8 @@ function properOrders(
   return [firstOrder, comebackOrders];
 }
 
-
 function vigMap(league, timeToStart) {
-  if (timeToStart < 86400){
+  if (timeToStart < 86400) {
     if (league === "NCAAF") {
       const seedAmount = 200;
       const desiredVig = 0.02;
@@ -88,14 +87,14 @@ function vigMap(league, timeToStart) {
       return { seedAmount, desiredVig, equityToLockIn };
     } else if (league === "NFL") {
       const seedAmount = 250;
-      const desiredVig = .015;
-      const equityToLockIn = .005;
-      return {seedAmount, desiredVig, equityToLockIn}
+      const desiredVig = 0.015;
+      const equityToLockIn = 0.005;
+      return { seedAmount, desiredVig, equityToLockIn };
     } else if (league === "NBA") {
       const seedAmount = 200;
-      const desiredVig = .02;
-      const equityToLockIn = .0075;
-      return {seedAmount, desiredVig, equityToLockIn}
+      const desiredVig = 0.02;
+      const equityToLockIn = 0.0075;
+      return { seedAmount, desiredVig, equityToLockIn };
     } else {
       const seedAmount = 200;
       const desiredVig = 0.02;
@@ -112,17 +111,17 @@ function vigMap(league, timeToStart) {
       const seedAmount = 100;
       const desiredVig = 0.02;
       const equityToLockIn = 0.0075;
-      return { seedAmount, desiredVig, equityToLockIn }
+      return { seedAmount, desiredVig, equityToLockIn };
     } else if (league === "NFL") {
       const seedAmount = 125;
-      const desiredVig = .015;
-      const equityToLockIn = .005;
-      return {seedAmount, desiredVig, equityToLockIn}
+      const desiredVig = 0.015;
+      const equityToLockIn = 0.005;
+      return { seedAmount, desiredVig, equityToLockIn };
     } else if (league === "NBA") {
       const seedAmount = 100;
-      const desiredVig = .02;
-      const equityToLockIn = .0075;
-      return {seedAmount, desiredVig, equityToLockIn}
+      const desiredVig = 0.02;
+      const equityToLockIn = 0.0075;
+      return { seedAmount, desiredVig, equityToLockIn };
     } else {
       const seedAmount = 100;
       const desiredVig = 0.02;
