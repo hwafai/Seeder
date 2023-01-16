@@ -22,6 +22,16 @@ async function getGameLiability(url, token, gameID) {
   });
 }
 
+async function getGames(league, token, url) {
+  return callApi({
+    url: `${url}/exchange/v2/getGames`,
+    method: 'GET',
+    params: {
+      league
+    },
+    headers: { authorization: token }
+  });
+}
 
 async function login(password, url, username) {
   return callApi({
@@ -61,6 +71,7 @@ async function placeOrders(gameID, orders, token, url) {
 module.exports = {
   cancelAllOrdersForGame,
   getGameLiability,
+  getGames,
   getOrderbook,
   login,
   placeOrders,

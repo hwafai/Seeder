@@ -1,3 +1,6 @@
+const { url } = require("inspector");
+const { placeOrders } = require("./apiUtils");
+
 function convertToDecimal(otherSide) {
   const newBase = otherSide / (1 - otherSide) + 1;
   return newBase;
@@ -15,6 +18,37 @@ function convertToPercent(price) {
   }
 }
 
+function timeToSeed(games) {
+  const ready = []
+  const hala = new Date()
+  for (const game of games) {
+    const start = new Date(game.start)
+    console.log((start - hala)/1000)
+    console.log(game.eventName)
+    if (((start - hala)/1000) < 30000) {
+      ready.push(game.id)
+    }
+  }
+  return ready
+}
+
+function bestBet(odds) {
+  if (odds > 0) {
+    const newOdds = odds + 1
+    return newOdds
+  } else {
+    const newOdds = odds + 1
+    return newOdds
+  }
+}
+
+// function placeEmAll(seedOrders) {
+//   let x = 0
+//   for (const package of seedOrders) {
+//     await placeOrders(package[x].gameID, package[x], token, url)
+//     x = x + 1
+//   }
+// }
 function convertDecimalToAmerican(decimalOdds) {
   if (parseFloat(decimalOdds) > 101) {
     return 10000;
@@ -153,6 +187,8 @@ function newSeeds(odds, desiredVig, equityToLockIn) {
 module.exports = {
   convertToDecimal,
   convertToPercent,
+  timeToSeed,
+  bestBet,
   convertDecimalToAmerican,
   findOtherSide,
   newSeeds,
