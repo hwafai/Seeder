@@ -4,21 +4,15 @@ const { Manager } = require("socket.io-client");
 const {
   timeToSeed,
   bestBet,
-  newSeeds,
-  findOtherSide,
   properOrders,
-  vigMap,
 } = require("./seederUtils");
 
 const {
-  cancelAllOrdersForGame,
-  getGameLiability,
   getGames,
   getOrderbook,
   login,
   placeOrders,
 } = require("./apiUtils");
-const { type } = require("os");
 
 const url = process.env.FOURCASTER_API_URI;
 const wsUrl = process.env.FOURCASTER_WS_API_URI;
