@@ -99,7 +99,6 @@ login(password, url, username).then((response) => {
                 const NFLodds = await getOrderbook(NFLid, url, token);
                 const name = NFLodds.data.games[0].eventName
                 const NFLovers = NFLodds.data.games[0].over
-                console.log(NFLovers)
                 const NFLunders = NFLodds.data.games[0].under
                 const homeSpreads = NFLodds.data.games[0].homeSpreads
                 const awaySpreads = NFLodds.data.games[0].awaySpreads
@@ -227,8 +226,14 @@ login(password, url, username).then((response) => {
             for (const NBAid of NBAready) {
                 const NBAodds = await getOrderbook(NBAid, url, token)
                 const name = NBAodds.data.games[0].eventName
+                const NBAovers = NBAodds.data.games[0].over
+                const NBAunders = NBAodds.data.games[0].under
+                const homeSpreads = NBAodds.data.games[0].homeSpreads
+                const awaySpreads = NBAodds.data.games[0].awaySpreads
                 const awayIds = (NBAodds.data.games[0].awayMoneylines)
                 const homeIds = (NBAodds.data.games[0].homeMoneylines)
+                const NBAtotalsAlready = []
+                const NBAspreadsAlready = []
                 const NBAalreadyBet = []
                 for (const bet of awayIds) {
                     if (bet.createdBy === id) {
@@ -238,6 +243,26 @@ login(password, url, username).then((response) => {
                 for (const yet of homeIds) {
                     if (yet.createdBy === id) {
                         NBAalreadyBet.push(yet)
+                    }
+                }
+                for (const over of NBAovers) {
+                    if (over.createdBy === id) {
+                        NBAtotalsAlready.push(over)
+                    }
+                }
+                for (const under of NBAunders) {
+                    if (under.createdBy === id) {
+                        NBAtotalsAlready.push(under)
+                    }
+                }
+                for (const homeSP of homeSpreads) {
+                    if (homeSP.createdBy === id) {
+                        NBAspreadsAlready.push(homeSP)
+                    }
+                }
+                for (const awaySP of awaySpreads) {
+                    if (awaySP.createdBy === id) {
+                        NBAspreadsAlready.push(awaySP)
                     }
                 }
                 if (!NBAalreadyBet.length) {
@@ -263,7 +288,59 @@ login(password, url, username).then((response) => {
                     await placeOrders(NBAid, NBAinitialOrders, token, url)
                     console.log('Seeded', name, type, 'at', {adjAway, adjHome}, 'for', betAmount)
                 } else {
-                    console.log(name, 'Already Seeded')
+                    console.log(name, 'Already Seeded ML')
+                }
+                if (!NBAspreadsAlready.length) {
+                    const awaySpreadOdds = NBAodds.data.games[0].awaySpreads[0].odds
+                    const adjAwaySpread = bestBet(awaySpreadOdds)
+                    const homeSpreadOdds = NBAodds.data.games[0].homeSpreads[0].odds
+                    const adjHomeSpread = bestBet(homeSpreadOdds)
+                    const number = NBAodds.data.games[0].homeSpreads[0].spread
+                    const type = NBAodds.data.games[0].awaySpreads[0].type
+                    const homeTeam = NBAodds.data.games[0].homeSpreads[0].participantID
+                    const awayTeam = NBAodds.data.games[0].awaySpreads[0].participantID
+                    const betAmount = 200
+                    console.log("NBA Spread", adjAwaySpread, adjHomeSpread)
+                    const NBAinitialSpreadOrders = properOrders(
+                        type,
+                        number,
+                        NBAid,
+                        homeTeam,
+                        awayTeam,
+                        betAmount,
+                        adjAwaySpread,
+                        adjHomeSpread
+                    );
+                    await placeOrders(NBAid, NBAinitialSpreadOrders, token, url)
+                    console.log('Seeded', name, type, 'at', number, 'at', {adjAwaySpread, adjHomeSpread}, 'for', betAmount)
+                } else {
+                    console.log(name, 'Already Seeded Spread')
+                }
+                if (!NBAtotalsAlready.length) {
+                    const overOdds = NBAodds.data.games[0].over[0].odds
+                    const adjOver = bestBet(overOdds)
+                    const underOdds = NBAodds.data.games[0].under[0].odds
+                    const adjUnder = bestBet(underOdds)
+                    const type = NBAodds.data.games[0].over[0].type
+                    const number = NBAodds.data.games[0].over[0].total
+                    const overSide = "over"
+                    const underSide = "under"
+                    const betAmount = 200
+                    console.log("NBA total", adjOver, adjUnder)
+                    const NBAinitialTotalOrders = properOrders(
+                        type,
+                        number,
+                        NBAid,
+                        overSide,
+                        underSide,
+                        betAmount,
+                        adjOver,
+                        adjUnder
+                    );
+                    await placeOrders(NBAid, NBAinitialTotalOrders, token, url);
+                    console.log('Seeded', name, type, 'at', number, 'at', {adjOver, adjUnder}, 'for', betAmount)
+                } else {
+                    console.log(name, "Already Seeded Totals")
                 }
             }
         } else {
