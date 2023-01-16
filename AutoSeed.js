@@ -346,4 +346,3 @@ async function runIt(token, id, url) {
         }
 }
 
-setInterval(() => {  }, 300)
