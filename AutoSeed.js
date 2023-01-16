@@ -40,7 +40,12 @@ login(password, url, username).then((response) => {
         query: { token },
     });
     socket.on("connect", async () => {
-        console.log(`message: ${username} connected to userFeed`);
+        setInterval(() => {runIt(token, id, url)}, 30000)
+    });
+})
+
+async function runIt(token, id, url) {
+    console.log(`message: ${username} connected to userFeed`);
         const ATPgames = await getGames ("ATP", token, url);
         const actuals = ATPgames.data.games
         const ready = timeToSeed(actuals)
@@ -339,5 +344,6 @@ login(password, url, username).then((response) => {
         } else {
             console.log('No NBA games to Seed')
         }
-    });
-})
+}
+
+setInterval(() => {  }, 300)
