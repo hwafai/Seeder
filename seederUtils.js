@@ -30,13 +30,42 @@ function timeToSeed(games) {
   return ready
 }
 
-function bestBet(odds) {
-  if (odds > 0) {
-    const newOdds = odds + 1
-    return newOdds
+function bestBet(odds1, odds2) {
+  if (odds1 < 0 && odds2 < 0) {
+    const cents = ((odds1 + 100) + (odds2 + 100))
+    if (cents > -5) {
+      const newOdds1 = odds1
+      const newOdds2 = odds2
+      return {newOdds1, newOdds2}
+    } else {
+      const newOdds1 = odds1 + 1
+      const newOdds2 = odds2 + 1
+      return {newOdds1, newOdds2}
+    }
   } else {
-    const newOdds = odds + 1
-    return newOdds
+    if (odds1 < -150 || odds1 > 150 || odds2 < -150 || odds2 > 150) {
+      const cents = odds1 + odds2
+      if (cents < 9 && cents > -9) {
+        const newOdds1 = odds1
+        const newOdds2 = odds2
+        return {newOdds1, newOdds2}
+      } else {
+        const newOdds1 = odds1 + 1
+        const newOdds2 = odds2 + 1
+        return { newOdds1, newOdds2}
+      }
+    } else {
+      const cents = odds1 + odds2
+      if (cents < 5 && cents > -5) {
+        const newOdds1 = odds1
+        const newOdds2 = odds2
+        return {newOdds1, newOdds2}
+      } else {
+        const newOdds1 = odds1 + 1
+        const newOdds2 = odds2 + 1
+        return {newOdds1, newOdds2}
+      }
+    }
   }
 }
 

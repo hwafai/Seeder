@@ -63,14 +63,14 @@ login(password, url, username).then((response) => {
                 }
                 if (!ATPalreadyBet.length) {
                     const awayOdds = (odds.data.games[0].awayMoneylines[0].odds)
-                    const adjAway = bestBet(awayOdds)
                     const homeOdds = (odds.data.games[0].homeMoneylines[0].odds)
-                    const adjHome = bestBet(homeOdds)
+                    const adjOdds = bestBet(awayOdds, homeOdds)
+                    console.log(adjOdds)
                     const type = odds.data.games[0].awayMoneylines[0].type
                     const homeSide = odds.data.games[0].homeMoneylines[0].participantID
                     const awaySide = odds.data.games[0].awayMoneylines[0].participantID
                     const betAmount = 200
-                    console.log("ATP", awayOdds, homeOdds)
+                    console.log("ATP", adjOdds)
                     const ATPinitialOrders =  properOrders(
                         type,
                         null,
@@ -78,12 +78,11 @@ login(password, url, username).then((response) => {
                         homeSide,
                         awaySide,
                         betAmount,
-                        adjAway,
-                        adjHome
-                    
+                        adjOdds.newOdds1,
+                        adjOdds.newOdds2 
                     );
                     await placeOrders(gt, ATPinitialOrders, token, url)
-                    console.log('Seeded', name, type, 'at', {adjAway, adjHome}, 'for', betAmount)
+                    console.log('Seeded', name, type, 'at', adjOdds, 'for', betAmount)
                 } else {
                     console.log(name, 'Already Seeded')
                 }
@@ -139,14 +138,13 @@ login(password, url, username).then((response) => {
                 }
                 if (!NFLalreadyBet.length) {
                     const awayOdds = (NFLodds.data.games[0].awayMoneylines[0].odds)
-                    const adjAway = bestBet(awayOdds)
                     const homeOdds = (NFLodds.data.games[0].homeMoneylines[0].odds)
-                    const adjHome = bestBet(homeOdds)
+                    const adjOdds = bestBet(awayOdds, homeOdds)
                     const type = NFLodds.data.games[0].awayMoneylines[0].type
                     const homeSide = NFLodds.data.games[0].homeMoneylines[0].participantID
                     const awaySide = NFLodds.data.games[0].awayMoneylines[0].participantID
                     const betAmount = 200
-                    console.log("NFL ML", adjAway, adjHome)
+                    console.log("NFL ML", adjOdds)
                     const NFLinitialOrders =  properOrders(
                         type,
                         null,
@@ -154,26 +152,25 @@ login(password, url, username).then((response) => {
                         homeSide,
                         awaySide,
                         betAmount,
-                        adjAway,
-                        adjHome
+                        adjOdds.newOdds1,
+                        adjOdds.newOdds2
                     
                     );
                     await placeOrders(NFLid, NFLinitialOrders, token, url)
-                    console.log('Seeded', name, type, 'at', {adjAway, adjHome}, 'for', betAmount)
+                    console.log('Seeded', name, type, 'at', adjOdds, 'for', betAmount)
                 } else {
                     console.log(name, 'Already Seeded ML')
                 }
                 if (!NFLspreadsAlready.length) {
                     const awaySpreadOdds = NFLodds.data.games[0].awaySpreads[0].odds
-                    const adjAwaySpread = bestBet(awaySpreadOdds)
                     const homeSpreadOdds = NFLodds.data.games[0].homeSpreads[0].odds
-                    const adjHomeSpread = bestBet(homeSpreadOdds)
+                    const adjOdds = bestBet(awaySpreadOdds, homeSpreadOdds)
                     const number = NFLodds.data.games[0].homeSpreads[0].spread
                     const type = NFLodds.data.games[0].awaySpreads[0].type
                     const homeTeam = NFLodds.data.games[0].homeSpreads[0].participantID
                     const awayTeam = NFLodds.data.games[0].awaySpreads[0].participantID
                     const betAmount = 200
-                    console.log("NFL Spread", adjAwaySpread, adjHomeSpread)
+                    console.log("NFL Spread", adjOdds)
                     const NFLinitialSpreadOrders = properOrders(
                         type,
                         number,
@@ -181,25 +178,24 @@ login(password, url, username).then((response) => {
                         homeTeam,
                         awayTeam,
                         betAmount,
-                        adjAwaySpread,
-                        adjHomeSpread
+                        adjOdds.newOdds1,
+                        adjOdds.newOdds2
                     );
                     await placeOrders(NFLid, NFLinitialSpreadOrders, token, url)
-                    console.log('Seeded', name, type, 'at', number, 'at', {adjAwaySpread, adjHomeSpread}, 'for', betAmount)
+                    console.log('Seeded', name, type, 'at', number, 'at', adjOdds, 'for', betAmount)
                 } else {
                     console.log(name, 'Already Seeded Spread')
                 }
                 if (!NFLtotalsAlready.length) {
                     const overOdds = NFLodds.data.games[0].over[0].odds
-                    const adjOver = bestBet(overOdds)
                     const underOdds = NFLodds.data.games[0].under[0].odds
-                    const adjUnder = bestBet(underOdds)
+                    const adjOdds = bestBet(overOdds, underOdds)
                     const type = NFLodds.data.games[0].over[0].type
                     const number = NFLodds.data.games[0].over[0].total
                     const overSide = "over"
                     const underSide = "under"
                     const betAmount = 200
-                    console.log("NFL total", adjOver, adjUnder)
+                    console.log("NFL total", adjOdds)
                     const NFLinitialTotalOrders = properOrders(
                         type,
                         number,
@@ -207,11 +203,11 @@ login(password, url, username).then((response) => {
                         overSide,
                         underSide,
                         betAmount,
-                        adjOver,
-                        adjUnder
+                        adjOdds.newOdds2,
+                        adjOdds.newOdds1
                     );
                     await placeOrders(NFLid, NFLinitialTotalOrders, token, url)
-                    console.log('Seeded', name, type, 'at', number, 'at', {adjOver, adjUnder}, 'for', betAmount)
+                    console.log('Seeded', name, type, 'at', number, 'at', adjOdds, 'for', betAmount)
                 } else {
                     console.log(name, "Already Seeded Totals")
                 }
@@ -267,14 +263,13 @@ login(password, url, username).then((response) => {
                 }
                 if (!NBAalreadyBet.length) {
                     const awayOdds = (NBAodds.data.games[0].awayMoneylines[0].odds)
-                    const adjAway = bestBet(awayOdds)
                     const homeOdds = (NBAodds.data.games[0].homeMoneylines[0].odds)
-                    const adjHome = bestBet(homeOdds)
+                    const adjOdds = bestBet(awayOdds, homeOdds)
                     const type = NBAodds.data.games[0].awayMoneylines[0].type
                     const homeSide = NBAodds.data.games[0].homeMoneylines[0].participantID
                     const awaySide = NBAodds.data.games[0].awayMoneylines[0].participantID
                     const betAmount = 200
-                    console.log("NBA", awayOdds, homeOdds)
+                    console.log("NBA", adjOdds)
                     const NBAinitialOrders = properOrders (
                         type,
                         null,
@@ -282,25 +277,24 @@ login(password, url, username).then((response) => {
                         homeSide,
                         awaySide,
                         betAmount,
-                        adjAway,
-                        adjHome
+                        adjOdds.newOdds1,
+                        adjOdds.newOdds2
                     );
                     await placeOrders(NBAid, NBAinitialOrders, token, url)
-                    console.log('Seeded', name, type, 'at', {adjAway, adjHome}, 'for', betAmount)
+                    console.log('Seeded', name, type, 'at', adjOdds, 'for', betAmount)
                 } else {
                     console.log(name, 'Already Seeded ML')
                 }
                 if (!NBAspreadsAlready.length) {
                     const awaySpreadOdds = NBAodds.data.games[0].awaySpreads[0].odds
-                    const adjAwaySpread = bestBet(awaySpreadOdds)
                     const homeSpreadOdds = NBAodds.data.games[0].homeSpreads[0].odds
-                    const adjHomeSpread = bestBet(homeSpreadOdds)
+                    const adjOdds = bestBet(awaySpreadOdds, homeSpreadOdds)
                     const number = NBAodds.data.games[0].homeSpreads[0].spread
                     const type = NBAodds.data.games[0].awaySpreads[0].type
                     const homeTeam = NBAodds.data.games[0].homeSpreads[0].participantID
                     const awayTeam = NBAodds.data.games[0].awaySpreads[0].participantID
                     const betAmount = 200
-                    console.log("NBA Spread", adjAwaySpread, adjHomeSpread)
+                    console.log("NBA Spread", adjOdds)
                     const NBAinitialSpreadOrders = properOrders(
                         type,
                         number,
@@ -308,25 +302,24 @@ login(password, url, username).then((response) => {
                         homeTeam,
                         awayTeam,
                         betAmount,
-                        adjAwaySpread,
-                        adjHomeSpread
+                        adjOdds.newOdds1,
+                        adjOdds.newOdds2
                     );
                     await placeOrders(NBAid, NBAinitialSpreadOrders, token, url)
-                    console.log('Seeded', name, type, 'at', number, 'at', {adjAwaySpread, adjHomeSpread}, 'for', betAmount)
+                    console.log('Seeded', name, type, 'at', number, 'at', adjOdds, 'for', betAmount)
                 } else {
                     console.log(name, 'Already Seeded Spread')
                 }
                 if (!NBAtotalsAlready.length) {
                     const overOdds = NBAodds.data.games[0].over[0].odds
-                    const adjOver = bestBet(overOdds)
                     const underOdds = NBAodds.data.games[0].under[0].odds
-                    const adjUnder = bestBet(underOdds)
+                    const adjOdds = bestBet(overOdds, underOdds)
                     const type = NBAodds.data.games[0].over[0].type
                     const number = NBAodds.data.games[0].over[0].total
                     const overSide = "over"
                     const underSide = "under"
                     const betAmount = 200
-                    console.log("NBA total", adjOver, adjUnder)
+                    console.log("NBA total", adjOdds)
                     const NBAinitialTotalOrders = properOrders(
                         type,
                         number,
@@ -334,11 +327,11 @@ login(password, url, username).then((response) => {
                         overSide,
                         underSide,
                         betAmount,
-                        adjOver,
-                        adjUnder
+                        adjOdds.newOdds2,
+                        adjOdds.newOdds1
                     );
                     await placeOrders(NBAid, NBAinitialTotalOrders, token, url);
-                    console.log('Seeded', name, type, 'at', number, 'at', {adjOver, adjUnder}, 'for', betAmount)
+                    console.log('Seeded', name, type, 'at', number, 'at', adjOdds, 'for', betAmount)
                 } else {
                     console.log(name, "Already Seeded Totals")
                 }
