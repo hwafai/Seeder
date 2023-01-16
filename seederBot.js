@@ -94,17 +94,31 @@ login(password, url, username)
             odds
           );
           const orderBook = await getOrderbook(gameID, url, token);
-          const startTime = (new Date(orderBook.data.games[0].start))
-          const rightNow = new Date()
-          const timeToStart = ((startTime - rightNow)/ 1000)
-          const league = formattedMessage.league
-          const {seedAmount, desiredVig, equityToLockIn} = vigMap(league, timeToStart)
-          console.log(seedAmount, desiredVig, equityToLockIn)
-          if (!(((formattedMessage.unmatched.offered - formattedMessage.unmatched.remaining)/formattedMessage.unmatched.offered) < fillThreshold)){
+          const startTime = new Date(orderBook.data.games[0].start);
+          const rightNow = new Date();
+          const timeToStart = (startTime - rightNow) / 1000;
+          const league = formattedMessage.league;
+          const { seedAmount, desiredVig, equityToLockIn } = vigMap(
+            league,
+            timeToStart
+          );
+          console.log(seedAmount, desiredVig, equityToLockIn);
+          if (
+            !(
+              (formattedMessage.unmatched.offered -
+                formattedMessage.unmatched.remaining) /
+                formattedMessage.unmatched.offered <
+              fillThreshold
+            )
+          ) {
             await cancelAllOrdersForGame(gameID, token, type, url);
             const side1 = formattedMessage.unmatched.side;
-            const {newSeedA, secondNewA} = newSeeds(odds, desiredVig, equityToLockIn)
-            console.log({newSeedA, secondNewA})
+            const { newSeedA, secondNewA } = newSeeds(
+              odds,
+              desiredVig,
+              equityToLockIn
+            );
+            console.log({ newSeedA, secondNewA });
             const orderParticipants = orderBook.data.games[0].participants;
             const side2 = findOtherSide(orderParticipants, side1, type);
             const orders = properOrders(

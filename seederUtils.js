@@ -73,15 +73,14 @@ function properOrders(
   return [firstOrder, comebackOrders];
 }
 
-
 function vigMap(league, timeToStart) {
-  if (timeToStart < 86400){
+  if (timeToStart < 86400) {
     if (league === "NCAAF") {
       const seedAmount = 500;
       const desiredVig = 0.02;
       const equityToLockIn = 0.005;
       return { seedAmount, desiredVig, equityToLockIn };
-    } else if (league === 'CHAMPIONS-LEAGUE') {
+    } else if (league === "CHAMPIONS-LEAGUE") {
       const seedAmount = 500;
       const desiredVig = 0.02;
       const equityToLockIn = 0.005;
@@ -89,54 +88,54 @@ function vigMap(league, timeToStart) {
     } else if (league === "PREMIER-LEAGUE") {
       const seedAmount = 100;
       const desiredVig = 0.04;
-      const equityToLockIn = 0.01;
+      const equityToLockIn = 0.005;
       return { seedAmount, desiredVig, equityToLockIn };
     } else if (league === "NFL") {
       const seedAmount = 500;
       const desiredVig = 0.02;
       const equityToLockIn = 0.005;
-      return {seedAmount, desiredVig, equityToLockIn}
+      return { seedAmount, desiredVig, equityToLockIn };
     } else if (league === "NBA") {
       const seedAmount = 100;
       const desiredVig = 0.04;
-      const equityToLockIn = 0.01;
-      return {seedAmount, desiredVig, equityToLockIn}
+      const equityToLockIn = 0.005;
+      return { seedAmount, desiredVig, equityToLockIn };
     } else {
       const seedAmount = 100;
       const desiredVig = 0.04;
-      const equityToLockIn = 0.01;
+      const equityToLockIn = 0.005;
       return { seedAmount, desiredVig, equityToLockIn };
     }
   } else {
     if (league === "NCAAF") {
       const seedAmount = 100;
       const desiredVig = 0.04;
-      const equityToLockIn = 0.01;
+      const equityToLockIn = 0.005;
       return { seedAmount, desiredVig, equityToLockIn };
-    } else if (league === 'CHAMPIONS-LEAGUE') {
+    } else if (league === "CHAMPIONS-LEAGUE") {
       const seedAmount = 100;
       const desiredVig = 0.04;
-      const equityToLockIn = 0.01;
+      const equityToLockIn = 0.005;
       return { seedAmount, desiredVig, equityToLockIn };
     } else if (league === "PREMIER-LEAGUE") {
       const seedAmount = 100;
       const desiredVig = 0.04;
-      const equityToLockIn = 0.01;
-      return { seedAmount, desiredVig, equityToLockIn }
+      const equityToLockIn = 0.005;
+      return { seedAmount, desiredVig, equityToLockIn };
     } else if (league === "NFL") {
       const seedAmount = 100;
-      const desiredVig = .04;
-      const equityToLockIn = .01;
-      return {seedAmount, desiredVig, equityToLockIn}
+      const desiredVig = 0.04;
+      const equityToLockIn = 0.005;
+      return { seedAmount, desiredVig, equityToLockIn };
     } else if (league === "NBA") {
       const seedAmount = 100;
-      const desiredVig = .04;
-      const equityToLockIn = .01;
-      return {seedAmount, desiredVig, equityToLockIn}
+      const desiredVig = 0.04;
+      const equityToLockIn = 0.005;
+      return { seedAmount, desiredVig, equityToLockIn };
     } else {
       const seedAmount = 100;
       const desiredVig = 0.04;
-      const equityToLockIn = 0.01;
+      const equityToLockIn = 0.005;
       return { seedAmount, desiredVig, equityToLockIn };
     }
   }
