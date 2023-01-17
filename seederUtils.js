@@ -20,7 +20,7 @@ function timeToSeed(games) {
   const hala = new Date()
   for (const game of games) {
     const start = new Date(game.start)
-    if (((start - hala)/1000) < 30000 && ((start - hala)/ 1000) > 0) {
+    if (((start - hala)/1000) < 3600 && ((start - hala)/ 1000) > 0) {
       ready.push(game.id)
     }
   }
