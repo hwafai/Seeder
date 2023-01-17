@@ -63,6 +63,7 @@ login(password, url, username)
         const odds = formattedMessage.unmatched.odds;
         const number = formattedMessage.unmatched.number;
         const type = formattedMessage.unmatched.type;
+        console.log(formattedMessage)
         const event = formattedMessage.eventName;
         const fillAmount = formattedMessage.unmatched.filled;
         const fillThreshold = 0.8;
