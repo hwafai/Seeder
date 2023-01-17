@@ -1,6 +1,3 @@
-const { url } = require("inspector");
-const { placeOrders } = require("./apiUtils");
-
 function convertToDecimal(otherSide) {
   const newBase = otherSide / (1 - otherSide) + 1;
   return newBase;
@@ -69,13 +66,51 @@ function bestBet(odds1, odds2) {
   }
 }
 
-// function placeEmAll(seedOrders) {
-//   let x = 0
-//   for (const package of seedOrders) {
-//     await placeOrders(package[x].gameID, package[x], token, url)
-//     x = x + 1
-//   }
-// }
+function noReseedMLs(homeMLs, awayMLs, id){
+  const MLsAlreadyBet = []
+  for (const bet of homeMLs) {
+    if (bet.createdBy === id) {
+      MLsAlreadyBet.push(bet)
+    }
+  }
+  for (const bet of awayMLs) {
+    if (bet.createdBy === id) {
+      MLsAlreadyBet.push(bet)
+    }
+  }
+  return MLsAlreadyBet
+}
+
+function noReseedSpreads(homeSpreads, awaySpreads, id) {
+  const SpreadsAlreadyBet = []
+  for (const homeSP of homeSpreads) {
+    if (homeSP.createdBy === id) {
+      SpreadsAlreadyBet.push(homeSP)
+    }
+  }
+  for (const awaySP of awaySpreads) {
+    if (awaySP.createdBy === id) {
+      SpreadsAlreadyBet.push(awaySP)
+    }
+  }
+  return SpreadsAlreadyBet
+}
+
+function noReseedTotals(overs, unders, id) {
+  const TotalsAlreadyBet = []
+  for (const over of overs) {
+    if (over.createdBy === id) {
+      TotalsAlreadyBet.push(over)
+    }
+  } 
+  for (const under of unders) {
+    if (under.createdBy === id) {
+      TotalsAlreadyBet.push(under)
+    }
+  }
+  return TotalsAlreadyBet
+}
+
 function convertDecimalToAmerican(decimalOdds) {
   if (parseFloat(decimalOdds) > 101) {
     return 10000;
@@ -216,6 +251,9 @@ module.exports = {
   convertToPercent,
   timeToSeed,
   bestBet,
+  noReseedMLs,
+  noReseedSpreads,
+  noReseedTotals,
   convertDecimalToAmerican,
   findOtherSide,
   newSeeds,

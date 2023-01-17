@@ -4,6 +4,9 @@ const { Manager } = require("socket.io-client");
 const {
   timeToSeed,
   bestBet,
+  noReseedMLs,
+  noReseedSpreads,
+  noReseedTotals,
   properOrders,
 } = require("./seederUtils");
 
@@ -55,39 +58,9 @@ async function runIt(token, id, url) {
                 const awaySpreads = odds.data.games[0].awaySpreads
                 const homeMLs = odds.data.games[0].homeMoneylines
                 const awayMLs = odds.data.games[0].awayMoneylines
-                const MLsAlreadyBet = []
-                const SpreadsAlreadyBet = []
-                const TotalsAlreadyBet = []
-                for (const bet of homeMLs) {
-                    if (bet.createdBy === id) {
-                        MLsAlreadyBet.push(bet)
-                    }
-                }
-                for (const bet of awayMLs) {
-                    if (bet.createdBy === id) {
-                        MLsAlreadyBet.push(bet)
-                    }
-                }
-                for (const homeSP of homeSpreads) {
-                    if (homeSP.createdBy === id) {
-                        SpreadsAlreadyBet.push(homeSP)
-                    }
-                }
-                for (const awaySP of awaySpreads) {
-                    if (awaySP.createdBy === id) {
-                        SpreadsAlreadyBet.push(awaySP)
-                    }
-                }
-                for (const over of overs) {
-                    if (over.createdBy === id) {
-                        TotalsAlreadyBet.push(over)
-                    }
-                }
-                for (const under of unders) {
-                    if (under.createdBy === id) {
-                        TotalsAlreadyBet.push(under)
-                    }
-                }
+                const MLsAlreadyBet = noReseedMLs(homeMLs, awayMLs, id)
+                const SpreadsAlreadyBet = noReseedSpreads(homeSpreads, awaySpreads, id)
+                const TotalsAlreadyBet = noReseedTotals(overs, unders, id)
                 if (!MLsAlreadyBet.length) {
                     const awayOdds = odds.data.games[0].awayMoneylines[0].odds
                     const homeOdds = odds.data.games[0].homeMoneylines[0].odds
