@@ -14,22 +14,22 @@ async function getOrderbook(gameID, url, token) {
 async function getGameLiability(url, token, gameID) {
   return callApi({
     url: `${url}/user/getGameLiability`,
-    method: 'GET',
+    method: "GET",
     params: {
-      gameID
+      gameID,
     },
-    headers: { authorization: token }
+    headers: { authorization: token },
   });
 }
 
 async function getGames(league, token, url) {
   return callApi({
     url: `${url}/exchange/v2/getGames`,
-    method: 'GET',
+    method: "GET",
     params: {
-      league
+      league,
     },
-    headers: { authorization: token }
+    headers: { authorization: token },
   });
 }
 

@@ -15,66 +15,66 @@ function convertToPercent(price) {
   }
 }
 
-function leagueWhenSeed (league) {
+function leagueWhenSeed(league) {
   if (league === "NFL") {
-    const thresholdTime = 86400
-    return thresholdTime
+    const thresholdTime = 86400;
+    return thresholdTime;
   } else if (league === "FED-EX-500") {
-    const thresholdTime = 10801
-    return thresholdTime
+    const thresholdTime = 10801;
+    return thresholdTime;
   } else {
-    const thresholdTime = 2000
-    return thresholdTime
+    const thresholdTime = 2000;
+    return thresholdTime;
   }
 }
 
 function timeToSeed(games, league) {
-  const thresholdTime = leagueWhenSeed (league)
-  const ready = []
-  const hala = new Date()
+  const thresholdTime = leagueWhenSeed(league);
+  const ready = [];
+  const hala = new Date();
   for (const game of games) {
-    const start = new Date(game.start)
-    if (((start - hala)/1000) < thresholdTime && ((start - hala)/ 1000) > 0) {
-      ready.push(game.id)
+    const start = new Date(game.start);
+    if ((start - hala) / 1000 < thresholdTime && (start - hala) / 1000 > 0) {
+      ready.push(game.id);
     }
   }
-  return ready
+  return ready;
 }
 
 function bestBet(odds1, odds2) {
   if (odds1 < 0 && odds2 < 0) {
-    const cents = ((odds1 + 100) + (odds2 + 100))
+    const cents = odds1 + 100 + (odds2 + 100);
     if (cents > -5) {
-      const newOdds1 = odds1
-      const newOdds2 = odds2
-      return {newOdds1, newOdds2}
+      const newOdds1 = odds1;
+      const newOdds2 = odds2;
+      return { newOdds1, newOdds2 };
     } else {
-      const newOdds1 = odds1 + 1
-      const newOdds2 = odds2 + 1
-      return {newOdds1, newOdds2}
+      const newOdds1 = odds1 + 1;
+      const newOdds2 = odds2 + 1;
+      return { newOdds1, newOdds2 };
     }
   } else {
     if (odds1 < -150 || odds1 > 150 || odds2 < -150 || odds2 > 150) {
-      const cents = odds1 + odds2
+      const cents = odds1 + odds2;
       if (cents < 9 && cents > -9) {
-        const newOdds1 = odds1
-        const newOdds2 = odds2
-        return {newOdds1, newOdds2}
+        const newOdds1 = odds1;
+        const newOdds2 = odds2;
+        return { newOdds1, newOdds2 };
       } else {
-        const newOdds1 = odds1 + 1
-        const newOdds2 = odds2 + 1
-        return { newOdds1, newOdds2}
+        const newOdds1 = odds1 + 1;
+        const newOdds2 = odds2 + 1;
+        return { newOdds1, newOdds2 };
       }
     } else {
-      const cents = odds1 + odds2
+      const cents = odds1 + odds2;
       if (cents < 5 && cents > -5) {
-        const newOdds1 = odds1
-        const newOdds2 = odds2
-        return {newOdds1, newOdds2}
+        const newOdds1 = odds1;
+        const newOdds2 = odds2;
+        return { newOdds1, newOdds2 };
       } else {
-        const newOdds1 = odds1 + 1
-        const newOdds2 = odds2 + 1
-        return {newOdds1, newOdds2}
+        const newOdds1 = odds1 + 1;
+        const newOdds2 = odds2 + 1;
+        return { newOdds1, newOdds2 };
       }
     }
   }
@@ -82,85 +82,85 @@ function bestBet(odds1, odds2) {
 
 function getInitialSeedAmount(league) {
   if (league === "NFL") {
-    const betAmount = 500
-    return betAmount
+    const betAmount = 500;
+    return betAmount;
   } else if (league === "NBA") {
-    const betAmount = 333
-    return betAmount
+    const betAmount = 333;
+    return betAmount;
   } else if (league === "ATP") {
-    const betAmount = 200
-    return betAmount
+    const betAmount = 200;
+    return betAmount;
   } else if (league === "WTA") {
-    const betAmount = 155
-    return betAmount
+    const betAmount = 155;
+    return betAmount;
   } else if (league === "FED-EX-500") {
-    const betAmount = 200
-    return betAmount
+    const betAmount = 200;
+    return betAmount;
   } else if (league === "NCAAB") {
-    const betAmount = 100
-    return betAmount
+    const betAmount = 100;
+    return betAmount;
   } else if (league === "NHL") {
-    const betAmount= 200
-    return betAmount
+    const betAmount = 200;
+    return betAmount;
   }
 }
 
-function getMaxLiability(league){
-  if (league === 'NFL') {
-    const maxLiability = -3000
-    return maxLiability
-  } else if (league === 'NHL') {
-    const maxLiability = -750
-    return maxLiability
+function getMaxLiability(league) {
+  if (league === "NFL") {
+    const maxLiability = -3000;
+    return maxLiability;
+  } else if (league === "NHL") {
+    const maxLiability = -750;
+    return maxLiability;
   } else {
-    const maxLiability = -1000
-    return maxLiability
+    const maxLiability = -1000;
+    return maxLiability;
   }
 }
 
-function noReseedMLs(homeMLs, awayMLs, id){
-  const MLsAlreadyBet = []
+function noReseedMLs(homeMLs, awayMLs, id) {
+  const MLsAlreadyBet = [];
   for (const bet of homeMLs) {
     if (bet.createdBy === id) {
-      MLsAlreadyBet.push(bet)
+      MLsAlreadyBet.push(bet);
     }
   }
   for (const bet of awayMLs) {
     if (bet.createdBy === id) {
-      MLsAlreadyBet.push(bet)
+      MLsAlreadyBet.push(bet);
     }
   }
-  return MLsAlreadyBet
+  return MLsAlreadyBet;
 }
 
 function noReseedSpreads(homeSpreads, awaySpreads, id) {
-  const SpreadsAlreadyBet = []
+  const SpreadsAlreadyBet = [];
   for (const homeSP of homeSpreads) {
     if (homeSP.createdBy === id) {
-      SpreadsAlreadyBet.push(homeSP)
+      SpreadsAlreadyBet.push(homeSP);
     }
   }
   for (const awaySP of awaySpreads) {
     if (awaySP.createdBy === id) {
-      SpreadsAlreadyBet.push(awaySP)
+      SpreadsAlreadyBet.push(awaySP);
     }
   }
-  return SpreadsAlreadyBet
+  return SpreadsAlreadyBet;
 }
 
 function noReseedTotals(overs, unders, id) {
-  const TotalsAlreadyBet = []
+  const TotalsAlreadyBet = [];
   for (const over of overs) {
     if (over.createdBy === id) {
-      TotalsAlreadyBet.push(over)
-    }
-  } 
-  for (const under of unders) {
-    if (under.createdBy === id) {
-      TotalsAlreadyBet.push(under)
+      TotalsAlreadyBet.push(over);
     }
   }
-  return TotalsAlreadyBet
+  for (const under of unders) {
+    if (under.createdBy === id) {
+      TotalsAlreadyBet.push(under);
+    }
+  }
+  return TotalsAlreadyBet;
 }
 
 function convertDecimalToAmerican(decimalOdds) {
@@ -221,9 +221,8 @@ function properOrders(
   return [firstOrder, comebackOrders];
 }
 
-
 function vigMap(league, timeToStart) {
-  if (timeToStart < 86400 && timeToStart > 10799 ){
+  if (timeToStart < 86400 && timeToStart > 10799) {
     if (league === "NCAAF") {
       const seedAmount = 200;
       const desiredVig = 0.02;
@@ -236,44 +235,44 @@ function vigMap(league, timeToStart) {
       return { seedAmount, desiredVig, equityToLockIn };
     } else if (league === "NFL") {
       const seedAmount = 500;
-      const desiredVig = .015;
-      const equityToLockIn = .005;
-      return {seedAmount, desiredVig, equityToLockIn}
+      const desiredVig = 0.015;
+      const equityToLockIn = 0.005;
+      return { seedAmount, desiredVig, equityToLockIn };
     } else if (league === "NBA") {
       const seedAmount = 200;
-      const desiredVig = .02;
-      const equityToLockIn = .0075;
-      return {seedAmount, desiredVig, equityToLockIn}
+      const desiredVig = 0.02;
+      const equityToLockIn = 0.0075;
+      return { seedAmount, desiredVig, equityToLockIn };
     } else if (league === "FED-EX-500") {
       const seedAmount = 200;
-      const desiredVig = .03;
-      const equityToLockIn = .01
-      return {seedAmount, desiredVig, equityToLockIn}
+      const desiredVig = 0.03;
+      const equityToLockIn = 0.01;
+      return { seedAmount, desiredVig, equityToLockIn };
     } else if (league === "ATP") {
       const seedAmount = 100;
-      const desiredVig = .04;
-      const equityToLockIn = .01;
-      return {seedAmount, desiredVig, equityToLockIn}
+      const desiredVig = 0.04;
+      const equityToLockIn = 0.01;
+      return { seedAmount, desiredVig, equityToLockIn };
     } else if (league === "WTA") {
       const seedAmount = 100;
-      const desiredVig = .04;
-      const equityToLockIn = .01;
-      return {seedAmount, desiredVig, equityToLockIn}
+      const desiredVig = 0.04;
+      const equityToLockIn = 0.01;
+      return { seedAmount, desiredVig, equityToLockIn };
     } else if (league === "NCAAB") {
       const seedAmount = 100;
-      const desiredVig = .04;
-      const equityToLockIn = .01;
-      return {seedAmount, desiredVig, equityToLockIn}
+      const desiredVig = 0.04;
+      const equityToLockIn = 0.01;
+      return { seedAmount, desiredVig, equityToLockIn };
     } else if (league === "NHL") {
       const seedAmount = 100;
-      const desiredVig = .04;
-      const equityToLockIn = .01;
-      return {seedAmount, desiredVig, equityToLockIn}
+      const desiredVig = 0.04;
+      const equityToLockIn = 0.01;
+      return { seedAmount, desiredVig, equityToLockIn };
     } else {
       const seedAmount = 100;
       const desiredVig = 0.04;
       const equityToLockIn = 0.01;
-      return {seedAmount, desiredVig, equityToLockIn};
+      return { seedAmount, desiredVig, equityToLockIn };
     }
   } else if (timeToStart < 10800 && timeToStart > 1799) {
     if (league === "NCAAF") {
@@ -288,97 +287,96 @@ function vigMap(league, timeToStart) {
       return { seedAmount, desiredVig, equityToLockIn };
     } else if (league === "NFL") {
       const seedAmount = 500;
-      const desiredVig = .015;
-      const equityToLockIn = .005;
-      return {seedAmount, desiredVig, equityToLockIn}
+      const desiredVig = 0.015;
+      const equityToLockIn = 0.005;
+      return { seedAmount, desiredVig, equityToLockIn };
     } else if (league === "NBA") {
       const seedAmount = 150;
-      const desiredVig = .03;
-      const equityToLockIn = .0075;
-      return {seedAmount, desiredVig, equityToLockIn}
+      const desiredVig = 0.03;
+      const equityToLockIn = 0.0075;
+      return { seedAmount, desiredVig, equityToLockIn };
     } else if (league === "FED-EX-500") {
       const seedAmount = 333;
-      const desiredVig = .02;
-      const equityToLockIn = .0075
-      return {seedAmount, desiredVig, equityToLockIn}
+      const desiredVig = 0.02;
+      const equityToLockIn = 0.0075;
+      return { seedAmount, desiredVig, equityToLockIn };
     } else if (league === "ATP") {
       const seedAmount = 100;
-      const desiredVig = .035;
-      const equityToLockIn = .01;
-      return {seedAmount, desiredVig, equityToLockIn}
+      const desiredVig = 0.035;
+      const equityToLockIn = 0.01;
+      return { seedAmount, desiredVig, equityToLockIn };
     } else if (league === "WTA") {
       const seedAmount = 100;
-      const desiredVig = .04;
-      const equityToLockIn = .01;
-      return {seedAmount, desiredVig, equityToLockIn}
+      const desiredVig = 0.04;
+      const equityToLockIn = 0.01;
+      return { seedAmount, desiredVig, equityToLockIn };
     } else if (league === "NCAAB") {
       const seedAmount = 100;
-      const desiredVig = .04;
-      const equityToLockIn = .01;
-      return {seedAmount, desiredVig, equityToLockIn}
+      const desiredVig = 0.04;
+      const equityToLockIn = 0.01;
+      return { seedAmount, desiredVig, equityToLockIn };
     } else if (league === "NHL") {
       const seedAmount = 100;
-      const desiredVig = .03;
-      const equityToLockIn = .01;
-      return {seedAmount, desiredVig, equityToLockIn}
+      const desiredVig = 0.03;
+      const equityToLockIn = 0.01;
+      return { seedAmount, desiredVig, equityToLockIn };
     } else {
       const seedAmount = 100;
       const desiredVig = 0.04;
       const equityToLockIn = 0.01;
-      return {seedAmount, desiredVig, equityToLockIn};
+      return { seedAmount, desiredVig, equityToLockIn };
     }
-  } 
-  else if (timeToStart < 1800) {
+  } else if (timeToStart < 1800) {
     if (league === "NCAAF") {
       const seedAmount = 200;
-      const desiredVig = .02;
-      const equityToLockIn = .0075;
-      return {seedAmount, desiredVig, equityToLockIn}
+      const desiredVig = 0.02;
+      const equityToLockIn = 0.0075;
+      return { seedAmount, desiredVig, equityToLockIn };
     } else if (league === "PREMIER-LEAGUE") {
       const seedAmount = 200;
-      const desiredVig = .02;
-      const equityToLockIn = .0075;
-      return {seedAmount, desiredVig, equityToLockIn}
+      const desiredVig = 0.02;
+      const equityToLockIn = 0.0075;
+      return { seedAmount, desiredVig, equityToLockIn };
     } else if (league === "NFL") {
       const seedAmount = 500;
-      const desiredVig = .015;
-      const equityToLockIn = .005;
-      return {seedAmount, desiredVig, equityToLockIn}
+      const desiredVig = 0.015;
+      const equityToLockIn = 0.005;
+      return { seedAmount, desiredVig, equityToLockIn };
     } else if (league === "NBA") {
       const seedAmount = 333;
-      const desiredVig = .02;
-      const equityToLockIn = .0075;
-      return {seedAmount, desiredVig, equityToLockIn}
+      const desiredVig = 0.02;
+      const equityToLockIn = 0.0075;
+      return { seedAmount, desiredVig, equityToLockIn };
     } else if (league === "FED-EX-500") {
       const seedAmount = 333;
-      const desiredVig = .03;
-      const equityToLockIn = .01
-      return {seedAmount, desiredVig, equityToLockIn}
+      const desiredVig = 0.03;
+      const equityToLockIn = 0.01;
+      return { seedAmount, desiredVig, equityToLockIn };
     } else if (league === "ATP") {
       const seedAmount = 200;
-      const desiredVig = .03;
-      const equityToLockIn = .01;
-      return {seedAmount, desiredVig, equityToLockIn}
+      const desiredVig = 0.03;
+      const equityToLockIn = 0.01;
+      return { seedAmount, desiredVig, equityToLockIn };
     } else if (league === "WTA") {
       const seedAmount = 155;
-      const desiredVig = .04;
-      const equityToLockIn = .01;
-      return {seedAmount, desiredVig, equityToLockIn}
+      const desiredVig = 0.04;
+      const equityToLockIn = 0.01;
+      return { seedAmount, desiredVig, equityToLockIn };
     } else if (league === "NCAAB") {
       const seedAmount = 250;
-      const desiredVig = .04;
-      const equityToLockIn = .01
-      return {seedAmount, desiredVig, equityToLockIn}
+      const desiredVig = 0.04;
+      const equityToLockIn = 0.01;
+      return { seedAmount, desiredVig, equityToLockIn };
     } else if (league === "NHL") {
       const seedAmount = 200;
-      const desiredVig = .03;
-      const equityToLockIn = .01;
-      return {seedAmount, desiredVig, equityToLockIn}
+      const desiredVig = 0.03;
+      const equityToLockIn = 0.01;
+      return { seedAmount, desiredVig, equityToLockIn };
     } else {
       const seedAmount = 100;
-      const desiredVig = .04;
-      const equityToLockIn = .01;
-      return {seedAmount, desiredVig, equityToLockIn}
+      const desiredVig = 0.04;
+      const equityToLockIn = 0.01;
+      return { seedAmount, desiredVig, equityToLockIn };
     }
   } else {
     if (league === "NCAAF") {
@@ -390,22 +388,22 @@ function vigMap(league, timeToStart) {
       const seedAmount = 100;
       const desiredVig = 0.02;
       const equityToLockIn = 0.0075;
-      return { seedAmount, desiredVig, equityToLockIn }
+      return { seedAmount, desiredVig, equityToLockIn };
     } else if (league === "NFL") {
       const seedAmount = 250;
-      const desiredVig = .02;
-      const equityToLockIn = .005;
-      return {seedAmount, desiredVig, equityToLockIn}
+      const desiredVig = 0.02;
+      const equityToLockIn = 0.005;
+      return { seedAmount, desiredVig, equityToLockIn };
     } else if (league === "NBA") {
       const seedAmount = 100;
-      const desiredVig = .02;
-      const equityToLockIn = .0075;
-      return {seedAmount, desiredVig, equityToLockIn}
+      const desiredVig = 0.02;
+      const equityToLockIn = 0.0075;
+      return { seedAmount, desiredVig, equityToLockIn };
     } else if (league === "FED-EX-500") {
       const seedAmount = 100;
-      const desiredVig = .04;
-      const equityToLockIn = .01;
-      return {seedAmount, desiredVig, equityToLockIn}
+      const desiredVig = 0.04;
+      const equityToLockIn = 0.01;
+      return { seedAmount, desiredVig, equityToLockIn };
     } else {
       const seedAmount = 100;
       const desiredVig = 0.04;
