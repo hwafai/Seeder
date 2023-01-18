@@ -1,5 +1,4 @@
 require("./loadEnv");
-const { Manager } = require("socket.io-client");
 
 const {
   timeToSeed,
@@ -17,29 +16,8 @@ const {
   placeOrders,
 } = require("./apiUtils");
 
-const url = process.env.FOURCASTER_API_URI;
-const wsUrl = process.env.FOURCASTER_WS_API_URI;
 const username = process.env.FOURCASTER_USERNAME;
-const password = process.env.FOURCASTER_PASSWORD;
 
-// login(password, url, username).then((response) => {
-//     const { user } = response.data;
-//     const username =  user.username;
-//     const token = user.auth;
-//     const id = user.id;
-//     const runningUser = { username, id, token}
-//     console.log(runningUser)
-//     const manager = new Manager(wsUrl, {
-//         reconnectionDelayMax: 1000,
-//         query: { token },
-//     });
-//     const socket = manager.socket(`/v2/user/${username}`, {
-//         query: { token },
-//     });
-//     socket.on("connect", async () => {
-//         setInterval(() => {runIt(token, id, url)}, 30000)
-//     });
-// })
 
 async function runIt(token, id, url) {
     console.log(`message: ${username} connected to userFeed`);
