@@ -4,11 +4,14 @@ const { Manager } = require("socket.io-client");
 const {
   timeToSeed,
   bestBet,
+  getMaxLiability,
   newSeeds,
   findOtherSide,
   properOrders,
   vigMap,
 } = require("./seederUtils");
+
+const { runIt } = require("./AutoSeed");
 
 const {
   cancelAllOrdersForGame,
@@ -40,11 +43,13 @@ login(password, url, username)
       query: { token },
     });
     socket.on("connect", () => {
+      setInterval(() => {runIt(token, id, url)}, 300000)
       console.log(`message: ${username} connected to userFeed`);
     });
 
     socket.on("positionUpdate", async (msg) => {
       const formattedMessage = JSON.parse(msg);
+      console.log(formattedMessage)
       if (!formattedMessage.unmatched) {
         console.log(
           `${username} took offer on`,
@@ -63,7 +68,6 @@ login(password, url, username)
         const odds = formattedMessage.unmatched.odds;
         const number = formattedMessage.unmatched.number;
         const type = formattedMessage.unmatched.type;
-        console.log(formattedMessage)
         const event = formattedMessage.eventName;
         const fillAmount = formattedMessage.unmatched.filled;
         const fillThreshold = 0.8;
@@ -99,13 +103,14 @@ login(password, url, username)
             odds
           );
           const gameLiability = await getGameLiability(url, token, gameID)
+          const league = formattedMessage.league
           console.log(gameLiability.data.liability)
-          if (gameLiability.data.liability > -1500) {
+          const maxLiability = getMaxLiability(league)
+          if (gameLiability.data.liability > maxLiability) {
             const orderBook = await getOrderbook(gameID, url, token);
             const startTime = (new Date(orderBook.data.games[0].start))
             const rightNow = new Date()
             const timeToStart = ((startTime - rightNow)/ 1000)
-            const league = formattedMessage.league
             const {seedAmount, desiredVig, equityToLockIn} = vigMap(league, timeToStart)
             console.log(seedAmount, desiredVig, equityToLockIn)
             if (!(((formattedMessage.unmatched.offered - formattedMessage.unmatched.remaining)/formattedMessage.unmatched.offered) < fillThreshold)){

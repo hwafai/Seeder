@@ -4,6 +4,7 @@ const { Manager } = require("socket.io-client");
 const {
   timeToSeed,
   bestBet,
+  getInitialSeedAmount,
   noReseedMLs,
   noReseedSpreads,
   noReseedTotals,
@@ -13,7 +14,6 @@ const {
 const {
   getGames,
   getOrderbook,
-  login,
   placeOrders,
 } = require("./apiUtils");
 
@@ -22,32 +22,32 @@ const wsUrl = process.env.FOURCASTER_WS_API_URI;
 const username = process.env.FOURCASTER_USERNAME;
 const password = process.env.FOURCASTER_PASSWORD;
 
-login(password, url, username).then((response) => {
-    const { user } = response.data;
-    const username =  user.username;
-    const token = user.auth;
-    const id = user.id;
-    const runningUser = { username, id, token}
-    console.log(runningUser)
-    const manager = new Manager(wsUrl, {
-        reconnectionDelayMax: 1000,
-        query: { token },
-    });
-    const socket = manager.socket(`/v2/user/${username}`, {
-        query: { token },
-    });
-    socket.on("connect", async () => {
-        setInterval(() => {runIt(token, id, url)}, 30000)
-    });
-})
+// login(password, url, username).then((response) => {
+//     const { user } = response.data;
+//     const username =  user.username;
+//     const token = user.auth;
+//     const id = user.id;
+//     const runningUser = { username, id, token}
+//     console.log(runningUser)
+//     const manager = new Manager(wsUrl, {
+//         reconnectionDelayMax: 1000,
+//         query: { token },
+//     });
+//     const socket = manager.socket(`/v2/user/${username}`, {
+//         query: { token },
+//     });
+//     socket.on("connect", async () => {
+//         setInterval(() => {runIt(token, id, url)}, 30000)
+//     });
+// })
 
 async function runIt(token, id, url) {
     console.log(`message: ${username} connected to userFeed`);
-    const leagues = ["ATP", "NFL", "NBA"]
+    const leagues = ["ATP", "WTA", "FED-EX-500", "NHL", "NCAAB", "NFL", "NBA"]
     for (const league of leagues) {
         const games = await getGames(league, token, url)
         const actuals = games.data.games
-        const ready = timeToSeed(actuals)
+        const ready = timeToSeed(actuals, league)
         if (ready.length) {
             for (const gameID of ready) {
                 const odds = await getOrderbook(gameID, url, token)
@@ -61,14 +61,14 @@ async function runIt(token, id, url) {
                 const MLsAlreadyBet = noReseedMLs(homeMLs, awayMLs, id)
                 const SpreadsAlreadyBet = noReseedSpreads(homeSpreads, awaySpreads, id)
                 const TotalsAlreadyBet = noReseedTotals(overs, unders, id)
-                if (!MLsAlreadyBet.length) {
+                if ( homeMLs.length && awayMLs.length && !MLsAlreadyBet.length) {
                     const awayOdds = odds.data.games[0].awayMoneylines[0].odds
                     const homeOdds = odds.data.games[0].homeMoneylines[0].odds
                     const adjOdds = bestBet(awayOdds, homeOdds)
                     const type = odds.data.games[0].awayMoneylines[0].type
                     const homeSide = odds.data.games[0].homeMoneylines[0].participantID
                     const awaySide = odds.data.games[0].awayMoneylines[0].participantID
-                    const betAmount = 200
+                    const betAmount = getInitialSeedAmount(league)
                     console.log(eventName, type, adjOdds)
                     const MLorders = properOrders(
                         type,
@@ -81,12 +81,11 @@ async function runIt(token, id, url) {
                         adjOdds.newOdds2
                     );
                     await placeOrders(gameID, MLorders, token, url)
-                    console.log('Seeded', eventName, type, 'at', adjOdds, 'for', betAmount)
                 } else {
-                    console.log(eventName, 'Already Seeded ML')
+                    console.log(eventName, 'Already Seeded ML or nothing to Seed')
                 }
-                if (league !== "ATP") {
-                    if (!SpreadsAlreadyBet.length) {
+                if (league !== "ATP" && league !== "FED-EX-500" && league !== "WTA" && league !== "NHL") {
+                    if (homeSpreads.length && awaySpreads.length && !SpreadsAlreadyBet.length) {
                         const awaySpreadOdds = odds.data.games[0].awaySpreads[0].odds
                         const homeSpreadOdds = odds.data.games[0].homeSpreads[0].odds
                         const adjOdds = bestBet(awaySpreadOdds, homeSpreadOdds)
@@ -94,7 +93,7 @@ async function runIt(token, id, url) {
                         const type = odds.data.games[0].awaySpreads[0].type
                         const homeTeam = odds.data.games[0].homeSpreads[0].participantID
                         const awayTeam = odds.data.games[0].awaySpreads[0].participantID
-                        const betAmount = 200
+                        const betAmount = getInitialSeedAmount(league)
                         console.log(eventName, type, adjOdds)
                         const spreadOrders = properOrders(
                             type,
@@ -107,34 +106,34 @@ async function runIt(token, id, url) {
                             adjOdds.newOdds2
                         );
                         await placeOrders(gameID, spreadOrders, token, url)
-                        console.log('Seeded', eventName, type, 'at', number, 'at', adjOdds, 'for', betAmount)
                     } else {
-                        console.log(eventName, 'Already Seeded Spread')
+                        console.log(eventName, 'Already Seeded Spread or nothing to Seed')
                     }
-                    if (!TotalsAlreadyBet.length) {
-                        const overOdds = odds.data.games[0].over[0].odds
-                        const underOdds = odds.data.games[0].under[0].odds
-                        const adjOdds = bestBet(overOdds, underOdds)
-                        const type = odds.data.games[0].over[0].type
-                        const number = odds.data.games[0].over[0].total
-                        const overSide = 'under'
-                        const underSide =  'over'
-                        const betAmount = 200
-                        console.log(eventName, type, adjOdds)
-                        const totalOrders = properOrders(
-                            type,
-                            number,
-                            gameID,
-                            overSide,
-                            underSide,
-                            betAmount,
-                            adjOdds.newOdds1,
-                            adjOdds.newOdds2
-                        );
-                        await placeOrders(gameID, totalOrders, token, url);
-                        console.log('Seeded', eventName, type, 'at', number, 'at', adjOdds, 'for', betAmount)
-                    } else {
-                        console.log(eventName, 'Already Seeded Totals')
+                    if (league !== "FED-EX-500") {
+                        if (overs.length && unders.length && !TotalsAlreadyBet.length) {
+                            const overOdds = odds.data.games[0].over[0].odds
+                            const underOdds = odds.data.games[0].under[0].odds
+                            const adjOdds = bestBet(overOdds, underOdds)
+                            const type = odds.data.games[0].over[0].type
+                            const number = odds.data.games[0].over[0].total
+                            const overSide = 'under'
+                            const underSide =  'over'
+                            const betAmount = getInitialSeedAmount(league)
+                            console.log(eventName, type, adjOdds)
+                            const totalOrders = properOrders(
+                                type,
+                                number,
+                                gameID,
+                                overSide,
+                                underSide,
+                                betAmount,
+                                adjOdds.newOdds1,
+                                adjOdds.newOdds2
+                            );
+                            await placeOrders(gameID, totalOrders, token, url);
+                        } else {
+                            console.log(eventName, 'Already Seeded Totals or nothing to Seed')
+                        }
                     }
                 }
             }
@@ -144,4 +143,8 @@ async function runIt(token, id, url) {
     }
 }
 
+
+module.exports = {
+    runIt
+};
 
