@@ -51,7 +51,7 @@ async function runIt(token, id, url) {
         if (ready.length) {
             for (const gameID of ready) {
                 const odds = await getOrderbook(gameID, url, token)
-                const eventName = odds.data.games[0].eventNameM
+                const eventName = odds.data.games[0].eventName ? odds.data.games[0].eventName: odds.data.games[0].eventNameM
                 const overs = odds.data.games[0].over
                 const unders = odds.data.games[0].under
                 const homeSpreads = odds.data.games[0].homeSpreads
