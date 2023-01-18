@@ -2,8 +2,6 @@ require("./loadEnv");
 const { Manager } = require("socket.io-client");
 
 const {
-  timeToSeed,
-  bestBet,
   getMaxLiability,
   newSeeds,
   findOtherSide,
@@ -16,7 +14,6 @@ const { runIt } = require("./AutoSeed");
 const {
   cancelAllOrdersForGame,
   getGameLiability,
-  getGames,
   getOrderbook,
   login,
   placeOrders,
