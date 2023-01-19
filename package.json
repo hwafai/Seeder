@@ -10,8 +10,11 @@
   "dependencies": {
     "axios": "^0.21.1",
     "dotenv": "^16.0.3",
+    "fast-xml-parser": "^4.0.13",
     "pm2": "^5.2.2",
-    "socket.io-client": "^4.5.4"
+    "sha1": "^1.1.1",
+    "socket.io-client": "^4.5.4",
+    "xmlparser": "^0.1.0"
   },
   "devDependencies": {
     "eslint": "^8.29.0",

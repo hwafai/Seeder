@@ -4,12 +4,16 @@ const { login } = require("./apiUtils")
 
 const url = process.env.FOURCASTER_API_URI;
 const wsUrl = process.env.FOURCASTER_WS_API_URI;
+const bgURL = process.env.BACKGROUND_JOBS_URI;
 const linesUsername = process.env.LINES_USERNAME;
 const linesPassword = process.env.LINES_PASSWORD;
 
+const { linesLOL, lineType, gameFinder, teamFinder, numberFinder, gameIdSplice} = require("./linesUtils")
+const { getTakMaster, getGames } = require("./apiUtils");
+const { format } = require("path");
+
 login(linesPassword, url, linesUsername)
   .then((response) => {
-    console.log(response)
     const { user } = response.data;
     const username = user.username;
     const token = user.auth;
@@ -78,6 +82,25 @@ login(linesPassword, url, linesUsername)
                   "at",
                   odds
                 );
+                console.log(formattedMessage)
+                const side = formattedMessage.matched.side
+                const AmountWagered = formattedMessage.matched.win
+                const ToWinAmount = formattedMessage.matched.risk
+                const FinalMoney = -1 * odds
+                const league = formattedMessage.league
+                const gameData = await getGames(league, token, url)
+                const teamGames = gameData.data.games
+                const ChosenTeam = teamFinder(teamGames, type, side, event)
+                const WagerType = lineType(type)
+                const { AdjSpread, AdjTotalPoints} = numberFinder(type, number)
+                const response = await getTakMaster(bgURL, token, league)
+                const games = response.data.games
+                const {eventID, VisitorRotNum, GameDateTime, SportType, SportSubType, ChosenTeamIdx } = gameFinder(games, event, ChosenTeam, side, type)
+                console.log(ChosenTeam, ChosenTeamIdx)
+                const idNumber = gameIdSplice(eventID)
+                const GameNum = parseInt(idNumber)
+
+                await linesLOL(AmountWagered, ToWinAmount, FinalMoney, SportType, SportSubType,GameNum, VisitorRotNum, GameDateTime, WagerType, AdjSpread, AdjTotalPoints, ChosenTeam, ChosenTeamIdx )
                 // axios.post all that good stuff, should be able to take what you need from formattedMessage too fill data for axios.post
             }    
         } 

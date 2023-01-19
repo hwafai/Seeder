@@ -11,6 +11,20 @@ async function getOrderbook(gameID, url, token) {
   });
 }
 
+async function getTakMaster(url, token, league) {
+  return callApi({
+    url: `${url}/api/v1/odds/getTakMasterStoreGames`,
+    method: 'POST',
+    data: {
+      league: league
+    },
+    headers: { 
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      authorization: token }
+  });
+}
+
 async function getGameLiability(url, token, gameID) {
   return callApi({
     url: `${url}/user/getGameLiability`,
@@ -73,6 +87,7 @@ module.exports = {
   getGameLiability,
   getGames,
   getOrderbook,
+  getTakMaster,
   login,
   placeOrders,
 };

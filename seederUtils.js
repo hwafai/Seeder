@@ -398,8 +398,8 @@ function vigMap(league, timeToStart) {
       return {seedAmount, desiredVig, equityToLockIn}
     } else if (league === "NBA") {
       const seedAmount = 100;
-      const desiredVig = .02;
-      const equityToLockIn = .0075;
+      const desiredVig = .04;
+      const equityToLockIn = .01;
       return {seedAmount, desiredVig, equityToLockIn}
     } else if (league === "FED-EX-500") {
       const seedAmount = 100;
