@@ -24,10 +24,10 @@ function lineType(type) {
 function teamIDfinder(game, ChosenTeam, side, type) {
     if (type === 'total') {
         if (side === 'over') {
-            const ChosenTeamIdx = '1'
+            const ChosenTeamIdx = '2'
             return ChosenTeamIdx
         } else if (side === 'under') {
-            const ChosenTeamIdx = '0'
+            const ChosenTeamIdx = '1'
             return ChosenTeamIdx
         }
     } else {
@@ -43,7 +43,7 @@ function teamIDfinder(game, ChosenTeam, side, type) {
 
 function gameFinder(games, event, ChosenTeam, side, type) {
     for (const game of games) {
-        if (game.eventName = event) {
+        if (game.eventName === event) {
             const eventID = game.apiEventID
             const VisitorRotNum = game.awayRotationNumber
             const GameDateTime = game.start
@@ -57,9 +57,11 @@ function gameFinder(games, event, ChosenTeam, side, type) {
 
 function teamFinder(teamGames, type, side, event) {
     for (const game of teamGames) {
+        console.log(event, game.eventName)
         if (game.eventName === event) {
             const teams = game.participants
             if (type !== 'total') {
+                console.log(type)
                 for (const team of teams) {
                     if (team.id !== side) {
                         const ChosenTeam = team.longName
@@ -67,6 +69,7 @@ function teamFinder(teamGames, type, side, event) {
                     }
                 }
             } else {
+                console.log(type)
                 const ChosenTeam = `${teams[0].longName}/${teams[1].longName}`
                 return ChosenTeam
             }
@@ -95,7 +98,17 @@ function gameIdSplice(eventID) {
     return Number
 }
 
-async function linesLOL(AmountWagered, ToWinAmount, FinalMoney, SportType, SportSubType, GameNum, VisitorRotNum, GameDateTime, WagerType, AdjSpread, AdjTotalPoints, ChosenTeam, ChosenTeamIdx ) {
+function OUfinder(ChosenTeamIdx) {
+    if (ChosenTeamIdx === '1') {
+        const OU = 'O'
+        return OU
+    } else if (ChosenTeamIdx === '2') {
+        const OU = 'U'
+        return OU
+    }
+}
+
+async function linesLOL(AmountWagered, ToWinAmount, FinalMoney, SportType, SportSubType, GameNum, VisitorRotNum, GameDateTime, WagerType, AdjSpread, AdjTotalPoints, ChosenTeam, ChosenTeamIdx, type) {
     const x = {
         TicketNumber: 0,
         CustomerID: '4casters',
@@ -118,6 +131,7 @@ async function linesLOL(AmountWagered, ToWinAmount, FinalMoney, SportType, Sport
                 WagerType: WagerType,
                 AdjSpread: AdjSpread,
                 AdjTotalPoints: AdjTotalPoints,
+                TotalPointsOU:"",
                 FinalMoney: FinalMoney,
                 ChosenTeam: ChosenTeam,
                 ChosenTeamIdx: ChosenTeamIdx,
@@ -131,11 +145,17 @@ async function linesLOL(AmountWagered, ToWinAmount, FinalMoney, SportType, Sport
             }]
         }]
     }
-
-    // console.log(data)
-    axios.post(`${url}`, returnLinesAgPayload(x)).then(function (response) {
-        console.log(response.data)
-    }).catch(e => console.log(e))
+    if (type === 'total') {
+        const OU = OUfinder(ChosenTeamIdx)
+        x.Wagers[0].Items[0].TotalPointsOU = OU
+        axios.post(`${url}`, returnLinesAgPayload(x)).then(function (response) {
+            console.log(response.data)
+        }).catch(e => console.log(e))
+    } else {
+        axios.post(`${url}`, returnLinesAgPayload(x)).then(function (response) {
+            console.log(response.data)
+        }).catch(e => console.log(e))
+    }
 }
 
 

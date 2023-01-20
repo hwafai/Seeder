@@ -10,7 +10,6 @@ const linesPassword = process.env.LINES_PASSWORD;
 
 const { linesLOL, lineType, gameFinder, teamFinder, numberFinder, gameIdSplice} = require("./linesUtils")
 const { getTakMaster, getGames } = require("./apiUtils");
-const { format } = require("path");
 
 login(linesPassword, url, linesUsername)
   .then((response) => {
@@ -45,7 +44,7 @@ login(linesPassword, url, linesUsername)
                 formattedMessage.matched.odds
             );
         } else {
-            const event = formattedMessage.eventName;
+            const eventTitle = formattedMessage.eventName;
             const type = formattedMessage.unmatched.type;
             const odds = formattedMessage.unmatched.odds;
             const number = formattedMessage.unmatched.number;
@@ -54,7 +53,7 @@ login(linesPassword, url, linesUsername)
             if (formattedMessage.unmatched.filled === 0 && orderAmount > 0) {
                 console.log(
                   `${username} created offer on `,
-                  event,
+                  eventTitle,
                   "on",
                   type,
                   "for",
@@ -65,7 +64,7 @@ login(linesPassword, url, linesUsername)
                 } else if (orderAmount === 0) {
                 console.log(
                   `${username} canceled offer on`,
-                  event,
+                  eventTitle,
                   "on",
                   type,
                   "at",
@@ -74,7 +73,7 @@ login(linesPassword, url, linesUsername)
                 } else {
                 console.log(
                   `${username} order on`,
-                  event,
+                  eventTitle,
                   "matched for",
                   fillAmount,
                   "on",
@@ -90,17 +89,18 @@ login(linesPassword, url, linesUsername)
                 const league = formattedMessage.league
                 const gameData = await getGames(league, token, url)
                 const teamGames = gameData.data.games
-                const ChosenTeam = teamFinder(teamGames, type, side, event)
+                const ChosenTeam = teamFinder(teamGames, type, side, eventTitle)
                 const WagerType = lineType(type)
                 const { AdjSpread, AdjTotalPoints} = numberFinder(type, number)
                 const response = await getTakMaster(bgURL, token, league)
                 const games = response.data.games
-                const {eventID, VisitorRotNum, GameDateTime, SportType, SportSubType, ChosenTeamIdx } = gameFinder(games, event, ChosenTeam, side, type)
+                const event = eventTitle.replace("'", "")
+                const { eventID, VisitorRotNum, GameDateTime, SportType, SportSubType, ChosenTeamIdx } = gameFinder(games, event, ChosenTeam, side, type)
                 console.log(ChosenTeam, ChosenTeamIdx)
                 const idNumber = gameIdSplice(eventID)
                 const GameNum = parseInt(idNumber)
 
-                await linesLOL(AmountWagered, ToWinAmount, FinalMoney, SportType, SportSubType,GameNum, VisitorRotNum, GameDateTime, WagerType, AdjSpread, AdjTotalPoints, ChosenTeam, ChosenTeamIdx )
+                await linesLOL(AmountWagered, ToWinAmount, FinalMoney, SportType, SportSubType,GameNum, VisitorRotNum, GameDateTime, WagerType, AdjSpread, AdjTotalPoints, ChosenTeam, ChosenTeamIdx, type )
                 // axios.post all that good stuff, should be able to take what you need from formattedMessage too fill data for axios.post
             }    
         } 
