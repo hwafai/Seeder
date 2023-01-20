@@ -57,11 +57,9 @@ function gameFinder(games, event, ChosenTeam, side, type) {
 
 function teamFinder(teamGames, type, side, event) {
     for (const game of teamGames) {
-        console.log(event, game.eventName)
         if (game.eventName === event) {
             const teams = game.participants
             if (type !== 'total') {
-                console.log(type)
                 for (const team of teams) {
                     if (team.id !== side) {
                         const ChosenTeam = team.longName
@@ -69,7 +67,6 @@ function teamFinder(teamGames, type, side, event) {
                     }
                 }
             } else {
-                console.log(type)
                 const ChosenTeam = `${teams[0].longName}/${teams[1].longName}`
                 return ChosenTeam
             }

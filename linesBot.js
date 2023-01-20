@@ -81,7 +81,6 @@ login(linesPassword, url, linesUsername)
                   "at",
                   odds
                 );
-                console.log(formattedMessage)
                 const side = formattedMessage.matched.side
                 const AmountWagered = formattedMessage.matched.win
                 const ToWinAmount = formattedMessage.matched.risk
