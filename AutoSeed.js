@@ -30,9 +30,7 @@ async function runIt(token, id, url) {
         const overs = odds.data.games[0].over;
         const unders = odds.data.games[0].under;
         const homeSpreads = odds.data.games[0].homeSpreads;
-        console.log("homeSpreads", homeSpreads)
         const awaySpreads = odds.data.games[0].awaySpreads;
-        console.log("awaySpreads", awaySpreads)
         const homeMLs = odds.data.games[0].homeMoneylines;
         const awayMLs = odds.data.games[0].awayMoneylines;
         const MLsAlreadyBet = noReseedMLs(homeMLs, awayMLs, id);
@@ -40,9 +38,7 @@ async function runIt(token, id, url) {
         const TotalsAlreadyBet = noReseedTotals(overs, unders, id);
         if (homeMLs.length && awayMLs.length && !MLsAlreadyBet.length) {
           const awayOdds = odds.data.games[0].awayMoneylines[0].odds;
-          console.log('awayOdds', awayOdds)
           const homeOdds = odds.data.games[0].homeMoneylines[0].odds;
-          console.log('homeOdds', homeOdds)
           const adjOdds = bestBet(awayOdds, homeOdds);
           const type = odds.data.games[0].awayMoneylines[0].type;
           const homeSide = odds.data.games[0].homeMoneylines[0].participantID;
