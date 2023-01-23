@@ -42,10 +42,13 @@ login(password, url, username)
 
     let interval;
     socket.on("connect", () => {
-      interval = setInterval(() => {
-        runIt(token, id, url);
-      }, 30000);
       console.log(`message: ${username} connected to userFeed`);
+      if (username !== 'mongoose') {
+        interval = setInterval(() => {
+          runIt(token, id, url);
+        }, 30000);
+        console.log(`Setting timer for interval: ${interval}`)
+      }
     });
 
     socket.on("disconnect", () => {
