@@ -112,7 +112,8 @@ async function runIt(token, id, url) {
                 underSide,
                 betAmount,
                 adjOdds.newOdds1,
-                adjOdds.newOdds2
+                adjOdds.newOdds2,
+                username,
               );
               await placeOrders(gameID, totalOrders, token, url);
             } else {
