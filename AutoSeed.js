@@ -113,7 +113,7 @@ async function runIt(token, id, url) {
                 betAmount,
                 adjOdds.newOdds1,
                 adjOdds.newOdds2,
-                username,
+                username
               );
               await placeOrders(gameID, totalOrders, token, url);
             } else {

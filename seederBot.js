@@ -124,9 +124,10 @@ login(password, url, username)
               const startTime = new Date(orderBook.data.games[0].start);
               const rightNow = new Date();
               const timeToStart = (startTime - rightNow) / 1000;
-              const timeKey = getTimeKey(timeToStart)
-              const {seedAmount, desiredVig, equityToLockIn} = userVigMap[username][league][timeKey]
-              console.log({seedAmount, desiredVig, equityToLockIn})
+              const timeKey = getTimeKey(timeToStart);
+              const { seedAmount, desiredVig, equityToLockIn } =
+                userVigMap[username][league][timeKey];
+              console.log({ seedAmount, desiredVig, equityToLockIn });
               if (
                 !(
                   (formattedMessage.unmatched.offered -
@@ -154,9 +155,9 @@ login(password, url, username)
                   seedAmount,
                   newSeedA,
                   secondNewA,
-                  username,
+                  username
                 );
-                console.log(orders)
+                console.log(orders);
                 await placeOrders(gameID, orders, token, url);
               }
             }

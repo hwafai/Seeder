@@ -106,9 +106,9 @@ function getInitialSeedAmount(league) {
 }
 
 function getMaxLiability(league, username) {
-  if (username === 'mongoose') {
-    const maxLiability = -10000
-    return maxLiability
+  if (username === "mongoose") {
+    const maxLiability = -10000;
+    return maxLiability;
   } else {
     if (league === "NFL") {
       const maxLiability = -3000;
@@ -191,27 +191,27 @@ function findOtherSide(participants, orderSide, type) {
 
 function getTimeKey(timeToStart) {
   if (timeToStart > 86400) {
-    const timeKey = 86400
-    return timeKey
+    const timeKey = 86400;
+    return timeKey;
   } else if (timeToStart < 86400 && timeToStart > 10800) {
-    const timeKey = 10800
-    return timeKey 
+    const timeKey = 10800;
+    return timeKey;
   } else if (timeToStart < 10800 && timeToStart > 1800) {
-    const timeKey = 1800
-    return timeKey
+    const timeKey = 1800;
+    return timeKey;
   } else if (timeToStart < 1800 && timeToStart > 0) {
-    const timeKey = 0
-    return timeKey
+    const timeKey = 0;
+    return timeKey;
   }
 }
 
 function userOrderType(username) {
-  if (username === 'zp4') { 
-    const orderType = 'post'
-    return orderType
+  if (username === "zp4") {
+    const orderType = "post";
+    return orderType;
   } else {
-    const orderType = 'limit'
-    return orderType
+    const orderType = "limit";
+    return orderType;
   }
 }
 
@@ -224,9 +224,9 @@ function properOrders(
   seedAmount,
   newSeedA,
   secondNewA,
-  username,
+  username
 ) {
-  const orderType = userOrderType(username)
+  const orderType = userOrderType(username);
   const firstOrder = {
     gameID,
     type,
@@ -234,7 +234,7 @@ function properOrders(
     bet: seedAmount,
     odds: -1 * newSeedA,
     expirationMinutes: 0,
-    orderType: orderType
+    orderType: orderType,
   };
   const comebackOrders = {
     gameID,
@@ -243,7 +243,7 @@ function properOrders(
     bet: seedAmount,
     odds: -1 * secondNewA,
     expirationMinutes: 0,
-    orderType: orderType
+    orderType: orderType,
   };
   if (type === "spread") {
     firstOrder.number = number;
