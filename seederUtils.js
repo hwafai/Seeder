@@ -105,16 +105,21 @@ function getInitialSeedAmount(league) {
   }
 }
 
-function getMaxLiability(league) {
-  if (league === "NFL") {
-    const maxLiability = -3000;
-    return maxLiability;
-  } else if (league === "NHL") {
-    const maxLiability = -750;
-    return maxLiability;
+function getMaxLiability(league, username) {
+  if (username === 'mongoose') {
+    const maxLiability = -10000
+    return maxLiability
   } else {
-    const maxLiability = -1000;
-    return maxLiability;
+    if (league === "NFL") {
+      const maxLiability = -3000;
+      return maxLiability;
+    } else if (league === "NHL") {
+      const maxLiability = -750;
+      return maxLiability;
+    } else {
+      const maxLiability = -1000;
+      return maxLiability;
+    }
   }
 }
 
