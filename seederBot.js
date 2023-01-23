@@ -46,7 +46,7 @@ login(password, url, username)
     let interval;
     socket.on("connect", () => {
       console.log(`message: ${username} connected to userFeed`);
-      if (username !== "trident") {
+      if (username !== "mongoose") {
         interval = setInterval(() => {
           runIt(token, id, url);
         }, 30000);

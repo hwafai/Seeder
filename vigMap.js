@@ -1,5 +1,5 @@
 const userVigMap = {
-  trident: {
+  zp4: {
     NCAAF: {
       86400: {
         seedAmount: 100,
@@ -251,19 +251,19 @@ const userVigMap = {
         equityToLockIn: 0.01,
       },
       10800: {
-        seedAmount: 100,
+        seedAmount: 500,
         desiredVig: 0.04,
-        equityToLockIn: 0.01,
+        equityToLockIn: 0.005,
       },
       1800: {
-        seedAmount: 250,
-        desiredVig: 0.03,
-        equityToLockIn: 0.01,
+        seedAmount: 500,
+        desiredVig: 0.04,
+        equityToLockIn: 0.005,
       },
       0: {
         seedAmount: 250,
-        desiredVig: 0.03,
-        equityToLockIn: 0.01,
+        desiredVig: 0.04,
+        equityToLockIn: 0.005,
       },
     },
     "CHAMPIONS-LEAGUE": {
@@ -273,19 +273,19 @@ const userVigMap = {
         equityToLockIn: 0.01,
       },
       10800: {
-        seedAmount: 100,
+        seedAmount: 500,
         desiredVig: 0.04,
-        equityToLockIn: 0.01,
+        equityToLockIn: 0.005,
       },
       1800: {
-        seedAmount: 100,
+        seedAmount: 500,
         desiredVig: 0.04,
-        equityToLockIn: 0.01,
+        equityToLockIn: 0.005,
       },
       0: {
-        seedAmount: 100,
-        desiredVig: 0.04,
-        equityToLockIn: 0.01,
+        seedAmount: 500,
+        desiredVig: 0.03,
+        equityToLockIn: 0.005,
       },
     },
     NFL: {
@@ -295,19 +295,19 @@ const userVigMap = {
         equityToLockIn: 0.01,
       },
       10800: {
-        seedAmount: 250,
+        seedAmount: 500,
         desiredVig: 0.03,
         equityToLockIn: 0.01,
       },
       1800: {
-        seedAmount: 250,
+        seedAmount: 500,
         desiredVig: 0.03,
-        equityToLockIn: 0.01,
+        equityToLockIn: 0.005,
       },
       0: {
         seedAmount: 500,
         desiredVig: 0.02,
-        equityToLockIn: 0.01,
+        equityToLockIn: 0.005,
       },
     },
     NBA: {
@@ -322,14 +322,14 @@ const userVigMap = {
         equityToLockIn: 0.01,
       },
       1800: {
-        seedAmount: 200,
-        desiredVig: 0.03,
-        equityToLockIn: 0.0075,
+        seedAmount: 100,
+        desiredVig: 0.04,
+        equityToLockIn: 0.005,
       },
       0: {
         seedAmount: 250,
         desiredVig: 0.02,
-        equityToLockIn: 0.01,
+        equityToLockIn: 0.005,
       },
     },
     "FED-EX-500": {
@@ -344,12 +344,12 @@ const userVigMap = {
         equityToLockIn: 0.01,
       },
       1800: {
-        seedAmount: 200,
+        seedAmount: 100,
         desiredVig: 0.04,
         equityToLockIn: 0.01,
       },
       0: {
-        seedAmount: 200,
+        seedAmount: 100,
         desiredVig: 0.04,
         equityToLockIn: 0.01,
       },
@@ -366,13 +366,13 @@ const userVigMap = {
         equityToLockIn: 0.01,
       },
       1800: {
-        seedAmount: 200,
-        desiredVig: 0.03,
+        seedAmount: 100,
+        desiredVig: 0.04,
         equityToLockIn: 0.01,
       },
       0: {
-        seedAmount: 250,
-        desiredVig: 0.03,
+        seedAmount: 100,
+        desiredVig: 0.04,
         equityToLockIn: 0.01,
       },
     },
@@ -388,12 +388,12 @@ const userVigMap = {
         equityToLockIn: 0.01,
       },
       1800: {
-        seedAmount: 150,
+        seedAmount: 100,
         desiredVig: 0.04,
         equityToLockIn: 0.01,
       },
       0: {
-        seedAmount: 150,
+        seedAmount: 100,
         desiredVig: 0.03,
         equityToLockIn: 0.01,
       },
@@ -410,13 +410,13 @@ const userVigMap = {
         equityToLockIn: 0.01,
       },
       1800: {
-        seedAmount: 200,
+        seedAmount: 100,
         desiredVig: 0.04,
         equityToLockIn: 0.01,
       },
       0: {
-        seedAmount: 200,
-        desiredVig: 0.03,
+        seedAmount: 100,
+        desiredVig: 0.04,
         equityToLockIn: 0.01,
       },
     },
@@ -432,13 +432,13 @@ const userVigMap = {
         equityToLockIn: 0.01,
       },
       1800: {
-        seedAmount: 200,
-        desiredVig: 0.03,
+        seedAmount: 100,
+        desiredVig: 0.04,
         equityToLockIn: 0.01,
       },
       0: {
-        seedAmount: 200,
-        desiredVig: 0.03,
+        seedAmount: 100,
+        desiredVig: 0.04,
         equityToLockIn: 0.01,
       },
     },
