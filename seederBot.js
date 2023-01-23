@@ -49,7 +49,9 @@ login(password, url, username)
     });
 
     socket.on("disconnect", () => {
-      console.log(`Disconnected from the socket, cleared timer interval: ${interval}`);
+      console.log(
+        `Disconnected from the socket, cleared timer interval: ${interval}`
+      );
       clearInterval(interval);
     });
 
