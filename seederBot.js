@@ -2,6 +2,7 @@ require("./loadEnv");
 const { Manager } = require("socket.io-client");
 
 const {
+  getTimeKey,
   getMaxLiability,
   newSeeds,
   findOtherSide,
@@ -10,6 +11,8 @@ const {
 } = require("./seederUtils");
 
 const { runIt } = require("./AutoSeed");
+
+const { userVigMap } = require("./vigMap.js");
 
 const {
   cancelAllOrdersForGame,
@@ -43,23 +46,24 @@ login(password, url, username)
     let interval;
     socket.on("connect", () => {
       console.log(`message: ${username} connected to userFeed`);
-      if (username !== 'mongoose') {
+      if (username !== "trident") {
         interval = setInterval(() => {
           runIt(token, id, url);
         }, 30000);
-        console.log(`Setting timer for interval: ${interval}`)
+        console.log(`Setting timer for interval: ${interval}`);
       }
     });
 
     socket.on("disconnect", () => {
-      console.log(`Disconnected from the socket, cleared timer interval: ${interval}`);
+      console.log(
+        `Disconnected from the socket, cleared timer interval: ${interval}`
+      );
       clearInterval(interval);
     });
 
     socket.on("positionUpdate", async (msg) => {
       try {
         const formattedMessage = JSON.parse(msg);
-        console.log(formattedMessage);
         if (!formattedMessage.unmatched) {
           console.log(
             `${username} took offer on`,
@@ -121,11 +125,11 @@ login(password, url, username)
               const startTime = new Date(orderBook.data.games[0].start);
               const rightNow = new Date();
               const timeToStart = (startTime - rightNow) / 1000;
-              const { seedAmount, desiredVig, equityToLockIn } = vigMap(
-                league,
-                timeToStart
-              );
-              console.log(seedAmount, desiredVig, equityToLockIn);
+              console.log('time2start', timeToStart)
+              const timeKey = getTimeKey(timeToStart)
+              console.log('timeKey',timeKey)
+              const {seedAmount, desiredVig, equityToLockIn} = userVigMap[username][league][timeKey]
+              console.log({seedAmount, desiredVig, equityToLockIn})
               if (
                 !(
                   (formattedMessage.unmatched.offered -
