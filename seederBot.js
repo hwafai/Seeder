@@ -40,7 +40,7 @@ login(password, url, username)
       query: { token },
     });
 
-    let interval
+    let interval;
     socket.on("connect", () => {
       interval = setInterval(() => {
         runIt(token, id, url);
@@ -49,9 +49,9 @@ login(password, url, username)
     });
 
     socket.on("disconnect", () => {
-      console.log("Disconnected from the socket, cleared timer")
-      clearInterval(interval)
-    })
+      console.log("Disconnected from the socket, cleared timer");
+      clearInterval(interval);
+    });
 
     socket.on("positionUpdate", async (msg) => {
       try {
