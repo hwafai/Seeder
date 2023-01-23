@@ -44,12 +44,12 @@ login(password, url, username)
     socket.on("connect", () => {
       interval = setInterval(() => {
         runIt(token, id, url);
-      }, 300000);
+      }, 30000);
       console.log(`message: ${username} connected to userFeed`);
     });
 
     socket.on("disconnect", () => {
-      console.log("Disconnected from the socket, cleared timer");
+      console.log(`Disconnected from the socket, cleared timer interval: ${interval}`);
       clearInterval(interval);
     });
 
