@@ -7,7 +7,6 @@ const {
   newSeeds,
   findOtherSide,
   properOrders,
-  vigMap,
 } = require("./seederUtils");
 
 const { runIt } = require("./AutoSeed");
@@ -120,15 +119,13 @@ login(password, url, username)
             const gameLiability = await getGameLiability(url, token, gameID);
             const league = formattedMessage.league;
             console.log(gameLiability.data.liability);
-            const maxLiability = getMaxLiability(league);
+            const maxLiability = getMaxLiability(league, username);
             if (gameLiability.data.liability > maxLiability) {
               const orderBook = await getOrderbook(gameID, url, token);
               const startTime = new Date(orderBook.data.games[0].start);
               const rightNow = new Date();
               const timeToStart = (startTime - rightNow) / 1000;
-              console.log('time2start', timeToStart)
               const timeKey = getTimeKey(timeToStart)
-              console.log('timeKey', timeKey)
               const {seedAmount, desiredVig, equityToLockIn} = userVigMap[username][league][timeKey]
               console.log({seedAmount, desiredVig, equityToLockIn})
               if (

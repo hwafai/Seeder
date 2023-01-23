@@ -105,16 +105,21 @@ function getInitialSeedAmount(league) {
   }
 }
 
-function getMaxLiability(league) {
-  if (league === "NFL") {
-    const maxLiability = -3000;
-    return maxLiability;
-  } else if (league === "NHL") {
-    const maxLiability = -750;
-    return maxLiability;
+function getMaxLiability(league, username) {
+  if (username === 'mongoose') {
+    const maxLiability = -10000
+    return maxLiability
   } else {
-    const maxLiability = -1000;
-    return maxLiability;
+    if (league === "NFL") {
+      const maxLiability = -3000;
+      return maxLiability;
+    } else if (league === "NHL") {
+      const maxLiability = -750;
+      return maxLiability;
+    } else {
+      const maxLiability = -1000;
+      return maxLiability;
+    }
   }
 }
 
@@ -251,198 +256,6 @@ function properOrders(
   return [firstOrder, comebackOrders];
 }
 
-// function vigMap(league, timeToStart) {
-//   if (timeToStart < 86400 && timeToStart > 10799) {
-//     if (league === "NCAAF") {
-//       const seedAmount = 200;
-//       const desiredVig = 0.02;
-//       const equityToLockIn = 0.0075;
-//       return { seedAmount, desiredVig, equityToLockIn };
-//     } else if (league === "PREMIER-LEAGUE") {
-//       const seedAmount = 100;
-//       const desiredVig = 0.04;
-//       const equityToLockIn = 0.005;
-//       return { seedAmount, desiredVig, equityToLockIn };
-//     } else if (league === "NFL") {
-//       const seedAmount = 500;
-//       const desiredVig = 0.02;
-//       const equityToLockIn = 0.005;
-//       return { seedAmount, desiredVig, equityToLockIn };
-//     } else if (league === "NBA") {
-//       const seedAmount = 100;
-//       const desiredVig = 0.04;
-//       const equityToLockIn = 0.005;
-//       return { seedAmount, desiredVig, equityToLockIn };
-//     } else if (league === "FED-EX-500") {
-//       const seedAmount = 200;
-//       const desiredVig = 0.03;
-//       const equityToLockIn = 0.01;
-//       return { seedAmount, desiredVig, equityToLockIn };
-//     } else if (league === "ATP") {
-//       const seedAmount = 100;
-//       const desiredVig = 0.04;
-//       const equityToLockIn = 0.01;
-//       return { seedAmount, desiredVig, equityToLockIn };
-//     } else if (league === "WTA") {
-//       const seedAmount = 100;
-//       const desiredVig = 0.04;
-//       const equityToLockIn = 0.01;
-//       return { seedAmount, desiredVig, equityToLockIn };
-//     } else if (league === "NCAAB") {
-//       const seedAmount = 100;
-//       const desiredVig = 0.04;
-//       const equityToLockIn = 0.01;
-//       return { seedAmount, desiredVig, equityToLockIn };
-//     } else if (league === "NHL") {
-//       const seedAmount = 100;
-//       const desiredVig = 0.04;
-//       const equityToLockIn = 0.01;
-//       return { seedAmount, desiredVig, equityToLockIn };
-//     } else {
-//       const seedAmount = 100;
-//       const desiredVig = 0.04;
-//       const equityToLockIn = 0.01;
-//       return { seedAmount, desiredVig, equityToLockIn };
-//     }
-//   } else if (timeToStart < 10800 && timeToStart > 1799) {
-//     if (league === "NCAAF") {
-//       const seedAmount = 200;
-//       const desiredVig = 0.02;
-//       const equityToLockIn = 0.0075;
-//       return { seedAmount, desiredVig, equityToLockIn };
-//     } else if (league === "PREMIER-LEAGUE") {
-//       const seedAmount = 200;
-//       const desiredVig = 0.025;
-//       const equityToLockIn = 0.01;
-//       return { seedAmount, desiredVig, equityToLockIn };
-//     } else if (league === "NFL") {
-//       const seedAmount = 500;
-//       const desiredVig = 0.015;
-//       const equityToLockIn = 0.005;
-//       return { seedAmount, desiredVig, equityToLockIn };
-//     } else if (league === "NBA") {
-//       const seedAmount = 150;
-//       const desiredVig = 0.03;
-//       const equityToLockIn = 0.0075;
-//       return { seedAmount, desiredVig, equityToLockIn };
-//     } else if (league === "FED-EX-500") {
-//       const seedAmount = 333;
-//       const desiredVig = 0.02;
-//       const equityToLockIn = 0.0075;
-//       return { seedAmount, desiredVig, equityToLockIn };
-//     } else if (league === "ATP") {
-//       const seedAmount = 100;
-//       const desiredVig = 0.035;
-//       const equityToLockIn = 0.01;
-//       return { seedAmount, desiredVig, equityToLockIn };
-//     } else if (league === "WTA") {
-//       const seedAmount = 100;
-//       const desiredVig = 0.04;
-//       const equityToLockIn = 0.01;
-//       return { seedAmount, desiredVig, equityToLockIn };
-//     } else if (league === "NCAAB") {
-//       const seedAmount = 100;
-//       const desiredVig = 0.04;
-//       const equityToLockIn = 0.01;
-//       return { seedAmount, desiredVig, equityToLockIn };
-//     } else if (league === "NHL") {
-//       const seedAmount = 100;
-//       const desiredVig = 0.03;
-//       const equityToLockIn = 0.01;
-//       return { seedAmount, desiredVig, equityToLockIn };
-//     } else {
-//       const seedAmount = 100;
-//       const desiredVig = 0.04;
-//       const equityToLockIn = 0.01;
-//       return { seedAmount, desiredVig, equityToLockIn };
-//     }
-//   } else if (timeToStart < 1800) {
-//     if (league === "NCAAF") {
-//       const seedAmount = 200;
-//       const desiredVig = 0.02;
-//       const equityToLockIn = 0.0075;
-//       return { seedAmount, desiredVig, equityToLockIn };
-//     } else if (league === "PREMIER-LEAGUE") {
-//       const seedAmount = 200;
-//       const desiredVig = 0.02;
-//       const equityToLockIn = 0.0075;
-//       return { seedAmount, desiredVig, equityToLockIn };
-//     } else if (league === "NFL") {
-//       const seedAmount = 500;
-//       const desiredVig = 0.015;
-//       const equityToLockIn = 0.005;
-//       return { seedAmount, desiredVig, equityToLockIn };
-//     } else if (league === "NBA") {
-//       const seedAmount = 333;
-//       const desiredVig = 0.02;
-//       const equityToLockIn = 0.0075;
-//       return { seedAmount, desiredVig, equityToLockIn };
-//     } else if (league === "FED-EX-500") {
-//       const seedAmount = 333;
-//       const desiredVig = 0.03;
-//       const equityToLockIn = 0.01;
-//       return { seedAmount, desiredVig, equityToLockIn };
-//     } else if (league === "ATP") {
-//       const seedAmount = 200;
-//       const desiredVig = 0.03;
-//       const equityToLockIn = 0.01;
-//       return { seedAmount, desiredVig, equityToLockIn };
-//     } else if (league === "WTA") {
-//       const seedAmount = 155;
-//       const desiredVig = 0.04;
-//       const equityToLockIn = 0.01;
-//       return { seedAmount, desiredVig, equityToLockIn };
-//     } else if (league === "NCAAB") {
-//       const seedAmount = 250;
-//       const desiredVig = 0.04;
-//       const equityToLockIn = 0.01;
-//       return { seedAmount, desiredVig, equityToLockIn };
-//     } else if (league === "NHL") {
-//       const seedAmount = 200;
-//       const desiredVig = 0.03;
-//       const equityToLockIn = 0.01;
-//       return { seedAmount, desiredVig, equityToLockIn };
-//     } else {
-//       const seedAmount = 100;
-//       const desiredVig = 0.04;
-//       const equityToLockIn = 0.01;
-//       return { seedAmount, desiredVig, equityToLockIn };
-//     }
-//   } else {
-//     if (league === "NCAAF") {
-//       const seedAmount = 100;
-//       const desiredVig = 0.04;
-//       const equityToLockIn = 0.01;
-//       return { seedAmount, desiredVig, equityToLockIn };
-//     } else if (league === "PREMIER-LEAGUE") {
-//       const seedAmount = 100;
-//       const desiredVig = 0.02;
-//       const equityToLockIn = 0.0075;
-//       return { seedAmount, desiredVig, equityToLockIn };
-//     } else if (league === "NFL") {
-//       const seedAmount = 250;
-//       const desiredVig = 0.02;
-//       const equityToLockIn = 0.005;
-//       return { seedAmount, desiredVig, equityToLockIn };
-//     } else if (league === "NBA") {
-//       const seedAmount = 100;
-//       const desiredVig = 0.02;
-//       const equityToLockIn = 0.0075;
-//       return { seedAmount, desiredVig, equityToLockIn };
-//     } else if (league === "FED-EX-500") {
-//       const seedAmount = 100;
-//       const desiredVig = 0.04;
-//       const equityToLockIn = 0.01;
-//       return { seedAmount, desiredVig, equityToLockIn };
-//     } else {
-//       const seedAmount = 100;
-//       const desiredVig = 0.04;
-//       const equityToLockIn = 0.0075;
-//       return { seedAmount, desiredVig, equityToLockIn };
-//     }
-//   }
-// }
-
 // equityToLockIn must be lower than desiredVig
 function newSeeds(odds, desiredVig, equityToLockIn) {
   const priceMove = desiredVig - equityToLockIn;
@@ -475,6 +288,5 @@ module.exports = {
   convertDecimalToAmerican,
   findOtherSide,
   newSeeds,
-  // vigMap,
   properOrders,
 };
