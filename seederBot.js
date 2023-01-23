@@ -39,12 +39,19 @@ login(password, url, username)
     const socket = manager.socket(`/v2/user/${username}`, {
       query: { token },
     });
+
+    let interval
     socket.on("connect", () => {
-      setInterval(() => {
+      interval = setInterval(() => {
         runIt(token, id, url);
       }, 300000);
       console.log(`message: ${username} connected to userFeed`);
     });
+
+    socket.on("disconnect", () => {
+      console.log("Disconnected from the socket, cleared timer")
+      clearInterval(interval)
+    })
 
     socket.on("positionUpdate", async (msg) => {
       try {
