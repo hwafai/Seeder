@@ -16,7 +16,7 @@ function convertToPercent(price) {
 }
 
 function leagueWhenSeed(league) {
-  if (league === "NFL") {
+  if (league === "NBA") {
     const thresholdTime = 86400;
     return thresholdTime;
   } else if (league === "FED-EX-500") {
@@ -200,6 +200,16 @@ function getTimeKey(timeToStart) {
   }
 }
 
+function userOrderType(username) {
+  if (username === 'zp4') { 
+    const orderType = 'post'
+    return orderType
+  } else {
+    const orderType = 'limit'
+    return orderType
+  }
+}
+
 function properOrders(
   type,
   number,
@@ -208,8 +218,10 @@ function properOrders(
   side2,
   seedAmount,
   newSeedA,
-  secondNewA
+  secondNewA,
+  username,
 ) {
+  const orderType = userOrderType(username)
   const firstOrder = {
     gameID,
     type,
@@ -217,6 +229,7 @@ function properOrders(
     bet: seedAmount,
     odds: -1 * newSeedA,
     expirationMinutes: 0,
+    orderType: orderType,
   };
   const comebackOrders = {
     gameID,
@@ -225,6 +238,7 @@ function properOrders(
     bet: seedAmount,
     odds: -1 * secondNewA,
     expirationMinutes: 0,
+    orderType: orderType,
   };
   if (type === "spread") {
     firstOrder.number = number;

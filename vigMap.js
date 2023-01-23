@@ -95,8 +95,8 @@ const userVigMap = {
         equityToLockIn: 0.01,
       },
       10800: {
-        seedAmount: 150,
-        desiredVig: 0.02,
+        seedAmount: 100,
+        desiredVig: 0.04,
         equityToLockIn: 0.01,
       },
       1800: {

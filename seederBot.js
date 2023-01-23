@@ -46,11 +46,12 @@ login(password, url, username)
     let interval;
     socket.on("connect", () => {
       console.log(`message: ${username} connected to userFeed`);
-      if (username !== "trident") {
-        interval = setInterval(() => {
-          runIt(token, id, url);
-        }, 30000);
-        console.log(`Setting timer for interval: ${interval}`);
+      if (username !== "mongoose") {
+        // interval = setInterval(() => {
+        //   runIt(token, id, url);
+        // }, 30000);
+        runIt(token, id, url)
+        // console.log(`Setting timer for interval: ${interval}`);
       }
     });
 
@@ -127,7 +128,7 @@ login(password, url, username)
               const timeToStart = (startTime - rightNow) / 1000;
               console.log('time2start', timeToStart)
               const timeKey = getTimeKey(timeToStart)
-              console.log('timeKey',timeKey)
+              console.log('timeKey', timeKey)
               const {seedAmount, desiredVig, equityToLockIn} = userVigMap[username][league][timeKey]
               console.log({seedAmount, desiredVig, equityToLockIn})
               if (
@@ -156,8 +157,10 @@ login(password, url, username)
                   side2,
                   seedAmount,
                   newSeedA,
-                  secondNewA
+                  secondNewA,
+                  username,
                 );
+                console.log(orders)
                 await placeOrders(gameID, orders, token, url);
               }
             }
