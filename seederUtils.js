@@ -198,16 +198,16 @@ function bestBet(odds1, odds2) {
 
 function getInitialSeedAmount(league) {
   if (league === "NFL") {
-    const betAmount = 500;
+    const betAmount = 250;
     return betAmount;
   } else if (league === "NBA") {
-    const betAmount = 333;
-    return betAmount;
-  } else if (league === "ATP") {
     const betAmount = 200;
     return betAmount;
+  } else if (league === "ATP") {
+    const betAmount = 150;
+    return betAmount;
   } else if (league === "WTA") {
-    const betAmount = 155;
+    const betAmount = 100;
     return betAmount;
   } else if (league === "FED-EX-500") {
     const betAmount = 200;
