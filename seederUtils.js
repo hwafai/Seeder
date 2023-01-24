@@ -1,3 +1,6 @@
+const _ = require('lodash');
+
+
 function convertToDecimal(otherSide) {
   const newBase = otherSide / (1 - otherSide) + 1;
   return newBase;
@@ -74,24 +77,83 @@ function getBestTotalsOdds(overs, unders) {
   return {overOdds, underOdds}
 }
 
-function adjustedSpreadPrices(homeSpreadKeys, awaySpreadKeys, spreadHome, spreadAway, homeMainSp, awayMainSp) {
-  const adjHomeSpreads = []
-  const adjAwaySpreads = []
+function adjustedSpreadOrders(type, homeSpreadKeys, awaySpreadKeys, spreadHome, spreadAway, homeMainSp, betAmount, homeTeam, awayTeam, gameID, username) {
+  const adjOrders = []
   for (const key of homeSpreadKeys) {
     if (key !== homeMainSp) {
-      const adjSpread = spreadHome[key]
-      console.log(key,adjSpread)
-      adjHomeSpreads.push(adjSpread)
+      const adjHomeSpread = spreadHome[key]
+      const number = key
+      const x = -1 * number
+      const y = _.toString(x)
+      // console.log({y})
+      for (const awayKey of awaySpreadKeys) {
+        if (y === awayKey) {
+          const adjAwaySpread = spreadAway[awayKey]
+          // console.log(adjAwaySpread)
+          const {homeSpreadOdds, awaySpreadOdds} = getBestSpreadOdds(adjHomeSpread, adjAwaySpread)
+          console.log({homeSpreadOdds, awaySpreadOdds})
+          const adjOdds = bestBet(awaySpreadOdds, homeSpreadOdds)
+          console.log({adjOdds})
+          const adjustedSpreadOrders = properOrders(
+            type,
+            number,
+            gameID,
+            homeTeam,
+            awayTeam,
+            betAmount,
+            adjOdds.newOdds1,
+            adjOdds.newOdds2,
+            username,
+          )
+          adjOrders.push(adjustedSpreadOrders)
+        }
+      }
     }
   }
-  for (const key of awaySpreadKeys) {
-    if (key !== parseInt(awayMainSp)) {
-      const adjSpread = spreadAway[key]
-      console.log(key,adjSpread)
-      adjAwaySpreads.push(adjSpread)
+  return adjOrders
+}
+
+function adjustedTotalOrders(type, overKeys, underKeys, oversOrders, undersOrders, mainTotal, betAmount, overSide, underSide, gameID, username) {
+  const adjOrders = []
+  for (const key of overKeys) {
+    if (key !== mainTotal) {
+      const adjOver = oversOrders[key]
+      const number = key
+      for (const unKey of underKeys) {
+        if (key === unKey ) {
+          const adjUnder = undersOrders[unKey]
+          const {overOdds, underOdds} = getBestTotalsOdds(adjOver, adjUnder)
+          const adjOdds = bestBet(overOdds, underOdds)
+          const adjustedTotalOrders =  properOrders(
+            type,
+            number,
+            gameID,
+            overSide,
+            underSide,
+            betAmount,
+            adjOdds.newOdds1,
+            adjOdds.newOdds2,
+            username,
+          )
+          adjOrders.push(adjustedTotalOrders)
+        }
+      }
     }
   }
-  return adjHomeSpreads, adjAwaySpreads
+  return adjOrders
+}
+
+function concatOrders(spreadOrders, adjOrders) {
+  if (!adjOrders.length) {
+    const orders = spreadOrders;
+    return orders
+  } else {
+    let orders = [...spreadOrders];
+    for (let i = 0; i < adjOrders.length; i++) {
+      orders = [...orders, ...adjOrders[i]]
+    }
+    return orders
+  }
 }
 
 
@@ -334,7 +396,9 @@ module.exports = {
   timeToSeed,
   getBestSpreadOdds,
   getBestTotalsOdds,
-  adjustedSpreadPrices,
+  adjustedSpreadOrders,
+  adjustedTotalOrders,
+  concatOrders,
   bestBet,
   getTimeKey,
   getInitialSeedAmount,

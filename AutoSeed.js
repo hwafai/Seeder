@@ -6,7 +6,9 @@ const {
   getInitialSeedAmount,
   getBestSpreadOdds,
   getBestTotalsOdds,
-  adjustedSpreadPrices,
+  adjustedSpreadOrders,
+  adjustedTotalOrders,
+  concatOrders,
   noReseedMLs,
   noReseedSpreads,
   noReseedTotals,
@@ -35,11 +37,13 @@ async function runIt(token, id, url) {
         const mainTotal = odds.data.game.mainTotal
         const overs = oversOrders[mainTotal]
         const unders = undersOrders[mainTotal]
+        const overKeys = Object.keys(oversOrders)
+        const underKeys = Object.keys(undersOrders)
         // console.log(odds.data.games[0])
         const spreadHome = odds.data.game.homeSpreads;
         const spreadAway = odds.data.game.awaySpreads;
-        // const homeSpreadKeys = Object.keys(spreadHome)
-        // const awaySpreadKeys = Object.keys(spreadAway)
+        const homeSpreadKeys = Object.keys(spreadHome)
+        const awaySpreadKeys = Object.keys(spreadAway)
         const homeMainSp = odds.data.game.mainHomeSpread
         const awayMainSp = odds.data.game.mainAwaySpread
         const homeSpreads = spreadHome[homeMainSp]
@@ -88,12 +92,12 @@ async function runIt(token, id, url) {
             // console.log({homeSpreadOdds, awaySpreadOdds})
             const adjOdds = bestBet(awaySpreadOdds, homeSpreadOdds);
             // console.log({homeSpreadKeys, awaySpreadKeys})
-            // console.log({adjHomeSpreads, adjAwaySpreads})
             const type = awaySpreads[0].type;
             const homeTeam = homeSpreads[0].participantID;
+            console.log({homeTeam})
             const awayTeam = awaySpreads[0].participantID;
             const betAmount = getInitialSeedAmount(league);
-            // const {adjHomeSpreads, adjAwaySpreads} = adjustedSpreadPrices(homeSpreadKeys, awaySpreadKeys, spreadHome, spreadAway, homeMainSp, awayMainSp)
+            const adjOrders = adjustedSpreadOrders(type ,homeSpreadKeys, awaySpreadKeys, spreadHome, spreadAway, homeMainSp, betAmount, homeTeam, awayTeam, gameID, username)
             console.log(eventName, type, adjOdds);
             const spreadOrders = properOrders(
               type,
@@ -106,7 +110,9 @@ async function runIt(token, id, url) {
               adjOdds.newOdds2,
               username
             );
-            await placeOrders(gameID, spreadOrders, token, url);
+            const orders = concatOrders(spreadOrders, adjOrders)
+            // console.log({orders})
+            await placeOrders(gameID, orders, token, url);
           } else {
             console.log(eventName, "Already Seeded Spread or nothing to Seed");
           }
@@ -118,6 +124,7 @@ async function runIt(token, id, url) {
               const overSide = "under";
               const underSide = "over";
               const betAmount = getInitialSeedAmount(league);
+              const adjOrders = adjustedTotalOrders(type, overKeys, underKeys, oversOrders, undersOrders, mainTotal, betAmount, overSide, underSide, gameID, username)
               console.log(eventName, type, adjOdds);
               const totalOrders = properOrders(
                 type,
@@ -130,7 +137,10 @@ async function runIt(token, id, url) {
                 adjOdds.newOdds2,
                 username,
               );
-              await placeOrders(gameID, totalOrders, token, url);
+            //   console.log({totalOrders})
+              const orders = concatOrders(totalOrders, adjOrders)
+            //   console.log({orders})
+              await placeOrders(gameID, orders, token, url);
             } else {
               console.log(
                 eventName,
