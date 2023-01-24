@@ -11,6 +11,17 @@ async function getOrderbook(gameID, url, token) {
   });
 }
 
+async function getSingleOrderbook(gameID, url, token) {
+  return callApi({
+    url: `${url}/exchange/getSingleOrderbook`,
+    method: "POST",
+    data: {
+      gameID: gameID,
+    },
+    headers: { authorization: token },
+  });
+}
+
 async function getGameLiability(url, token, gameID) {
   return callApi({
     url: `${url}/user/getGameLiability`,
@@ -73,6 +84,7 @@ module.exports = {
   getGameLiability,
   getGames,
   getOrderbook,
+  getSingleOrderbook,
   login,
   placeOrders,
 };

@@ -16,7 +16,7 @@ const { userVigMap } = require("./vigMap.js");
 const {
   cancelAllOrdersForGame,
   getGameLiability,
-  getOrderbook,
+  getSingleOrderbook,
   login,
   placeOrders,
 } = require("./apiUtils");
@@ -46,10 +46,11 @@ login(password, url, username)
     socket.on("connect", () => {
       console.log(`message: ${username} connected to userFeed`);
       if (username !== "mongoose") {
-        interval = setInterval(() => {
-          runIt(token, id, url);
-        }, 30000);
-        console.log(`Setting timer for interval: ${interval}`);
+        // interval = setInterval(() => {
+        //   runIt(token, id, url);
+        // }, 30000);
+        runIt(token, id, url);
+        // console.log(`Setting timer for interval: ${interval}`);
       }
     });
 
@@ -120,8 +121,8 @@ login(password, url, username)
             console.log(gameLiability.data.liability);
             const maxLiability = getMaxLiability(league, username);
             if (gameLiability.data.liability > maxLiability) {
-              const orderBook = await getOrderbook(gameID, url, token);
-              const startTime = new Date(orderBook.data.games[0].start);
+              const orderBook = await getSingleOrderbook(gameID, url, token);
+              const startTime = new Date(orderBook.data.game.start);
               const rightNow = new Date();
               const timeToStart = (startTime - rightNow) / 1000;
               const timeKey = getTimeKey(timeToStart);
@@ -144,7 +145,7 @@ login(password, url, username)
                   equityToLockIn
                 );
                 console.log({ newSeedA, secondNewA });
-                const orderParticipants = orderBook.data.games[0].participants;
+                const orderParticipants = orderBook.data.game.participants;
                 const side2 = findOtherSide(orderParticipants, side1, type);
                 const orders = properOrders(
                   type,
