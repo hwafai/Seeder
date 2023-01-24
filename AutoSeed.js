@@ -6,7 +6,7 @@ const {
   getInitialSeedAmount,
   getBestSpreadOdds,
   getBestTotalsOdds,
-  getSpreads,
+  adjustedSpreadPrices,
   noReseedMLs,
   noReseedSpreads,
   noReseedTotals,
@@ -19,7 +19,7 @@ const username = process.env.FOURCASTER_USERNAME;
 
 async function runIt(token, id, url) {
   console.log(`message: ${username} connected to userFeed`);
-  const leagues = [ "FED-EX-500", "NCAAB", "NFL", "NBA"];
+  const leagues = [ "FED-EX-500", "NCAAB", "NFL", "NBA", "ATP", "WTA", "NHL"];
   for (const league of leagues) {
     const games = await getGames(league, token, url);
     const actuals = games.data.games;
@@ -38,6 +38,8 @@ async function runIt(token, id, url) {
         // console.log(odds.data.games[0])
         const spreadHome = odds.data.game.homeSpreads;
         const spreadAway = odds.data.game.awaySpreads;
+        // const homeSpreadKeys = Object.keys(spreadHome)
+        // const awaySpreadKeys = Object.keys(spreadAway)
         const homeMainSp = odds.data.game.mainHomeSpread
         const awayMainSp = odds.data.game.mainAwaySpread
         const homeSpreads = spreadHome[homeMainSp]
@@ -83,12 +85,15 @@ async function runIt(token, id, url) {
             !SpreadsAlreadyBet.length
           ) {
             const {homeSpreadOdds, awaySpreadOdds} = getBestSpreadOdds(homeSpreads, awaySpreads)
-            console.log({homeSpreadOdds, awaySpreadOdds})
+            // console.log({homeSpreadOdds, awaySpreadOdds})
             const adjOdds = bestBet(awaySpreadOdds, homeSpreadOdds);
+            // console.log({homeSpreadKeys, awaySpreadKeys})
+            // console.log({adjHomeSpreads, adjAwaySpreads})
             const type = awaySpreads[0].type;
             const homeTeam = homeSpreads[0].participantID;
             const awayTeam = awaySpreads[0].participantID;
             const betAmount = getInitialSeedAmount(league);
+            // const {adjHomeSpreads, adjAwaySpreads} = adjustedSpreadPrices(homeSpreadKeys, awaySpreadKeys, spreadHome, spreadAway, homeMainSp, awayMainSp)
             console.log(eventName, type, adjOdds);
             const spreadOrders = properOrders(
               type,

@@ -74,6 +74,26 @@ function getBestTotalsOdds(overs, unders) {
   return {overOdds, underOdds}
 }
 
+function adjustedSpreadPrices(homeSpreadKeys, awaySpreadKeys, spreadHome, spreadAway, homeMainSp, awayMainSp) {
+  const adjHomeSpreads = []
+  const adjAwaySpreads = []
+  for (const key of homeSpreadKeys) {
+    if (key !== homeMainSp) {
+      const adjSpread = spreadHome[key]
+      console.log(key,adjSpread)
+      adjHomeSpreads.push(adjSpread)
+    }
+  }
+  for (const key of awaySpreadKeys) {
+    if (key !== parseInt(awayMainSp)) {
+      const adjSpread = spreadAway[key]
+      console.log(key,adjSpread)
+      adjAwaySpreads.push(adjSpread)
+    }
+  }
+  return adjHomeSpreads, adjAwaySpreads
+}
+
 
 function bestBet(odds1, odds2) {
   if (odds1 < 0 && odds2 < 0) {
@@ -170,21 +190,6 @@ function noReseedMLs(homeMLs, awayMLs, id) {
     }
   }
   return MLsAlreadyBet;
-}
-
-function getSpreads(homeSpreads, awaySpreads) {
-  const spreads = []
-  for (const order of homeSpreads) {
-    const sp = order.spread
-    const odds = order.odds
-    spreads.push({sp, odds})
-  }
-  for (const order of awaySpreads) {
-    const sp = order.spread
-    const odds = order.odds
-    spreads.push({sp, odds})
-  }
-  return spreads
 }
 
 function noReseedSpreads(homeSpreads, awaySpreads, id) {
@@ -329,12 +334,12 @@ module.exports = {
   timeToSeed,
   getBestSpreadOdds,
   getBestTotalsOdds,
+  adjustedSpreadPrices,
   bestBet,
   getTimeKey,
   getInitialSeedAmount,
   getMaxLiability,
   noReseedMLs,
-  getSpreads,
   noReseedSpreads,
   noReseedTotals,
   convertDecimalToAmerican,
