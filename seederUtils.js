@@ -16,7 +16,7 @@ function convertToPercent(price) {
 }
 
 function leagueWhenSeed(league) {
-  if (league === "NFL") {
+  if (league === "NBA") {
     const thresholdTime = 86400;
     return thresholdTime;
   } else if (league === "FED-EX-500") {
@@ -40,6 +40,40 @@ function timeToSeed(games, league) {
   }
   return ready;
 }
+
+
+function getBestSpreadOdds(homeSpreads, awaySpreads) {
+  let homeSpreadOdds = -10000
+  let awaySpreadOdds = -10000
+  for (const home of homeSpreads) {
+    if (home.odds > homeSpreadOdds) {
+      homeSpreadOdds = home.odds
+    }
+  }
+  for (const away of awaySpreads) {
+    if (away.odds > awaySpreadOdds) {
+      awaySpreadOdds = away.odds
+    }
+  }
+  return {homeSpreadOdds, awaySpreadOdds}
+}
+
+function getBestTotalsOdds(overs, unders) {
+  let overOdds =  -10000
+  let underOdds = -10000
+  for (const over of overs) {
+    if (over.odds > overOdds) {
+      overOdds = over.odds
+    }
+  }
+  for (const under of unders) {
+    if (under.odds > underOdds) {
+      underOdds = under.odds
+    }
+  }
+  return {overOdds, underOdds}
+}
+
 
 function bestBet(odds1, odds2) {
   if (odds1 < 0 && odds2 < 0) {
@@ -136,6 +170,21 @@ function noReseedMLs(homeMLs, awayMLs, id) {
     }
   }
   return MLsAlreadyBet;
+}
+
+function getSpreads(homeSpreads, awaySpreads) {
+  const spreads = []
+  for (const order of homeSpreads) {
+    const sp = order.spread
+    const odds = order.odds
+    spreads.push({sp, odds})
+  }
+  for (const order of awaySpreads) {
+    const sp = order.spread
+    const odds = order.odds
+    spreads.push({sp, odds})
+  }
+  return spreads
 }
 
 function noReseedSpreads(homeSpreads, awaySpreads, id) {
@@ -278,11 +327,14 @@ module.exports = {
   convertToDecimal,
   convertToPercent,
   timeToSeed,
+  getBestSpreadOdds,
+  getBestTotalsOdds,
   bestBet,
   getTimeKey,
   getInitialSeedAmount,
   getMaxLiability,
   noReseedMLs,
+  getSpreads,
   noReseedSpreads,
   noReseedTotals,
   convertDecimalToAmerican,
