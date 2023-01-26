@@ -50,11 +50,11 @@ login(password, url, username)
     socket.on("connect", () => {
       console.log(`message: ${username} connected to userFeed`);
       if (username !== "mongoose") {
-        // interval = setInterval(() => {
-        //   runIt(token, id, url);
-        // }, 30000);
-        runIt(token, id, url);
-        // console.log(`Setting timer for interval: ${interval}`);
+        interval = setInterval(() => {
+          runIt(token, id, url);
+        }, 30000);
+        // runIt(token, id, url);
+        console.log(`Setting timer for interval: ${interval}`);
       }
     });
 
@@ -127,11 +127,12 @@ login(password, url, username)
               const orderBook = await getSingleOrderbook(gameID, url, token);
               const startTime = new Date(orderBook.data.game.start);
               const rightNow = new Date();
-              const participants = orderBook.data.game.participants
+              const participants = orderBook.data.game.participants;
               const timeToStart = (startTime - rightNow) / 1000;
-              const timeKey = getTimeKey(timeToStart)
-              const {seedAmount, desiredVig, equityToLockIn} = userVigMap[username][league][timeKey]
-              console.log({seedAmount, desiredVig, equityToLockIn})
+              const timeKey = getTimeKey(timeToStart);
+              const { seedAmount, desiredVig, equityToLockIn } =
+                userVigMap[username][league][timeKey];
+              console.log({ seedAmount, desiredVig, equityToLockIn });
               if (
                 !(
                   (formattedMessage.unmatched.offered -
@@ -142,12 +143,25 @@ login(password, url, username)
               ) {
                 const side1 = formattedMessage.unmatched.side;
                 const side2 = findOtherSide(participants, side1, type);
-                const teamSide = homeAway(participants, side1, type)
-                console.log({teamSide})
-                const toReseed = eligibleToReseed(orderBook, type, id, number, teamSide)
-                console.log({toReseed})
-                const ordersToReseed = constructReseedOrders(toReseed, desiredVig, equityToLockIn, type, gameID, side1, side2, seedAmount, username)
-                // console.log({ordersToReseed})
+                const teamSide = homeAway(participants, side1, type);
+                const toReseed = eligibleToReseed(
+                  orderBook,
+                  type,
+                  id,
+                  number,
+                  teamSide
+                );
+                const ordersToReseed = constructReseedOrders(
+                  toReseed,
+                  desiredVig,
+                  equityToLockIn,
+                  type,
+                  gameID,
+                  side1,
+                  side2,
+                  seedAmount,
+                  username
+                );
                 await cancelAllOrdersForGame(gameID, token, type, url);
                 const { newSeedA, secondNewA } = newSeeds(
                   odds,
@@ -157,9 +171,8 @@ login(password, url, username)
                 console.log({
                   odds,
                   newSeedA,
-                  secondNewA
-                })
-                // console.log({ newSeedA, secondNewA });
+                  secondNewA,
+                });
                 const mainOrders = properOrders(
                   type,
                   number,
@@ -169,14 +182,13 @@ login(password, url, username)
                   seedAmount,
                   newSeedA,
                   secondNewA,
-                  username,
+                  username
                 );
-                // console.log({mainOrders})
-                const orders = concatOrders(mainOrders, ordersToReseed)
+                const orders = concatOrders(mainOrders, ordersToReseed);
                 await placeOrders(gameID, orders, token, url);
               }
             } else {
-              console.log('Max liability for event exceeded')
+              console.log("Max liability for event exceeded");
             }
           }
         }

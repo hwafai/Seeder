@@ -1,5 +1,4 @@
-const _ = require('lodash');
-
+const _ = require("lodash");
 
 function convertToDecimal(otherSide) {
   const newBase = otherSide / (1 - otherSide) + 1;
@@ -18,11 +17,14 @@ function convertToPercent(price) {
 }
 
 function leagueWhenSeed(league) {
-  if (league === "NBA") {
+  if (league === "NFL") {
     const thresholdTime = 86400;
     return thresholdTime;
-  } else if (league === "FED-EX-500") {
+  } else if (league === "FED-EX-500" || league === "ATP" || league === "WTA") {
     const thresholdTime = 10800;
+    return thresholdTime;
+  } else if (league === "NBA" || league === "NCAAB") {
+    const thresholdTime = 3600;
     return thresholdTime;
   } else {
     const thresholdTime = 1800;
@@ -43,56 +45,66 @@ function timeToSeed(games, league) {
   return ready;
 }
 
-
 function getBestSpreadOdds(homeSpreads, awaySpreads) {
-  let homeSpreadOdds = -10000
-  let awaySpreadOdds = -10000
+  let homeSpreadOdds = -10000;
+  let awaySpreadOdds = -10000;
   for (const home of homeSpreads) {
     if (home.odds > homeSpreadOdds) {
-      homeSpreadOdds = home.odds
+      homeSpreadOdds = home.odds;
     }
   }
   for (const away of awaySpreads) {
     if (away.odds > awaySpreadOdds) {
-      awaySpreadOdds = away.odds
+      awaySpreadOdds = away.odds;
     }
   }
-  return {homeSpreadOdds, awaySpreadOdds}
+  return { homeSpreadOdds, awaySpreadOdds };
 }
 
 function getBestTotalsOdds(overs, unders) {
-  let overOdds =  -10000
-  let underOdds = -10000
+  let overOdds = -10000;
+  let underOdds = -10000;
   for (const over of overs) {
     if (over.odds > overOdds) {
-      overOdds = over.odds
+      overOdds = over.odds;
     }
   }
   for (const under of unders) {
     if (under.odds > underOdds) {
-      underOdds = under.odds
+      underOdds = under.odds;
     }
   }
-  return {overOdds, underOdds}
+  return { overOdds, underOdds };
 }
 
-function adjustedSpreadOrders(type, homeSpreadKeys, awaySpreadKeys, spreadHome, spreadAway, homeMainSp, betAmount, homeTeam, awayTeam, gameID, username) {
-  const adjOrders = []
+function adjustedSpreadOrders(
+  type,
+  homeSpreadKeys,
+  awaySpreadKeys,
+  spreadHome,
+  spreadAway,
+  homeMainSp,
+  betAmount,
+  homeTeam,
+  awayTeam,
+  gameID,
+  username
+) {
+  const adjOrders = [];
   for (const key of homeSpreadKeys) {
     if (key !== homeMainSp) {
-      const adjHomeSpread = spreadHome[key]
-      const number = key
-      const x = -1 * number
-      const y = _.toString(x)
-      // console.log({y})
+      const adjHomeSpread = spreadHome[key];
+      const number = key;
+      const x = -1 * number;
+      const y = _.toString(x);
       for (const awayKey of awaySpreadKeys) {
         if (y === awayKey) {
-          const adjAwaySpread = spreadAway[awayKey]
-          // console.log(adjAwaySpread)
-          const {homeSpreadOdds, awaySpreadOdds} = getBestSpreadOdds(adjHomeSpread, adjAwaySpread)
-          console.log({homeSpreadOdds, awaySpreadOdds})
-          const adjOdds = bestBet(awaySpreadOdds, homeSpreadOdds)
-          console.log({adjOdds})
+          const adjAwaySpread = spreadAway[awayKey];
+          const { homeSpreadOdds, awaySpreadOdds } = getBestSpreadOdds(
+            adjHomeSpread,
+            adjAwaySpread
+          );
+          const adjOdds = bestBet(awaySpreadOdds, homeSpreadOdds);
           const adjustedSpreadOrders = properOrders(
             type,
             number,
@@ -102,28 +114,40 @@ function adjustedSpreadOrders(type, homeSpreadKeys, awaySpreadKeys, spreadHome, 
             betAmount,
             adjOdds.newOdds1,
             adjOdds.newOdds2,
-            username,
-          )
-          adjOrders.push(adjustedSpreadOrders)
+            username
+          );
+          adjOrders.push(adjustedSpreadOrders);
         }
       }
     }
   }
-  return adjOrders
+  return adjOrders;
 }
 
-function adjustedTotalOrders(type, overKeys, underKeys, oversOrders, undersOrders, mainTotal, betAmount, overSide, underSide, gameID, username) {
-  const adjOrders = []
+function adjustedTotalOrders(
+  type,
+  overKeys,
+  underKeys,
+  oversOrders,
+  undersOrders,
+  mainTotal,
+  betAmount,
+  overSide,
+  underSide,
+  gameID,
+  username
+) {
+  const adjOrders = [];
   for (const key of overKeys) {
     if (key !== mainTotal) {
-      const adjOver = oversOrders[key]
-      const number = key
+      const adjOver = oversOrders[key];
+      const number = key;
       for (const unKey of underKeys) {
-        if (key === unKey ) {
-          const adjUnder = undersOrders[unKey]
-          const {overOdds, underOdds} = getBestTotalsOdds(adjOver, adjUnder)
-          const adjOdds = bestBet(overOdds, underOdds)
-          const adjustedTotalOrders =  properOrders(
+        if (key === unKey) {
+          const adjUnder = undersOrders[unKey];
+          const { overOdds, underOdds } = getBestTotalsOdds(adjOver, adjUnder);
+          const adjOdds = bestBet(overOdds, underOdds);
+          const adjustedTotalOrders = properOrders(
             type,
             number,
             gameID,
@@ -132,148 +156,147 @@ function adjustedTotalOrders(type, overKeys, underKeys, oversOrders, undersOrder
             betAmount,
             adjOdds.newOdds1,
             adjOdds.newOdds2,
-            username,
-          )
-          adjOrders.push(adjustedTotalOrders)
+            username
+          );
+          adjOrders.push(adjustedTotalOrders);
         }
       }
     }
   }
-  return adjOrders
+  return adjOrders;
 }
 
 function concatOrders(spreadOrders, adjOrders) {
   if (!adjOrders.length) {
     const orders = spreadOrders;
-    return orders
+    return orders;
   } else {
     let orders = [...spreadOrders];
     for (let i = 0; i < adjOrders.length; i++) {
-      orders = [...orders, ...adjOrders[i]]
+      orders = [...orders, ...adjOrders[i]];
     }
-    return orders
+    return orders;
   }
 }
 
 function homeAway(participants, side1, type) {
-  if (type === 'moneyline') {
-    return
-  } else if (type === 'total') {
-    return side1
-  } else if (type === 'spread') {
+  if (type === "moneyline") {
+    return;
+  } else if (type === "total") {
+    return side1;
+  } else if (type === "spread") {
     for (const part of participants) {
       if (part.id === side1) {
-        return part.homeAway
+        return part.homeAway;
       }
     }
   }
 }
 
-
 function eligibleToReseed(orderBook, type, id, number, teamSide) {
-  const toReseed = []
-  if (type === 'moneyline') {
-    return
-  } else if (type === 'spread') {
-    const trueNum = -1 * number
-    if (teamSide === 'home') {
+  const toReseed = [];
+  if (type === "moneyline") {
+    return;
+  } else if (type === "spread") {
+    const trueNum = -1 * number;
+    if (teamSide === "home") {
       const spreadAway = orderBook.data.game.awaySpreads;
-      const awaySpreadKeys = Object.keys(spreadAway)
+      const awaySpreadKeys = Object.keys(spreadAway);
       for (const key of awaySpreadKeys) {
-        const stringNumber = trueNum.toString()
+        const stringNumber = trueNum.toString();
         if (key !== stringNumber) {
-          // console.log({key, number})
-          const keyOrders = spreadAway[key]
+          const keyOrders = spreadAway[key];
           for (const order of keyOrders) {
             if (order.createdBy === id) {
-              const odds = order.odds
-              // console.log({key, odds})
-              toReseed.push({key, odds})
+              const odds = order.odds;
+              toReseed.push({ key, odds });
             }
           }
         }
       }
-      return toReseed
+      return toReseed;
     }
-    if (teamSide === 'away') {
+    if (teamSide === "away") {
       const spreadHome = orderBook.data.game.homeSpreads;
       const homeSpreadKeys = Object.keys(spreadHome);
       for (const key of homeSpreadKeys) {
-        const stringNumber = trueNum.toString()
+        const stringNumber = trueNum.toString();
         if (key !== stringNumber) {
-          console.log({key, number})
-          const keyOrders = spreadHome[key]
-          // console.log({keyOrders})
+          const keyOrders = spreadHome[key];
           for (const order of keyOrders) {
             if (order.createdBy === id) {
-              const odds = order.odds
-              console.log({key, odds})
-              toReseed.push({key, odds})
+              const odds = order.odds;
+              toReseed.push({ key, odds });
             }
           }
         }
       }
-      return toReseed
+      return toReseed;
     }
-  } else if (type === 'total') {
-    if (teamSide === 'over') {
+  } else if (type === "total") {
+    if (teamSide === "over") {
       const undersOrders = orderBook.data.game.under;
       const underKeys = Object.keys(undersOrders);
       for (const key of underKeys) {
         if (key !== number) {
-          const underKeyOrders = undersOrders[key]
+          const underKeyOrders = undersOrders[key];
           for (const order of underKeyOrders) {
             if (order.createdBy === id) {
-              const odds = order.odds
-              toReseed.push({key, odds})
+              const odds = order.odds;
+              toReseed.push({ key, odds });
             }
           }
         }
       }
-      return toReseed
+      return toReseed;
     }
-    if (teamSide === 'under') {
+    if (teamSide === "under") {
       const oversOrders = orderBook.data.game.over;
       const overKeys = Object.keys(oversOrders);
       for (const key of overKeys) {
         if (key !== number) {
-          const overKeyOrders = oversOrders[key]
+          const overKeyOrders = oversOrders[key];
           for (const order of overKeyOrders) {
             if (order.createdBy === id) {
-              const odds = order.odds
-              toReseed.push({key, odds})
+              const odds = order.odds;
+              toReseed.push({ key, odds });
             }
           }
         }
       }
-      return toReseed
+      return toReseed;
     }
   }
 }
 
 function getNumber(type, reseed) {
-  if (type === 'spread') {
-    const takenNumber = reseed.key
-    const number = takenNumber * -1
-    return number
-  } else if (type === 'total') {
-    const number = reseed.key
-    return number
+  if (type === "spread") {
+    const takenNumber = reseed.key;
+    const number = takenNumber * -1;
+    return number;
+  } else if (type === "total") {
+    const number = reseed.key;
+    return number;
   }
 }
 
-function constructReseedOrders(toReseed, desiredVig, equityToLockIn, type, gameID, side1, side2, seedAmount, username) {
-  const ordersToReseed = []
+function constructReseedOrders(
+  toReseed,
+  desiredVig,
+  equityToLockIn,
+  type,
+  gameID,
+  side1,
+  side2,
+  seedAmount,
+  username
+) {
+  const ordersToReseed = [];
   for (const reseed of toReseed) {
-    const takenOdds = reseed.odds
-    const odds = takenOdds * -1
-    const number = getNumber(type, reseed)
-    // console.log({odds, number})
-    const { newSeedA, secondNewA } = newSeeds(odds, desiredVig, equityToLockIn)
-    console.log('reseed',{
-      odds,
-      newSeedA, 
-      secondNewA})
+    const takenOdds = reseed.odds;
+    const odds = takenOdds * -1;
+    const number = getNumber(type, reseed);
+    const { newSeedA, secondNewA } = newSeeds(odds, desiredVig, equityToLockIn);
     const adjOrders = properOrders(
       type,
       number,
@@ -283,11 +306,11 @@ function constructReseedOrders(toReseed, desiredVig, equityToLockIn, type, gameI
       seedAmount,
       newSeedA,
       secondNewA,
-      username,
-    )
-    ordersToReseed.push(adjOrders)
+      username
+    );
+    ordersToReseed.push(adjOrders);
   }
-  return ordersToReseed
+  return ordersToReseed;
 }
 
 function bestBet(odds1, odds2) {
@@ -355,14 +378,23 @@ function getInitialSeedAmount(league) {
 }
 
 function getMaxLiability(league, username) {
-  if (username === 'mongoose') {
-    const maxLiability = -10000
-    return maxLiability
+  if (username === "mongoose") {
+    const maxLiability = -10000;
+    return maxLiability;
   } else {
-    if (league === "NBA") {
-      const maxLiability = -3000;
+    if (league === "NFL") {
+      const maxLiability = -3500;
       return maxLiability;
-    } else if (league === "NHL") {
+    } else if (league === "NBA") {
+      const maxLiability = -2500;
+      return maxLiability;
+    } else if (league === "NCAAB") {
+      const maxLiability = -2000;
+      return maxLiability;
+    } else if (league === "ATP") {
+      const maxLiability = -1500;
+      return maxLiability;
+    } else if (league === "WTA") {
       const maxLiability = -750;
       return maxLiability;
     } else {
@@ -402,8 +434,8 @@ function noReseedSpreads(homeSpreads, awaySpreads, id) {
     }
     return SpreadsAlreadyBet;
   } else {
-    const SpreadsAlreadyBet = [{}]
-    return SpreadsAlreadyBet
+    const SpreadsAlreadyBet = [{}];
+    return SpreadsAlreadyBet;
   }
 }
 
@@ -422,8 +454,8 @@ function noReseedTotals(overs, unders, id) {
     }
     return TotalsAlreadyBet;
   } else {
-    const TotalsAlreadyBet = [{}]
-    return TotalsAlreadyBet
+    const TotalsAlreadyBet = [{}];
+    return TotalsAlreadyBet;
   }
 }
 
@@ -450,27 +482,27 @@ function findOtherSide(participants, orderSide, type) {
 
 function getTimeKey(timeToStart) {
   if (timeToStart > 86400) {
-    const timeKey = 86400
-    return timeKey
+    const timeKey = 86400;
+    return timeKey;
   } else if (timeToStart < 86400 && timeToStart > 10800) {
-    const timeKey = 10800
-    return timeKey 
+    const timeKey = 10800;
+    return timeKey;
   } else if (timeToStart < 10800 && timeToStart > 1800) {
-    const timeKey = 1800
-    return timeKey
+    const timeKey = 1800;
+    return timeKey;
   } else if (timeToStart < 1800 && timeToStart > 0) {
-    const timeKey = 0
-    return timeKey
+    const timeKey = 0;
+    return timeKey;
   }
 }
 
 function userOrderType(username) {
-  if (username === 'trident') { 
-    const orderType = 'post'
-    return orderType
+  if (username === "zp4") {
+    const orderType = "post";
+    return orderType;
   } else {
-    const orderType = 'limit'
-    return orderType
+    const orderType = "limit";
+    return orderType;
   }
 }
 
@@ -483,9 +515,9 @@ function properOrders(
   seedAmount,
   newSeedA,
   secondNewA,
-  username,
+  username
 ) {
-  const orderType = userOrderType(username)
+  const orderType = userOrderType(username);
   const firstOrder = {
     gameID,
     type,
@@ -493,7 +525,7 @@ function properOrders(
     bet: seedAmount,
     odds: -1 * newSeedA,
     expirationMinutes: 0,
-    orderType: orderType
+    orderType: orderType,
   };
   const comebackOrders = {
     gameID,
@@ -502,7 +534,7 @@ function properOrders(
     bet: seedAmount,
     odds: -1 * secondNewA,
     expirationMinutes: 0,
-    orderType: orderType
+    orderType: orderType,
   };
   if (type === "spread") {
     firstOrder.number = number;
