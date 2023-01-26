@@ -143,9 +143,9 @@ login(password, url, username)
                 const side1 = formattedMessage.unmatched.side;
                 const side2 = findOtherSide(participants, side1, type);
                 const teamSide = homeAway(participants, side1, type)
-                // console.log(teamSide)
+                console.log({teamSide})
                 const toReseed = eligibleToReseed(orderBook, type, id, number, teamSide)
-                // console.log({toReseed})
+                console.log({toReseed})
                 const ordersToReseed = constructReseedOrders(toReseed, desiredVig, equityToLockIn, type, gameID, side1, side2, seedAmount, username)
                 // console.log({ordersToReseed})
                 await cancelAllOrdersForGame(gameID, token, type, url);

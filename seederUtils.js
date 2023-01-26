@@ -171,11 +171,11 @@ function homeAway(participants, side1, type) {
 
 
 function eligibleToReseed(orderBook, type, id, number, teamSide) {
-  const trueNum = -1 * number
   const toReseed = []
   if (type === 'moneyline') {
     return
   } else if (type === 'spread') {
+    const trueNum = -1 * number
     if (teamSide === 'home') {
       const spreadAway = orderBook.data.game.awaySpreads;
       const awaySpreadKeys = Object.keys(spreadAway)
@@ -217,22 +217,6 @@ function eligibleToReseed(orderBook, type, id, number, teamSide) {
     }
   } else if (type === 'total') {
     if (teamSide === 'over') {
-      const oversOrders = orderBook.data.game.over;
-      const overKeys = Object.keys(oversOrders);
-      for (const key of overKeys) {
-        if (key !== number) {
-          const overKeyOrders = oversOrders[key]
-          for (const order of overKeyOrders) {
-            if (order.createdBy === id) {
-              const odds = order.odds
-              toReseed.push(key, odds)
-            }
-          }
-        }
-      }
-      return toReseed
-    }
-    if (teamSide === 'under') {
       const undersOrders = orderBook.data.game.under;
       const underKeys = Object.keys(undersOrders);
       for (const key of underKeys) {
@@ -241,7 +225,23 @@ function eligibleToReseed(orderBook, type, id, number, teamSide) {
           for (const order of underKeyOrders) {
             if (order.createdBy === id) {
               const odds = order.odds
-              toReseed.push(key, odds)
+              toReseed.push({key, odds})
+            }
+          }
+        }
+      }
+      return toReseed
+    }
+    if (teamSide === 'under') {
+      const oversOrders = orderBook.data.game.over;
+      const overKeys = Object.keys(oversOrders);
+      for (const key of overKeys) {
+        if (key !== number) {
+          const overKeyOrders = oversOrders[key]
+          for (const order of overKeyOrders) {
+            if (order.createdBy === id) {
+              const odds = order.odds
+              toReseed.push({key, odds})
             }
           }
         }
@@ -251,13 +251,23 @@ function eligibleToReseed(orderBook, type, id, number, teamSide) {
   }
 }
 
+function getNumber(type, reseed) {
+  if (type === 'spread') {
+    const takenNumber = reseed.key
+    const number = takenNumber * -1
+    return number
+  } else if (type === 'total') {
+    const number = reseed.key
+    return number
+  }
+}
+
 function constructReseedOrders(toReseed, desiredVig, equityToLockIn, type, gameID, side1, side2, seedAmount, username) {
   const ordersToReseed = []
   for (const reseed of toReseed) {
     const takenOdds = reseed.odds
     const odds = takenOdds * -1
-    const takenNumber = reseed.key
-    const number = takenNumber * -1
+    const number = getNumber(type, reseed)
     // console.log({odds, number})
     const { newSeedA, secondNewA } = newSeeds(odds, desiredVig, equityToLockIn)
     console.log('reseed',{
