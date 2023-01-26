@@ -3,8 +3,8 @@
   "version": "0.0.1",
   "description": "Reseeding bot for the 4casters exchange",
   "scripts": {
-    "seeder": "nodemon seederBot.js",
-    "start": "node seederBot.js",
+    "seeder": "nodemon index.seederBot.js",
+    "start": "node index.seederBot.js",
     "lint:fix": "eslint --fix --ext .js --ignore-path .gitignore ."
   },
   "dependencies": {

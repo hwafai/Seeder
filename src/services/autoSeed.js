@@ -1,4 +1,4 @@
-require("./loadEnv");
+require("../libs/loadEnv");
 
 const {
   timeToSeed,
@@ -13,9 +13,13 @@ const {
   noReseedSpreads,
   noReseedTotals,
   properOrders,
-} = require("./seederUtils");
+} = require("../utils/seederUtils");
 
-const { getGames, getSingleOrderbook, placeOrders } = require("./apiUtils");
+const {
+  getGames,
+  getSingleOrderbook,
+  placeOrders,
+} = require("../utils/apiUtils");
 
 const username = process.env.FOURCASTER_USERNAME;
 

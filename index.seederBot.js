@@ -1,4 +1,4 @@
-require("./loadEnv");
+require("./src/libs/loadEnv");
 const { Manager } = require("socket.io-client");
 
 const {
@@ -11,11 +11,11 @@ const {
   properOrders,
   eligibleToReseed,
   constructReseedOrders,
-} = require("./seederUtils");
+} = require("./src/utils/seederUtils");
 
-const { runIt } = require("./AutoSeed");
+const { runIt } = require("./src/services/autoSeed");
 
-const { userVigMap } = require("./vigMap.js");
+const { userVigMap } = require("./src/utils/vigUtils");
 
 const {
   cancelAllOrdersForGame,
@@ -23,7 +23,7 @@ const {
   getSingleOrderbook,
   login,
   placeOrders,
-} = require("./apiUtils");
+} = require("./src/utils/apiUtils");
 
 const url = process.env.FOURCASTER_API_URI;
 const wsUrl = process.env.FOURCASTER_WS_API_URI;

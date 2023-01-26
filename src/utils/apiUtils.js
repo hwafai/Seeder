@@ -1,4 +1,4 @@
-const callApi = require("./callApi");
+const callApi = require("../libs/callApi");
 
 async function getOrderbook(gameID, url, token) {
   return callApi({
