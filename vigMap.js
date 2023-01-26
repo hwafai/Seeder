@@ -252,12 +252,12 @@ const userVigMap = {
       },
       10800: {
         seedAmount: 500,
-        desiredVig: 0.04,
+        desiredVig: 0.02,
         equityToLockIn: 0.005,
       },
       1800: {
         seedAmount: 500,
-        desiredVig: 0.04,
+        desiredVig: 0.02,
         equityToLockIn: 0.005,
       },
       0: {
@@ -274,34 +274,34 @@ const userVigMap = {
       },
       10800: {
         seedAmount: 500,
-        desiredVig: 0.04,
+        desiredVig: 0.02,
         equityToLockIn: 0.005,
       },
       1800: {
         seedAmount: 500,
-        desiredVig: 0.04,
+        desiredVig: 0.02,
         equityToLockIn: 0.005,
       },
       0: {
         seedAmount: 500,
-        desiredVig: 0.03,
+        desiredVig: 0.02,
         equityToLockIn: 0.005,
       },
     },
     NFL: {
       86400: {
         seedAmount: 100,
-        desiredVig: 0.04,
-        equityToLockIn: 0.01,
+        desiredVig: 0.02,
+        equityToLockIn: 0.005,
       },
       10800: {
         seedAmount: 500,
-        desiredVig: 0.03,
-        equityToLockIn: 0.01,
+        desiredVig: 0.02,
+        equityToLockIn: 0.005,
       },
       1800: {
         seedAmount: 500,
-        desiredVig: 0.03,
+        desiredVig: 0.02,
         equityToLockIn: 0.005,
       },
       0: {
