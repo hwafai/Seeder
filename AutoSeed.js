@@ -21,7 +21,7 @@ const username = process.env.FOURCASTER_USERNAME;
 
 async function runIt(token, id, url) {
   console.log(`message: ${username} connected to userFeed`);
-  const leagues = [ "FED-EX-500", "NCAAB", "NFL", "NBA", "ATP", "WTA", "NHL"];
+  const leagues = ["FED-EX-500", "NCAAB", "NFL", "NBA", "ATP", "WTA", "NHL"];
   for (const league of leagues) {
     const games = await getGames(league, token, url);
     const actuals = games.data.games;
@@ -34,20 +34,19 @@ async function runIt(token, id, url) {
           : odds.data.game.eventNameM;
         const oversOrders = odds.data.game.over;
         const undersOrders = odds.data.game.under;
-        const mainTotal = odds.data.game.mainTotal
-        const overs = oversOrders[mainTotal]
-        const unders = undersOrders[mainTotal]
-        const overKeys = Object.keys(oversOrders)
-        const underKeys = Object.keys(undersOrders)
-        // console.log(odds.data.games[0])
+        const mainTotal = odds.data.game.mainTotal;
+        const overs = oversOrders[mainTotal];
+        const unders = undersOrders[mainTotal];
+        const overKeys = Object.keys(oversOrders);
+        const underKeys = Object.keys(undersOrders);
         const spreadHome = odds.data.game.homeSpreads;
         const spreadAway = odds.data.game.awaySpreads;
-        const homeSpreadKeys = Object.keys(spreadHome)
-        const awaySpreadKeys = Object.keys(spreadAway)
-        const homeMainSp = odds.data.game.mainHomeSpread
-        const awayMainSp = odds.data.game.mainAwaySpread
-        const homeSpreads = spreadHome[homeMainSp]
-        const awaySpreads = spreadAway[awayMainSp]
+        const homeSpreadKeys = Object.keys(spreadHome);
+        const awaySpreadKeys = Object.keys(spreadAway);
+        const homeMainSp = odds.data.game.mainHomeSpread;
+        const awayMainSp = odds.data.game.mainAwaySpread;
+        const homeSpreads = spreadHome[homeMainSp];
+        const awaySpreads = spreadAway[awayMainSp];
         const homeMLs = odds.data.game.homeMoneylines;
         const awayMLs = odds.data.game.awayMoneylines;
         const MLsAlreadyBet = noReseedMLs(homeMLs, awayMLs, id);
@@ -61,7 +60,6 @@ async function runIt(token, id, url) {
           const homeSide = odds.data.game.homeMoneylines[0].participantID;
           const awaySide = odds.data.game.awayMoneylines[0].participantID;
           const betAmount = getInitialSeedAmount(league);
-          console.log(eventName, type, adjOdds);
           const MLorders = properOrders(
             type,
             null,
@@ -83,22 +81,29 @@ async function runIt(token, id, url) {
           league !== "WTA" &&
           league !== "NHL"
         ) {
-          if (
-            homeSpreads.length &&
-            awaySpreads.length &&
-            !SpreadsAlreadyBet.length
-          ) {
-            const {homeSpreadOdds, awaySpreadOdds} = getBestSpreadOdds(homeSpreads, awaySpreads)
-            // console.log({homeSpreadOdds, awaySpreadOdds})
+          if (homeSpreads && awaySpreads && !SpreadsAlreadyBet.length) {
+            const { homeSpreadOdds, awaySpreadOdds } = getBestSpreadOdds(
+              homeSpreads,
+              awaySpreads
+            );
             const adjOdds = bestBet(awaySpreadOdds, homeSpreadOdds);
-            // console.log({homeSpreadKeys, awaySpreadKeys})
             const type = awaySpreads[0].type;
             const homeTeam = homeSpreads[0].participantID;
-            console.log({homeTeam})
             const awayTeam = awaySpreads[0].participantID;
             const betAmount = getInitialSeedAmount(league);
-            const adjOrders = adjustedSpreadOrders(type ,homeSpreadKeys, awaySpreadKeys, spreadHome, spreadAway, homeMainSp, betAmount, homeTeam, awayTeam, gameID, username)
-            console.log(eventName, type, adjOdds);
+            const adjOrders = adjustedSpreadOrders(
+              type,
+              homeSpreadKeys,
+              awaySpreadKeys,
+              spreadHome,
+              spreadAway,
+              homeMainSp,
+              betAmount,
+              homeTeam,
+              awayTeam,
+              gameID,
+              username
+            );
             const spreadOrders = properOrders(
               type,
               homeMainSp,
@@ -110,22 +115,32 @@ async function runIt(token, id, url) {
               adjOdds.newOdds2,
               username
             );
-            const orders = concatOrders(spreadOrders, adjOrders)
-            // console.log({orders})
+            const orders = concatOrders(spreadOrders, adjOrders);
             await placeOrders(gameID, orders, token, url);
           } else {
             console.log(eventName, "Already Seeded Spread or nothing to Seed");
           }
           if (league !== "FED-EX-500") {
-            if (overs.length && unders.length && !TotalsAlreadyBet.length) {
-              const {overOdds, underOdds} = getBestTotalsOdds(overs, unders)
+            if (overs && unders && !TotalsAlreadyBet.length) {
+              const { overOdds, underOdds } = getBestTotalsOdds(overs, unders);
               const adjOdds = bestBet(overOdds, underOdds);
               const type = overs[0].type;
               const overSide = "under";
               const underSide = "over";
               const betAmount = getInitialSeedAmount(league);
-              const adjOrders = adjustedTotalOrders(type, overKeys, underKeys, oversOrders, undersOrders, mainTotal, betAmount, overSide, underSide, gameID, username)
-              console.log(eventName, type, adjOdds);
+              const adjOrders = adjustedTotalOrders(
+                type,
+                overKeys,
+                underKeys,
+                oversOrders,
+                undersOrders,
+                mainTotal,
+                betAmount,
+                overSide,
+                underSide,
+                gameID,
+                username
+              );
               const totalOrders = properOrders(
                 type,
                 mainTotal,
@@ -137,9 +152,7 @@ async function runIt(token, id, url) {
                 adjOdds.newOdds2,
                 username
               );
-            //   console.log({totalOrders})
-              const orders = concatOrders(totalOrders, adjOrders)
-            //   console.log({orders})
+              const orders = concatOrders(totalOrders, adjOrders);
               await placeOrders(gameID, orders, token, url);
             } else {
               console.log(

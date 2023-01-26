@@ -74,17 +74,17 @@ const userVigMap = {
       },
       10800: {
         seedAmount: 250,
-        desiredVig: 0.025,
+        desiredVig: 0.03,
         equityToLockIn: 0.01,
       },
       1800: {
         seedAmount: 500,
-        desiredVig: 0.02,
+        desiredVig: 0.025,
         equityToLockIn: 0.01,
       },
       0: {
         seedAmount: 500,
-        desiredVig: 0.02,
+        desiredVig: 0.025,
         equityToLockIn: 0.01,
       },
     },
@@ -96,18 +96,18 @@ const userVigMap = {
       },
       10800: {
         seedAmount: 150,
-        desiredVig: 0.02,
+        desiredVig: 0.04,
         equityToLockIn: 0.01,
       },
       1800: {
         seedAmount: 200,
-        desiredVig: 0.04,
+        desiredVig: 0.03,
         equityToLockIn: 0.01,
       },
       0: {
         seedAmount: 250,
-        desiredVig: 0.02,
-        equityToLockIn: 0.005,
+        desiredVig: 0.025,
+        equityToLockIn: 0.01,
       },
     },
     "FED-EX-500": {
@@ -123,12 +123,12 @@ const userVigMap = {
       },
       1800: {
         seedAmount: 200,
-        desiredVig: 0.03,
+        desiredVig: 0.04,
         equityToLockIn: 0.01,
       },
       0: {
         seedAmount: 300,
-        desiredVig: 0.02,
+        desiredVig: 0.04,
         equityToLockIn: 0.01,
       },
     },
@@ -145,13 +145,13 @@ const userVigMap = {
       },
       1800: {
         seedAmount: 200,
-        desiredVig: 0.02,
-        equityToLockIn: 0.005,
+        desiredVig: 0.03,
+        equityToLockIn: 0.01,
       },
       0: {
         seedAmount: 300,
-        desiredVig: 0.02,
-        equityToLockIn: 0.005,
+        desiredVig: 0.03,
+        equityToLockIn: 0.01,
       },
     },
     WTA: {
@@ -167,12 +167,12 @@ const userVigMap = {
       },
       1800: {
         seedAmount: 150,
-        desiredVig: 0.03,
+        desiredVig: 0.04,
         equityToLockIn: 0.01,
       },
       0: {
         seedAmount: 150,
-        desiredVig: 0.03,
+        desiredVig: 0.04,
         equityToLockIn: 0.01,
       },
     },
@@ -189,12 +189,12 @@ const userVigMap = {
       },
       1800: {
         seedAmount: 100,
-        desiredVig: 0.04,
+        desiredVig: 0.03,
         equityToLockIn: 0.01,
       },
       0: {
-        seedAmount: 100,
-        desiredVig: 0.04,
+        seedAmount: 150,
+        desiredVig: 0.03,
         equityToLockIn: 0.01,
       },
     },
@@ -211,12 +211,12 @@ const userVigMap = {
       },
       1800: {
         seedAmount: 200,
-        desiredVig: 0.03,
+        desiredVig: 0.025,
         equityToLockIn: 0.01,
       },
       0: {
         seedAmount: 250,
-        desiredVig: 0.03,
+        desiredVig: 0.025,
         equityToLockIn: 0.01,
       },
     },
