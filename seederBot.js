@@ -4,9 +4,13 @@ const { Manager } = require("socket.io-client");
 const {
   getTimeKey,
   getMaxLiability,
+  concatOrders,
+  homeAway,
   newSeeds,
   findOtherSide,
   properOrders,
+  eligibleToReseed,
+  constructReseedOrders,
 } = require("./seederUtils");
 
 const { runIt } = require("./AutoSeed");
@@ -118,12 +122,12 @@ login(password, url, username)
             );
             const gameLiability = await getGameLiability(url, token, gameID);
             const league = formattedMessage.league;
-            console.log(gameLiability.data.liability);
             const maxLiability = getMaxLiability(league, username);
             if (gameLiability.data.liability > maxLiability) {
               const orderBook = await getSingleOrderbook(gameID, url, token);
               const startTime = new Date(orderBook.data.game.start);
               const rightNow = new Date();
+              const participants = orderBook.data.game.participants
               const timeToStart = (startTime - rightNow) / 1000;
               const timeKey = getTimeKey(timeToStart)
               const {seedAmount, desiredVig, equityToLockIn} = userVigMap[username][league][timeKey]
@@ -136,17 +140,27 @@ login(password, url, username)
                   fillThreshold
                 )
               ) {
-                await cancelAllOrdersForGame(gameID, token, type, url);
                 const side1 = formattedMessage.unmatched.side;
+                const side2 = findOtherSide(participants, side1, type);
+                const teamSide = homeAway(participants, side1, type)
+                // console.log(teamSide)
+                const toReseed = eligibleToReseed(orderBook, type, id, number, teamSide)
+                // console.log({toReseed})
+                const ordersToReseed = constructReseedOrders(toReseed, desiredVig, equityToLockIn, type, gameID, side1, side2, seedAmount, username)
+                // console.log({ordersToReseed})
+                await cancelAllOrdersForGame(gameID, token, type, url);
                 const { newSeedA, secondNewA } = newSeeds(
                   odds,
                   desiredVig,
                   equityToLockIn
                 );
-                console.log({ newSeedA, secondNewA });
-                const orderParticipants = orderBook.data.game.participants;
-                const side2 = findOtherSide(orderParticipants, side1, type);
-                const orders = properOrders(
+                console.log({
+                  odds,
+                  newSeedA,
+                  secondNewA
+                })
+                // console.log({ newSeedA, secondNewA });
+                const mainOrders = properOrders(
                   type,
                   number,
                   gameID,
@@ -157,9 +171,12 @@ login(password, url, username)
                   secondNewA,
                   username,
                 );
-                console.log(orders)
+                // console.log({mainOrders})
+                const orders = concatOrders(mainOrders, ordersToReseed)
                 await placeOrders(gameID, orders, token, url);
               }
+            } else {
+              console.log('Max liability for event exceeded')
             }
           }
         }

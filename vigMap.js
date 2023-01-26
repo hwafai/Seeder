@@ -1,5 +1,5 @@
 const userVigMap = {
-  zp4: {
+  trident: {
     NCAAF: {
       86400: {
         seedAmount: 100,
@@ -96,7 +96,7 @@ const userVigMap = {
       },
       10800: {
         seedAmount: 150,
-        desiredVig: 0.02,
+        desiredVig: 0.04,
         equityToLockIn: 0.01,
       },
       1800: {

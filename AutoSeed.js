@@ -84,8 +84,8 @@ async function runIt(token, id, url) {
           league !== "NHL"
         ) {
           if (
-            homeSpreads.length &&
-            awaySpreads.length &&
+            homeSpreads &&
+            awaySpreads &&
             !SpreadsAlreadyBet.length
           ) {
             const {homeSpreadOdds, awaySpreadOdds} = getBestSpreadOdds(homeSpreads, awaySpreads)
@@ -117,7 +117,7 @@ async function runIt(token, id, url) {
             console.log(eventName, "Already Seeded Spread or nothing to Seed");
           }
           if (league !== "FED-EX-500") {
-            if (overs.length && unders.length && !TotalsAlreadyBet.length) {
+            if (overs && unders && !TotalsAlreadyBet.length) {
               const {overOdds, underOdds} = getBestTotalsOdds(overs, unders)
               const adjOdds = bestBet(overOdds, underOdds);
               const type = overs[0].type;
