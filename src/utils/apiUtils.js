@@ -41,7 +41,7 @@ async function getLastFilledOrder(url, token, type, gameID) {
       gameID,
       type,
     },
-    headers: { authorization: token }
+    headers: { authorization: token },
   });
 }
 
