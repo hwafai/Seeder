@@ -33,6 +33,18 @@ async function getGameLiability(url, token, gameID) {
   });
 }
 
+async function getLastFilledOrder(url, token, type, gameID) {
+  return callApi({
+    url: `${url}/session/getLastFilledOrder`,
+    method: "GET",
+    params: {
+      gameID,
+      type,
+    },
+    headers: { authorization: token },
+  });
+}
+
 async function getGames(league, token, url) {
   return callApi({
     url: `${url}/exchange/v2/getGames`,
@@ -82,6 +94,7 @@ async function placeOrders(gameID, orders, token, url) {
 module.exports = {
   cancelAllOrdersForGame,
   getGameLiability,
+  getLastFilledOrder,
   getGames,
   getOrderbook,
   getSingleOrderbook,
