@@ -23,7 +23,6 @@ const {
   getSingleOrderbook,
   login,
   placeOrders,
-  getLastFilledOrder,
 } = require("./src/utils/apiUtils");
 
 const url = process.env.FOURCASTER_API_URI;
