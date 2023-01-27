@@ -50,11 +50,11 @@ login(password, url, username)
     socket.on("connect", () => {
       console.log(`message: ${username} connected to userFeed`);
       if (username !== "mongoose") {
-        interval = setInterval(() => {
-          runIt(token, id, url);
-        }, 30000);
-        // runIt(token, id, url);
-        console.log(`Setting timer for interval: ${interval}`);
+        // interval = setInterval(() => {
+        //   runIt(token, id, url);
+        // }, 30000);
+        runIt(token, id, url);
+        // console.log(`Setting timer for interval: ${interval}`);
       }
     });
 

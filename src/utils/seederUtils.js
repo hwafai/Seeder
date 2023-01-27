@@ -17,13 +17,13 @@ function convertToPercent(price) {
 }
 
 function leagueWhenSeed(league) {
-  if (league === "NFL") {
+  if (league === "NBA") {
     const thresholdTime = 86400;
     return thresholdTime;
   } else if (league === "FED-EX-500" || league === "ATP" || league === "WTA") {
     const thresholdTime = 10800;
     return thresholdTime;
-  } else if (league === "NBA" || league === "NCAAB") {
+  } else if (league === "NFL" || league === "NCAAB") {
     const thresholdTime = 3600;
     return thresholdTime;
   } else {
@@ -196,7 +196,7 @@ function homeAway(participants, side1, type) {
 function eligibleToReseed(orderBook, type, id, number, teamSide) {
   const toReseed = [];
   if (type === "moneyline") {
-    return;
+    return toReseed;
   } else if (type === "spread") {
     const trueNum = -1 * number;
     if (teamSide === "home") {
