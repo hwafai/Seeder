@@ -53,9 +53,30 @@ async function runIt(token, id, url) {
         const awaySpreads = spreadAway[awayMainSp];
         const homeMLs = odds.data.game.homeMoneylines;
         const awayMLs = odds.data.game.awayMoneylines;
-        const MLsAlreadyBet = await noReseedMLs(homeMLs, awayMLs, id, url, token, gameID);
-        const SpreadsAlreadyBet = await noReseedSpreads(homeSpreads, awaySpreads, id, url, token, gameID);
-        const TotalsAlreadyBet = await noReseedTotals(overs, unders, id, url, token, gameID);
+        const MLsAlreadyBet = await noReseedMLs(
+          homeMLs,
+          awayMLs,
+          id,
+          url,
+          token,
+          gameID
+        );
+        const SpreadsAlreadyBet = await noReseedSpreads(
+          homeSpreads,
+          awaySpreads,
+          id,
+          url,
+          token,
+          gameID
+        );
+        const TotalsAlreadyBet = await noReseedTotals(
+          overs,
+          unders,
+          id,
+          url,
+          token,
+          gameID
+        );
         if (homeMLs.length && awayMLs.length && !MLsAlreadyBet.length) {
           const awayOdds = odds.data.game.awayMoneylines[0].odds;
           const homeOdds = odds.data.game.homeMoneylines[0].odds;
