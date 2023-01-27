@@ -17,13 +17,13 @@ function convertToPercent(price) {
 }
 
 function leagueWhenSeed(league) {
-  if (league === "NBA") {
+  if (league === "NFL") {
     const thresholdTime = 86400;
     return thresholdTime;
   } else if (league === "FED-EX-500" || league === "ATP" || league === "WTA") {
     const thresholdTime = 10800;
     return thresholdTime;
-  } else if (league === "NFL" || league === "NCAAB") {
+  } else if (league === "NBA" || league === "NCAAB") {
     const thresholdTime = 3600;
     return thresholdTime;
   } else {
