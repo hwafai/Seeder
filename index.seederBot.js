@@ -23,6 +23,7 @@ const {
   getSingleOrderbook,
   login,
   placeOrders,
+  getLastFilledOrder,
 } = require("./src/utils/apiUtils");
 
 const url = process.env.FOURCASTER_API_URI;
@@ -52,7 +53,7 @@ login(password, url, username)
       if (username !== "mongoose") {
         interval = setInterval(() => {
           runIt(token, id, url);
-        }, 3000);
+        }, 300000);
         // runIt(token, id, url);
         console.log(`Setting timer for interval: ${interval}`);
       }
