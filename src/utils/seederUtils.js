@@ -142,7 +142,8 @@ function adjustedTotalOrders(
 ) {
   const adjOrders = [];
   for (const key of overKeys) {
-    if (key !== mainTotal) {
+    const MT = _.toString(mainTotal)
+    if (key !== MT) {
       const adjOver = oversOrders[key];
       const number = key;
       for (const unKey of underKeys) {
