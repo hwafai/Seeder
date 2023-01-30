@@ -123,7 +123,7 @@ function vigMap(league, timeToStart) {
       const equityToLockIn = 0.005;
       return { seedAmount, desiredVig, equityToLockIn };
     } else if (league === "NFL") {
-      const seedAmount = 100;
+      const seedAmount = 500;
       const desiredVig = 0.02;
       const equityToLockIn = 0.005;
       return { seedAmount, desiredVig, equityToLockIn };
