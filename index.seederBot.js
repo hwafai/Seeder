@@ -13,7 +13,7 @@ const {
   constructReseedOrders,
 } = require("./src/utils/seederUtils");
 
-const { runIt } = require("./src/services/autoSeed");
+const { runIt } = require("./src/services/pinnyAutoSeed");
 
 const { userVigMap } = require("./src/utils/vigUtils");
 
@@ -50,11 +50,11 @@ login(password, url, username)
     socket.on("connect", () => {
       console.log(`message: ${username} connected to userFeed`);
       if (username !== "mongoose") {
-        interval = setInterval(() => {
-          runIt(token, id, url);
-        }, 300000);
-        // runIt(token, id, url);
-        console.log(`Setting timer for interval: ${interval}`);
+        // interval = setInterval(() => {
+        //   runIt(token, id, url);
+        // }, 300000);
+        runIt(token, id, url);
+        // console.log(`Setting timer for interval: ${interval}`);
       }
     });
 

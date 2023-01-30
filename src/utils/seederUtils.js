@@ -24,8 +24,8 @@ function leagueWhenSeed(league) {
   } else if (league === "FED-EX-500" || league === "ATP" || league === "WTA") {
     const thresholdTime = 10800;
     return thresholdTime;
-  } else if (league === "NBA") {
-    const thresholdTime = 7200;
+  } else if (league === "NBA" || league === "NHL") {
+    const thresholdTime = 86400;
     return thresholdTime;
   } else {
     const thresholdTime = 1800;
@@ -142,7 +142,7 @@ function adjustedTotalOrders(
 ) {
   const adjOrders = [];
   for (const key of overKeys) {
-    const MT = _.toString(mainTotal)
+    const MT = _.toString(mainTotal);
     if (key !== MT) {
       const adjOver = oversOrders[key];
       const number = key;
@@ -408,19 +408,8 @@ function getMaxLiability(league, username) {
   }
 }
 
-async function noReseedMLs(homeMLs, awayMLs, id, url, token, gameID) {
+function noReseedMLs(homeMLs, awayMLs, id) {
   const MLsAlreadyBet = [];
-  const lastML = await getLastFilledOrder(url, token, "moneyline", gameID);
-  const lastMLOrder = lastML.data.session;
-  if (lastMLOrder) {
-    const timeTaken = lastMLOrder.updatedAt;
-    const takenDate = new Date(timeTaken);
-    const rightNow = new Date();
-    const sinceTaken = (rightNow - takenDate) / 1000;
-    if (sinceTaken < 75) {
-      MLsAlreadyBet.push(lastMLOrder);
-    }
-  }
   for (const bet of homeMLs) {
     if (bet.createdBy === id) {
       MLsAlreadyBet.push(bet);
@@ -434,33 +423,23 @@ async function noReseedMLs(homeMLs, awayMLs, id, url, token, gameID) {
   return MLsAlreadyBet;
 }
 
-async function noReseedSpreads(
+function noReseedSpreads(
   homeSpreads,
   awaySpreads,
   id,
-  url,
-  token,
-  gameID
+  mainHomeSpread,
+  mainAwaySpread
 ) {
+  const homeMain = homeSpreads[mainHomeSpread]
+  const awayMain = awaySpreads[mainAwaySpread]
   const SpreadsAlreadyBet = [];
-  const lastSpread = await getLastFilledOrder(url, token, "spread", gameID);
-  const lastSpreadOrder = lastSpread.data.session;
-  if (lastSpreadOrder) {
-    const timeTaken = lastSpreadOrder.updatedAt;
-    const takenDate = new Date(timeTaken);
-    const rightNow = new Date();
-    const sinceTaken = (rightNow - takenDate) / 1000;
-    if (sinceTaken < 75) {
-      SpreadsAlreadyBet.push(lastSpreadOrder);
-    }
-  }
-  if (homeSpreads && awaySpreads) {
-    for (const homeSP of homeSpreads) {
+  if (homeMain && awayMain) {
+    for (const homeSP of homeMain) {
       if (homeSP.createdBy === id) {
         SpreadsAlreadyBet.push(homeSP);
       }
     }
-    for (const awaySP of awaySpreads) {
+    for (const awaySP of awayMain) {
       if (awaySP.createdBy === id) {
         SpreadsAlreadyBet.push(awaySP);
       }
@@ -472,26 +451,17 @@ async function noReseedSpreads(
   }
 }
 
-async function noReseedTotals(overs, unders, id, url, token, gameID) {
+function noReseedTotals(overs, unders, id, keyTotal) {
+  const overMain = overs[keyTotal]
+  const underMain = unders[keyTotal]
   const TotalsAlreadyBet = [];
-  const lastTotal = await getLastFilledOrder(url, token, "total", gameID);
-  const lastTotalOrder = lastTotal.data.session;
-  if (lastTotalOrder) {
-    const timeTaken = lastTotalOrder.updatedAt;
-    const rightNow = new Date();
-    const takenDate = new Date(timeTaken);
-    const sinceTaken = (rightNow - takenDate) / 1000;
-    if (sinceTaken < 75) {
-      TotalsAlreadyBet.push(lastTotalOrder);
-    }
-  }
   if (overs && unders) {
-    for (const over of overs) {
+    for (const over of overMain) {
       if (over.createdBy === id) {
         TotalsAlreadyBet.push(over);
       }
     }
-    for (const under of unders) {
+    for (const under of underMain) {
       if (under.createdBy === id) {
         TotalsAlreadyBet.push(under);
       }

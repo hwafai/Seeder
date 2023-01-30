@@ -21,6 +21,8 @@ const {
   placeOrders,
 } = require("../utils/apiUtils");
 
+const { pinnyExample } = require("../../altExample");
+
 const username = process.env.FOURCASTER_USERNAME;
 
 async function runIt(token, id, url) {
@@ -36,6 +38,8 @@ async function runIt(token, id, url) {
         const eventName = odds.data.game.eventName
           ? odds.data.game.eventName
           : odds.data.game.eventNameM;
+        // await pinny game from gameID of timeToSeed
+        console.log({ pinnyExample });
         const oversOrders = odds.data.game.over;
         const undersOrders = odds.data.game.under;
         const mainTotal = odds.data.game.mainTotal;
@@ -81,7 +85,7 @@ async function runIt(token, id, url) {
           const awayOdds = odds.data.game.awayMoneylines[0].odds;
           const homeOdds = odds.data.game.homeMoneylines[0].odds;
           const adjOdds = bestBet(awayOdds, homeOdds);
-          const type = odds.data.game.awayMoneylines[0].type;
+          const type = odds.data.game.homeMoneylines[0].type;
           const homeSide = odds.data.game.homeMoneylines[0].participantID;
           const awaySide = odds.data.game.awayMoneylines[0].participantID;
           const betAmount = getInitialSeedAmount(league);
@@ -96,7 +100,7 @@ async function runIt(token, id, url) {
             adjOdds.newOdds2,
             username
           );
-          await placeOrders(gameID, MLorders, token, url);
+          // await placeOrders(gameID, MLorders, token, url);
         } else {
           console.log(eventName, "Already Seeded ML or nothing to Seed");
         }
@@ -112,7 +116,7 @@ async function runIt(token, id, url) {
               awaySpreads
             );
             const adjOdds = bestBet(awaySpreadOdds, homeSpreadOdds);
-            const type = awaySpreads[0].type;
+            const type = homeSpreads[0].type;
             const homeTeam = homeSpreads[0].participantID;
             const awayTeam = awaySpreads[0].participantID;
             const betAmount = getInitialSeedAmount(league);
@@ -141,7 +145,7 @@ async function runIt(token, id, url) {
               username
             );
             const orders = concatOrders(spreadOrders, adjOrders);
-            await placeOrders(gameID, orders, token, url);
+            // await placeOrders(gameID, orders, token, url);
           } else {
             console.log(eventName, "Already Seeded Spread or nothing to Seed");
           }
@@ -178,7 +182,7 @@ async function runIt(token, id, url) {
                 username
               );
               const orders = concatOrders(totalOrders, adjOrders);
-              await placeOrders(gameID, orders, token, url);
+              // await placeOrders(gameID, orders, token, url);
             } else {
               console.log(
                 eventName,
