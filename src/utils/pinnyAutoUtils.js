@@ -1,5 +1,5 @@
 const { pinnyExample } = require("../../altExample");
-const { properOrders, concatOrders } = require("./seederUtils");
+const { properOrders, concatOrders, noReseedMLs, noReseedSpreads, noReseedTotals } = require("./seederUtils");
 
 function whatYouNeed(league) {
   const ML = pinnyExample["moneyline"];
@@ -23,6 +23,106 @@ function whatYouNeed(league) {
     return { ML };
   }
 }
+
+function findTeams(teams) {
+    let homeTeam = '';
+    let awayTeam = '';
+    teams.forEach(team => {
+      if (team.homeAway === 'home') {
+        homeTeam = team.id;
+      } else if (team.homeAway === 'away') {
+        awayTeam = team.id;
+      }
+    });
+    return { homeTeam, awayTeam };
+}
+
+function Igot(game, league, id) {
+    const teams = game.participants;
+    const {homeTeam, awayTeam} = findTeams(teams)
+    const homeMLs = game.homeMoneylines;
+    const awayMLs = game.awayMoneylines;
+    const homeSpreads = game.homeSpreads;
+    const awaySpreads = game.awaySpreads;
+    const mainHomeSpread = game.mainHomeSpread;
+    const mainAwaySpread = game.mainAwaySpread;
+    const overs = game.over;
+    const unders = game.under;
+    const keyTotal = game.mainTotal;
+    const MLsAlreadyBet = noReseedMLs(homeMLs, awayMLs, id)
+    if (league === "NBA" || league === "NFL" || league === "NCAAB") {    
+        const SpreadsAlreadyBet = noReseedSpreads(homeSpreads, awaySpreads, id, mainHomeSpread, mainAwaySpread)
+        const TotalsAlreadyBet = noReseedTotals(overs, unders, id, keyTotal)    
+        return {
+            homeTeam,
+            awayTeam,
+            MLsAlreadyBet,
+            SpreadsAlreadyBet,
+            TotalsAlreadyBet,
+        }
+    } else {
+        return { homeTeam, awayTeam, MLsAlreadyBet }
+    }
+}
+
+function constructOrders(MLsAlreadyBet, SpreadsAlreadyBet, TotalsAlreadyBet, ML, mainSpread, altSpread1, altSpread2, mainTotal, altTotal1, altTotal2, gameID, homeTeam, awayTeam, betAmount, username) {
+    let orders = [];
+    if (!MLsAlreadyBet.length) {
+        const type = 'moneyline';
+        const MLorders = properOrders(
+            type,
+            null,
+            gameID,
+            homeTeam,
+            awayTeam,
+            betAmount,
+            ML.away,
+            ML.home,
+            username
+        );
+        orders = orders.concat(MLorders);
+    } else {
+        console.log("Already Seeded ML or nothing to Seed")
+    }
+    if (SpreadsAlreadyBet && !SpreadsAlreadyBet.length) {
+        const type = "spread"
+        const spreadOrders = constructSpreadOrders(
+            mainSpread,
+            altSpread1,
+            altSpread2,
+            type,
+            gameID,
+            homeTeam,
+            awayTeam,
+            betAmount,
+            username
+        );
+        orders = orders.concat(spreadOrders)
+    } else {
+        console.log("Already Seeded Spread or nothing to Seed")
+    }
+    if (TotalsAlreadyBet && !TotalsAlreadyBet.length) {
+        const type = "total"
+        const overSide = "under"
+        const underSide = "over"
+        const totalOrders = constructTotalOrders(
+            mainTotal,
+            altTotal1,
+            altTotal2,
+            type,
+            gameID,
+            overSide,
+            underSide,
+            betAmount,
+            username
+        );
+        orders = orders.concat(totalOrders)
+    } else {
+        console.log("Already Seeded Totals or nothing to Seed")
+    }
+    return orders
+}
+
 
 function constructTotalOrders(
   mainTotal,
@@ -126,6 +226,6 @@ function constructSpreadOrders(
 
 module.exports = {
   whatYouNeed,
-  constructSpreadOrders,
-  constructTotalOrders,
+  Igot,
+  constructOrders,
 };
