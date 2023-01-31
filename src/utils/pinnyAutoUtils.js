@@ -1,14 +1,50 @@
 const { pinnyExample } = require("../../altExample");
 const { properOrders, concatOrders, noReseedMLs, noReseedSpreads, noReseedTotals } = require("./seederUtils");
 
-function whatYouNeed(league) {
-  const ML = pinnyExample["moneyline"];
-  const mainSpread = pinnyExample["spreads"][0];
-  const altSpread1 = pinnyExample["spreads"][5];
-  const altSpread2 = pinnyExample["spreads"][6];
-  const mainTotal = pinnyExample["totals"][0];
-  const altTotal1 = pinnyExample["totals"][5];
-  const altTotal2 = pinnyExample["totals"][6];
+function whatYouNeed(league, eventOdds) {
+  // may need to get home and way moneylines
+  const moneylines = eventOdds.moneylines;
+  const ML = {
+    home: moneylines[0].odds,
+    away: moneylines[1].odds
+  }
+  // key for main spread, do not know if they have
+  const homeMainSpread = eventOdds.mainSpread;
+  const keyTotal = eventOdds.mainTotal
+  const mainSpread = {
+    hdp: homeMainSpread,
+    home: eventOdds["spreads"][0].odds,
+    away: eventOdds["spreads"][1].odds,
+  }
+  const {spread1, spread2} = getAlternativeNumbers(homeMainSpread)
+  const awaySpread1 = -1 * spread1
+  const awaySpread2 = -1 * spread2
+  const altSpread1 = {
+    hdp: spread1,
+    home: eventOdds.homeSpreads[spread1].odds,
+    away: eventOdds.awaySpreads[awaySpread1].odds,
+  }
+  const altSpread2 = {
+    hdp: spread2,
+    home: eventOdds.homeSpreads[spread2].odds,
+    away: eventOdds.awaySpreads[awaySpread2].odds,
+  }
+  const mainTotal = {
+    points: keyTotal,
+    over: eventOdds["totals"][1].odds,
+    under: eventOdds["totals"][0].odds,
+  }
+  const {total1, total2} = getAlternativeNumbers(keyTotal)
+  const altTotal1 = {
+    points: total1,
+    over: eventOdds.over[total1].odds,
+    under: eventOdds.under[total1].odds,
+  }
+  const altTotal2 = {
+    points: total2,
+    over: eventOdds.over[total2].odds,
+    under: eventOdds.under[total2].odds
+  }
   if (league === "NBA" || league || "NFL" || league === "NCAAB") {
     return {
       ML,
@@ -21,6 +57,37 @@ function whatYouNeed(league) {
     };
   } else {
     return { ML };
+  }
+}
+
+function getAlternativeNumbers(number) {
+  if (Math.abs(number) < 1.1) {
+    if (number > 0) {
+      const x = number + .5
+      const y = -1 * number
+      return {x, y}
+    } else if (number < 0) {
+      const x = number - .5
+      const y = -1 * number
+      return {x, y}
+    } else if (number = 0) {
+      const x = 1
+      const y = -1
+      return {x, y}
+    }
+  } else {
+    const x = number + .5
+    const y = number - .5
+    return {x, y}
+  }
+}
+
+function findEvent(eventName, altLines) {
+  for (const altL of altLines) {
+    if (altL.eventName === eventName) {
+      const eventOdds = altL
+      return eventOdds
+    }
   }
 }
 
@@ -227,5 +294,6 @@ function constructSpreadOrders(
 module.exports = {
   whatYouNeed,
   Igot,
+  findEvent,
   constructOrders,
 };

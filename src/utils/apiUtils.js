@@ -11,6 +11,17 @@ async function getOrderbook(gameID, url, token) {
   });
 }
 
+async function getPs3838AlternateLines(league, url) {
+  return callApi({
+    url: `${url}/api/v1/odds/getPs3838AlternateLines`,
+    method: "POST",
+    data: {
+      league
+    },
+  });
+}
+
+
 async function getSingleOrderbook(gameID, url, token) {
   return callApi({
     url: `${url}/exchange/getSingleOrderbook`,
@@ -97,6 +108,7 @@ module.exports = {
   getLastFilledOrder,
   getGames,
   getOrderbook,
+  getPs3838AlternateLines,
   getSingleOrderbook,
   login,
   placeOrders,
