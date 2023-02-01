@@ -18,7 +18,7 @@ function convertToPercent(price) {
 
 function leagueWhenSeed(league) {
   if (league === "NFL") {
-    const thresholdTime = 20000000000;
+    const thresholdTime = 2000000000;
     return thresholdTime;
   } else if (league === "FED-EX-500" || league === "ATP" || league === "WTA") {
     const thresholdTime = 10800;

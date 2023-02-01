@@ -4,45 +4,46 @@ function whatYouNeed(league, eventOdds) {
   // may need to get home and way moneylines
   const moneylines = eventOdds.moneylines;
   const ML = {
-    home: moneylines[0].odds,
-    away: moneylines[1].odds
+    home: addLean(moneylines[0].odds, 1),
+    away: addLean(moneylines[1].odds, 1),
   }
   // key for main spread, do not know if they have
   const homeMainSpread = eventOdds.mainSpread;
   const keyTotal = eventOdds.mainTotal
   const mainSpread = {
     hdp: homeMainSpread,
-    home: eventOdds["spreads"][0].odds,
-    away: eventOdds["spreads"][1].odds,
+    home: addLean(eventOdds["spreads"][0].odds, 1),
+    away: addLean(eventOdds["spreads"][1].odds, 1),
   }
   const {spread1, spread2} = getAlternativeSpreads(homeMainSpread)
   const awaySpread1 = -1 * spread1
   const awaySpread2 = -1 * spread2
   const altSpread1 = {
     hdp: spread1,
-    home: eventOdds.homeSpreads[spread1][0].odds,
-    away: eventOdds.awaySpreads[awaySpread1][0].odds,
+    home: addLean(eventOdds.homeSpreads[spread1][0].odds, 1),
+    away: addLean(eventOdds.awaySpreads[awaySpread1][0].odds, 1),
   }
   const altSpread2 = {
     hdp: spread2,
-    home: eventOdds.homeSpreads[spread2][0].odds,
-    away: eventOdds.awaySpreads[awaySpread2][0].odds,
+    home: addLean(eventOdds.homeSpreads[spread2][0].odds, 1),
+    away: addLean(eventOdds.awaySpreads[awaySpread2][0].odds, 1),
   }
+
   const mainTotal = {
     points: keyTotal,
-    over: eventOdds["totals"][1].odds,
-    under: eventOdds["totals"][0].odds,
+    over: addLean(eventOdds["totals"][1].odds, 1),
+    under: addLean(eventOdds["totals"][0].odds, 1),
   }
   const {total1, total2} = getAlternativeTotals(keyTotal)
   const altTotal1 = {
     points: total1,
-    over: eventOdds.over[total1][0].odds,
-    under: eventOdds.under[total1][0].odds,
+    over: addLean(eventOdds.over[total1][0].odds, 1),
+    under: addLean(eventOdds.under[total1][0].odds, 1),
   }
   const altTotal2 = {
     points: total2,
-    over: eventOdds.over[total2][0].odds,
-    under: eventOdds.under[total2][0].odds
+    over: addLean(eventOdds.over[total2][0].odds, 1),
+    under: addLean(eventOdds.under[total2][0].odds1),
   }
   if (league === "NBA" || league || "NFL" || league === "NCAAB") {
     return {
@@ -56,6 +57,24 @@ function whatYouNeed(league, eventOdds) {
     };
   } else {
     return { ML };
+  }
+}
+
+function addLean (americanOdds, lean) {
+  let leanCopy = lean
+  if (!leanCopy) {
+    leanCopy = -1
+  }
+  const leanedOdds = parseFloat(americanOdds) + parseFloat(leanCopy)
+  if (Math.abs(leanedOdds) >= 100) {
+    return leanedOdds
+  }
+  if (Math.sign(americanOdds) > 0 && Math.abs(leanedOdds) < 100) {
+    // odds are positive
+    return leanedOdds - 200
+  }
+  if (Math.sign(americanOdds) < 0 && Math.abs(leanedOdds) < 100) {
+    return 200 + leanedOdds
   }
 }
 
