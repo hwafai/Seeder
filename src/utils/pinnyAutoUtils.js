@@ -124,7 +124,7 @@ function ifReseed(game, league, id, eventOdds) {
     const mainAwaySpread = mainHomeSpread * -1;
     const overs = game.over;
     const unders = game.under;
-    const keyTotal = game.mainTotal;
+    const keyTotal = eventOdds.mainTotal;
     const MLsAlreadyBet = noReseedMLs(homeMLs, awayMLs, id)
     if (league === "NBA" || league === "NFL" || league === "NCAAB") {    
         const SpreadsAlreadyBet = noReseedSpreads(homeSpreads, awaySpreads, id, mainHomeSpread, mainAwaySpread)

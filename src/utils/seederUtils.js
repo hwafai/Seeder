@@ -453,7 +453,7 @@ function noReseedTotals(overs, unders, id, keyTotal) {
   const overMain = overs[keyTotal]
   const underMain = unders[keyTotal]
   const TotalsAlreadyBet = [];
-  if (overs && unders) {
+  if (overMain && underMain) {
     for (const over of overMain) {
       if (over.createdBy === id) {
         TotalsAlreadyBet.push(over);
@@ -466,7 +466,6 @@ function noReseedTotals(overs, unders, id, keyTotal) {
     }
     return TotalsAlreadyBet;
   } else {
-    const TotalsAlreadyBet = [{}];
     return TotalsAlreadyBet;
   }
 }
