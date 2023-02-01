@@ -49,7 +49,7 @@ function fetchOdds(league, eventOdds) {
   const altTotal2 = {
     points: total2,
     over: addLean(eventOdds.over[total2][0].odds, 1),
-    under: addLean(eventOdds.under[total2][0].odds1),
+    under: addLean(eventOdds.under[total2][0].odds, 1),
   };
   if (league === "NBA" || league || "NFL" || league === "NCAAB") {
     return {
