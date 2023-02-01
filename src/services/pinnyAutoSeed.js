@@ -38,26 +38,29 @@ async function runIt(token, id, url) {
           const game = odds.data.game;
           const eventName = game.eventName
           const eventOdds = findEvent(eventName, events)
-          const {
-            homeTeam,
-            awayTeam,
-            MLsAlreadyBet,
-            SpreadsAlreadyBet,
-            TotalsAlreadyBet,
-          } = ifReseed(game, league, id, eventOdds)
-          const betAmount = getInitialSeedAmount(league);
-          const {
-            ML,
-            mainSpread,
-            altSpread1,
-            altSpread2,
-            mainTotal,
-            altTotal1,
-            altTotal2,
-          } = whatYouNeed(league, eventOdds);
-          const orders = constructOrders(MLsAlreadyBet, SpreadsAlreadyBet, TotalsAlreadyBet, ML, mainSpread, altSpread1, altSpread2, mainTotal, altTotal1, altTotal2, gameID, homeTeam, awayTeam, betAmount, username)
-          await placeOrders(gameID, orders, token, url)
-        
+          if (eventOdds) {
+            const {
+              homeTeam,
+              awayTeam,
+              MLsAlreadyBet,
+              SpreadsAlreadyBet,
+              TotalsAlreadyBet,
+            } = ifReseed(game, league, id, eventOdds)
+            const betAmount = getInitialSeedAmount(league);
+            const {
+              ML,
+              mainSpread,
+              altSpread1,
+              altSpread2,
+              mainTotal,
+              altTotal1,
+              altTotal2,
+            } = whatYouNeed(league, eventOdds);
+            const orders = constructOrders(MLsAlreadyBet, SpreadsAlreadyBet, TotalsAlreadyBet, ML, mainSpread, altSpread1, altSpread2, mainTotal, altTotal1, altTotal2, gameID, homeTeam, awayTeam, betAmount, username)
+            await placeOrders(gameID, orders, token, url)
+          } else {
+            console.log('no event from pinnacle')
+          }      
       }
     } else {
       console.log("No", league, "games to Seed");

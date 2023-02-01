@@ -91,11 +91,15 @@ function getAlternativeTotals(keyTotal){
 }
 
 function findEvent(eventName, events) {
-  for (const event of events) {
-    if (event.eventName === eventName) {
-      const eventOdds = event
-      return eventOdds
+  if (events) {
+    for (const event of events) {
+      if (event.eventName === eventName) {
+        const eventOdds = event
+        return eventOdds
+      }
     }
+  } else {
+    return null
   }
 }
 
