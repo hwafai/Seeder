@@ -5,7 +5,6 @@ const {
   ifReseed,
   findEvent,
   constructOrders,
-  fetchOdds,
 } = require("../utils/pinnyAutoUtils");
 
 const { timeToSeed, getInitialSeedAmount } = require("../utils/seederUtils");
