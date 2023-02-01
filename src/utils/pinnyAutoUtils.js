@@ -16,34 +16,36 @@ function whatYouNeed(league, eventOdds) {
     home: eventOdds["spreads"][0].odds,
     away: eventOdds["spreads"][1].odds,
   }
-  const {spread1, spread2} = getAlternativeNumbers(homeMainSpread)
+  const {spread1, spread2} = getAlternativeSpreads(homeMainSpread)
+  // console.log({homeMainSpread})
+  // console.log({spread1, spread2})
   const awaySpread1 = -1 * spread1
   const awaySpread2 = -1 * spread2
   const altSpread1 = {
     hdp: spread1,
-    home: eventOdds.homeSpreads[spread1].odds,
-    away: eventOdds.awaySpreads[awaySpread1].odds,
+    home: eventOdds.homeSpreads[spread1][0].odds,
+    away: eventOdds.awaySpreads[awaySpread1][0].odds,
   }
   const altSpread2 = {
     hdp: spread2,
-    home: eventOdds.homeSpreads[spread2].odds,
-    away: eventOdds.awaySpreads[awaySpread2].odds,
+    home: eventOdds.homeSpreads[spread2][0].odds,
+    away: eventOdds.awaySpreads[awaySpread2][0].odds,
   }
   const mainTotal = {
     points: keyTotal,
     over: eventOdds["totals"][1].odds,
     under: eventOdds["totals"][0].odds,
   }
-  const {total1, total2} = getAlternativeNumbers(keyTotal)
+  const {total1, total2} = getAlternativeTotals(keyTotal)
   const altTotal1 = {
     points: total1,
-    over: eventOdds.over[total1].odds,
-    under: eventOdds.under[total1].odds,
+    over: eventOdds.over[total1][0].odds,
+    under: eventOdds.under[total1][0].odds,
   }
   const altTotal2 = {
     points: total2,
-    over: eventOdds.over[total2].odds,
-    under: eventOdds.under[total2].odds
+    over: eventOdds.over[total2][0].odds,
+    under: eventOdds.under[total2][0].odds
   }
   if (league === "NBA" || league || "NFL" || league === "NCAAB") {
     return {
@@ -60,32 +62,38 @@ function whatYouNeed(league, eventOdds) {
   }
 }
 
-function getAlternativeNumbers(number) {
-  if (Math.abs(number) < 1.1) {
-    if (number > 0) {
-      const x = number + .5
-      const y = -1 * number
-      return {x, y}
-    } else if (number < 0) {
-      const x = number - .5
-      const y = -1 * number
-      return {x, y}
-    } else if (number = 0) {
-      const x = 1
-      const y = -1
-      return {x, y}
+function getAlternativeSpreads(homeMainSpread) {
+  if (Math.abs(homeMainSpread) < 1.1) {
+    if (homeMainSpread > 0) {
+      const spread1 = homeMainSpread + .5
+      const spread2 = -1 * homeMainSpread
+      return {spread1, spread2}
+    } else if (homeMainSpread < 0) {
+      const spread1 = homeMainSpread - .5
+      const spread2 = -1 * homeMainSpread
+      return {spread1, spread2}
+    } else if (homeMainSpread = 0) {
+      const spread1 = 1
+      const spread2 = -1
+      return {spread1, spread2}
     }
   } else {
-    const x = number + .5
-    const y = number - .5
-    return {x, y}
+    const spread1 = homeMainSpread + .5
+    const spread2 = homeMainSpread - .5
+    return {spread1, spread2}
   }
 }
 
-function findEvent(eventName, altLines) {
-  for (const altL of altLines) {
-    if (altL.eventName === eventName) {
-      const eventOdds = altL
+function getAlternativeTotals(keyTotal){
+  const total1 = keyTotal + .5
+  const total2 = keyTotal - .5
+  return {total1, total2}
+}
+
+function findEvent(eventName, events) {
+  for (const event of events) {
+    if (event.eventName === eventName) {
+      const eventOdds = event
       return eventOdds
     }
   }
@@ -104,15 +112,15 @@ function findTeams(teams) {
     return { homeTeam, awayTeam };
 }
 
-function Igot(game, league, id) {
+function ifReseed(game, league, id, eventOdds) {
     const teams = game.participants;
     const {homeTeam, awayTeam} = findTeams(teams)
     const homeMLs = game.homeMoneylines;
     const awayMLs = game.awayMoneylines;
     const homeSpreads = game.homeSpreads;
     const awaySpreads = game.awaySpreads;
-    const mainHomeSpread = game.mainHomeSpread;
-    const mainAwaySpread = game.mainAwaySpread;
+    const mainHomeSpread = eventOdds.mainSpread;
+    const mainAwaySpread = mainHomeSpread * -1;
     const overs = game.over;
     const unders = game.under;
     const keyTotal = game.mainTotal;
@@ -293,7 +301,7 @@ function constructSpreadOrders(
 
 module.exports = {
   whatYouNeed,
-  Igot,
+  ifReseed,
   findEvent,
   constructOrders,
 };

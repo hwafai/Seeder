@@ -2,7 +2,7 @@ require("../libs/loadEnv");
 
 const {
   whatYouNeed,
-  Igot,
+  ifReseed,
   findEvent,
   constructOrders,
 } = require("../utils/pinnyAutoUtils");
@@ -27,7 +27,7 @@ async function runIt(token, id, url) {
   const leagues = ["FED-EX-500", "NCAAB", "NFL", "NBA", "ATP", "WTA", "NHL"];
   for (const league of leagues) {
     const altLines = await getPs3838AlternateLines(league, BACKGROUND_JOBS_URI)
-    console.log({altLines})
+    const events = altLines.data.games
     // bring altLines to list of games
     const games = await getGames(league, token, url);
     const actuals = games.data.games;
@@ -37,14 +37,14 @@ async function runIt(token, id, url) {
           const odds = await getSingleOrderbook(gameID, url, token);
           const game = odds.data.game;
           const eventName = game.eventName
-          const eventOdds = findEvent(eventName, altLines) 
+          const eventOdds = findEvent(eventName, events)
           const {
             homeTeam,
             awayTeam,
             MLsAlreadyBet,
             SpreadsAlreadyBet,
             TotalsAlreadyBet,
-            } = Igot(game, league, id)
+          } = ifReseed(game, league, id, eventOdds)
           const betAmount = getInitialSeedAmount(league);
           const {
             ML,

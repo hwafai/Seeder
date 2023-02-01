@@ -446,7 +446,6 @@ function noReseedSpreads(
     }
     return SpreadsAlreadyBet;
   } else {
-    const SpreadsAlreadyBet = [{}];
     return SpreadsAlreadyBet;
   }
 }
