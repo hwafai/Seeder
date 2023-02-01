@@ -1,5 +1,4 @@
 const _ = require("lodash");
-const { getLastFilledOrder } = require("./apiUtils");
 
 function convertToDecimal(otherSide) {
   const newBase = otherSide / (1 - otherSide) + 1;
@@ -510,7 +509,7 @@ function getTimeKey(timeToStart) {
 }
 
 function userOrderType(username) {
-  if (username === "trident") {
+  if (username === "mongoose") {
     const orderType = "post";
     return orderType;
   } else {

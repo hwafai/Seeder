@@ -1,16 +1,5 @@
 const callApi = require("../libs/callApi");
 
-async function getOrderbook(gameID, url, token) {
-  return callApi({
-    url: `${url}/exchange/v2/getOrderbook`,
-    method: "GET",
-    params: {
-      gameID,
-    },
-    headers: { authorization: token },
-  });
-}
-
 async function getPs3838AlternateLines(league, url) {
   return callApi({
     url: `${url}/api/v1/odds/getPs3838AlternateLines`,
@@ -39,18 +28,6 @@ async function getGameLiability(url, token, gameID) {
     method: "GET",
     params: {
       gameID,
-    },
-    headers: { authorization: token },
-  });
-}
-
-async function getLastFilledOrder(url, token, type, gameID) {
-  return callApi({
-    url: `${url}/session/getLastFilledOrder`,
-    method: "GET",
-    params: {
-      gameID,
-      type,
     },
     headers: { authorization: token },
   });
@@ -105,9 +82,7 @@ async function placeOrders(gameID, orders, token, url) {
 module.exports = {
   cancelAllOrdersForGame,
   getGameLiability,
-  getLastFilledOrder,
   getGames,
-  getOrderbook,
   getPs3838AlternateLines,
   getSingleOrderbook,
   login,

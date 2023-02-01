@@ -1,4 +1,3 @@
-const { pinnyExample } = require("../../altExample");
 const { properOrders, concatOrders, noReseedMLs, noReseedSpreads, noReseedTotals } = require("./seederUtils");
 
 function whatYouNeed(league, eventOdds) {
@@ -17,8 +16,6 @@ function whatYouNeed(league, eventOdds) {
     away: eventOdds["spreads"][1].odds,
   }
   const {spread1, spread2} = getAlternativeSpreads(homeMainSpread)
-  // console.log({homeMainSpread})
-  // console.log({spread1, spread2})
   const awaySpread1 = -1 * spread1
   const awaySpread2 = -1 * spread2
   const altSpread1 = {
