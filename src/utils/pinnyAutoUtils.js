@@ -6,7 +6,7 @@ const {
   noReseedTotals,
 } = require("./seederUtils");
 
-function whatYouNeed(league, eventOdds) {
+function fetchOdds(league, eventOdds) {
   // may need to get home and way moneylines
   const moneylines = eventOdds.moneylines;
   const ML = {
@@ -347,7 +347,7 @@ function constructSpreadOrders(
 }
 
 module.exports = {
-  whatYouNeed,
+  fetchOdds,
   ifReseed,
   findEvent,
   constructOrders,

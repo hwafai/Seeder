@@ -1,10 +1,11 @@
 require("../libs/loadEnv");
 
 const {
-  whatYouNeed,
+  fetchOdds,
   ifReseed,
   findEvent,
   constructOrders,
+  fetchOdds,
 } = require("../utils/pinnyAutoUtils");
 
 const { timeToSeed, getInitialSeedAmount } = require("../utils/seederUtils");
@@ -52,7 +53,7 @@ async function runIt(token, id, url) {
             mainTotal,
             altTotal1,
             altTotal2,
-          } = whatYouNeed(league, eventOdds);
+          } = fetchOdds(league, eventOdds);
           const orders = constructOrders(
             MLsAlreadyBet,
             SpreadsAlreadyBet,
