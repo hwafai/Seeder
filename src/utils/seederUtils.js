@@ -429,8 +429,8 @@ function noReseedSpreads(
   mainHomeSpread,
   mainAwaySpread
 ) {
-  const homeMain = homeSpreads[mainHomeSpread]
-  const awayMain = awaySpreads[mainAwaySpread]
+  const homeMain = homeSpreads[mainHomeSpread];
+  const awayMain = awaySpreads[mainAwaySpread];
   const SpreadsAlreadyBet = [];
   if (homeMain && awayMain) {
     for (const homeSP of homeMain) {
@@ -450,8 +450,8 @@ function noReseedSpreads(
 }
 
 function noReseedTotals(overs, unders, id, keyTotal) {
-  const overMain = overs[keyTotal]
-  const underMain = unders[keyTotal]
+  const overMain = overs[keyTotal];
+  const underMain = unders[keyTotal];
   const TotalsAlreadyBet = [];
   if (overMain && underMain) {
     for (const over of overMain) {

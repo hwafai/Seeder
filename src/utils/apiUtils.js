@@ -5,11 +5,10 @@ async function getPs3838AlternateLines(league, url) {
     url: `${url}/api/v1/odds/getPs3838AlternateLines`,
     method: "POST",
     data: {
-      league
+      league,
     },
   });
 }
-
 
 async function getSingleOrderbook(gameID, url, token) {
   return callApi({
