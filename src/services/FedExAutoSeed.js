@@ -1,4 +1,8 @@
-const { getSingleOrderbook, getGames, placeOrders } = require("../utils/apiUtils");
+const {
+  getSingleOrderbook,
+  getGames,
+  placeOrders,
+} = require("../utils/apiUtils");
 const {
   noReseedMLs,
   bestBet,

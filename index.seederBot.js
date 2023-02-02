@@ -1,6 +1,10 @@
 require("./src/libs/loadEnv");
 const { Manager } = require("socket.io-client");
 
+// import off the board listener
+const OffTheBoardListener = require("./src/libs/OffTheBoardListener");
+const offTheBoardListener = new OffTheBoardListener();
+
 const {
   getTimeKey,
   getMaxLiability,
@@ -11,6 +15,7 @@ const {
   properOrders,
   eligibleToReseed,
   constructReseedOrders,
+  leagues,
 } = require("./src/utils/seederUtils");
 
 const { runIt } = require("./src/services/pinnyAutoSeed");
@@ -51,7 +56,7 @@ login(password, url, username)
       console.log(`message: ${username} connected to userFeed`);
       if (username !== "mongoose") {
         interval = setInterval(() => {
-          runIt(token, id, url);
+          runIt(token, id, url, offTheBoardListener);
         }, 300000);
         console.log(`Setting timer for interval: ${interval}`);
       }
@@ -194,6 +199,36 @@ login(password, url, username)
         }
       } catch (e) {
         console.log(e);
+      }
+    });
+
+    // listen for the off the board message emitted by the OTB Listener
+    offTheBoardListener.on("offTheBoardMessage", async (msg) => {
+      // parse the message
+      const parsedMessage = JSON.parse(msg);
+
+      const { offTheBoard, league, fourcasterGameID } = parsedMessage;
+
+      // this means that this league is covered by the seeder
+      if (leagues.indexOf(league) > -1) {
+        // if Off the Board is true, this game is off the board
+        if (offTheBoard) {
+          // first cancel all orders for the game
+          await cancelAllOrdersForGame(fourcasterGameID, token, null, url);
+          // then register the game as off the board by the seeder
+          await offTheBoardListener.setSeederOffTheBoardStatus(
+            username,
+            fourcasterGameID,
+            offTheBoard
+          );
+        } else {
+          // this game was off the board but is now back on
+          await offTheBoardListener.setSeederOffTheBoardStatus(
+            username,
+            fourcasterGameID,
+            offTheBoard
+          );
+        }
       }
     });
   })
