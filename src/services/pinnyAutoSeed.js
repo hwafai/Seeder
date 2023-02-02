@@ -9,6 +9,8 @@ const {
 
 const { timeToSeed, getInitialSeedAmount } = require("../utils/seederUtils");
 
+const { FedExAutoSeed } = require("./FedExAutoSeed")
+
 const {
   getGames,
   getSingleOrderbook,
@@ -31,48 +33,53 @@ async function runIt(token, id, url) {
     const ready = timeToSeed(actuals, league);
     if (ready.length) {
       for (const gameID of ready) {
-        const odds = await getSingleOrderbook(gameID, url, token);
-        const game = odds.data.game;
-        const eventName = game.eventName;
-        const eventOdds = findEvent(eventName, events);
-        if (eventOdds) {
-          const {
-            homeTeam,
-            awayTeam,
-            MLsAlreadyBet,
-            SpreadsAlreadyBet,
-            TotalsAlreadyBet,
-          } = ifReseed(game, league, id, eventOdds);
-          const betAmount = getInitialSeedAmount(league);
-          const {
-            ML,
-            mainSpread,
-            altSpread1,
-            altSpread2,
-            mainTotal,
-            altTotal1,
-            altTotal2,
-          } = fetchOdds(league, eventOdds);
-          const orders = constructOrders(
-            MLsAlreadyBet,
-            SpreadsAlreadyBet,
-            TotalsAlreadyBet,
-            ML,
-            mainSpread,
-            altSpread1,
-            altSpread2,
-            mainTotal,
-            altTotal1,
-            altTotal2,
-            gameID,
-            homeTeam,
-            awayTeam,
-            betAmount,
-            username
-          );
-          await placeOrders(gameID, orders, token, url);
-        } else {
-          console.log("no event from pinnacle");
+        if (league !== "FED-EX-500") {
+          const odds = await getSingleOrderbook(gameID, url, token);
+          const game = odds.data.game;
+          const eventName = game.eventName;
+          const eventOdds = findEvent(eventName, events);
+          if (eventOdds) {
+            const {
+              homeTeam,
+              awayTeam,
+              MLsAlreadyBet,
+              SpreadsAlreadyBet,
+              TotalsAlreadyBet,
+            } = ifReseed(game, league, id, eventOdds);
+            const betAmount = getInitialSeedAmount(league);
+            const {
+              ML,
+              mainSpread,
+              altSpread1,
+              altSpread2,
+              mainTotal,
+              altTotal1,
+              altTotal2,
+            } = fetchOdds(league, eventOdds);
+            const orders = constructOrders(
+              MLsAlreadyBet,
+              SpreadsAlreadyBet,
+              TotalsAlreadyBet,
+              ML,
+              mainSpread,
+              altSpread1,
+              altSpread2,
+              mainTotal,
+              altTotal1,
+              altTotal2,
+              gameID,
+              homeTeam,
+              awayTeam,
+              betAmount,
+              username
+            );
+            await placeOrders(gameID, orders, token, url);
+          } else {
+            console.log("no event from pinnacle");
+          }
+        } else if (league === "FED-EX-500") {
+          const orders = await FedExAutoSeed(gameID, url, token, id, league, username)
+          await placeOrders(gameID, orders, token, url)
         }
       }
     } else {
