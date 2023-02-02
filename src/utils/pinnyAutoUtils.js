@@ -7,6 +7,10 @@ const {
 } = require("./seederUtils");
 
 function fetchOdds(league, eventOdds) {
+  // console.log({eventOdds})
+  // const MLlimit = eventOdds.maxMoneyline,
+  // const spreadLimit = eventOdds.maxSpread,
+  // const totalLimit = eventOdds.maxTotal,
   // may need to get home and way moneylines
   const moneylines = eventOdds.moneylines;
   const ML = {
