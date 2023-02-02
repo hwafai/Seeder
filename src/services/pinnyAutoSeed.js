@@ -25,7 +25,7 @@ async function runIt(token, id, url) {
   console.log(`message: ${username} connected to userFeed`);
   const leagues = ["FED-EX-500", "NCAAB", "NFL", "NBA", "ATP", "WTA", "NHL"];
   for (const league of leagues) {
-    if (league !== "FED-EX-500" || league !== "ATP" || league !== "WTA") {
+    if (league !== "FED-EX-500" && league !== "ATP" && league !== "WTA") {
       const altLines = await getPs3838AlternateLines(
         league,
         BACKGROUND_JOBS_URI
