@@ -26,7 +26,7 @@ async function runIt(token, id, url) {
   const leagues = ["FED-EX-500", "NCAAB", "NFL", "NBA", "ATP", "WTA", "NHL"];
   for (const league of leagues) {
     console.log({league})
-    if (league !== "FED-EX-500") {
+    if (league !== "FED-EX-500" || league !== "ATP" || league !== "WTA") {
       const altLines = await getPs3838AlternateLines(
         league,
         BACKGROUND_JOBS_URI
@@ -88,7 +88,7 @@ async function runIt(token, id, url) {
       } else {
         console.log("No Pinnacle Events", league);
       }
-    } else if (league === "FED-EX-500") {
+    } else if (league === "FED-EX-500" || league === "ATP" || league === "WTA") {
       await FedExAutoSeed(
         url,
         token,
