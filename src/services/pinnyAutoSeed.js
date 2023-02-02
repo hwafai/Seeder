@@ -90,6 +90,9 @@ async function runIt(token, id, url, offTheBoardListener) {
               } else {
                 console.log("no event from pinnacle", league);
               }
+            } else {
+              // log that game is off the board
+              console.log(`Game ${gameID} is Off The Board`);
             }
           }
         } else {

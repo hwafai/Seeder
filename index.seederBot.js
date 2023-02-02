@@ -214,6 +214,7 @@ login(password, url, username)
         // if Off the Board is true, this game is off the board
         if (offTheBoard) {
           // first cancel all orders for the game
+          console.log(`Game OTB, cancelling orders for ${fourcasterGameID}`);
           await cancelAllOrdersForGame(fourcasterGameID, token, null, url);
           // then register the game as off the board by the seeder
           await offTheBoardListener.setSeederOffTheBoardStatus(
@@ -222,6 +223,9 @@ login(password, url, username)
             offTheBoard
           );
         } else {
+          console.log(
+            `Game ${fourcasterGameID} is back on the board, will reseed shortly`
+          );
           // this game was off the board but is now back on
           await offTheBoardListener.setSeederOffTheBoardStatus(
             username,
