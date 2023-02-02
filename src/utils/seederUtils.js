@@ -20,11 +20,16 @@ function leagueWhenSeed(league) {
   if (league === "NFL") {
     const thresholdTime = 2000000000;
     return thresholdTime;
-  } else if (league === "FED-EX-500" || league === "ATP" || league === "WTA") {
-    const thresholdTime = 10800;
+  } else if (league === "NBA") {
+    const thresholdTime = 28800;
     return thresholdTime;
-  } else if (league === "NBA" || league === "NHL") {
-    const thresholdTime = 86400;
+  } else if (
+    league === "FED-EX-500" ||
+    league === "ATP" ||
+    league === "WTA" ||
+    league === "NHL"
+  ) {
+    const thresholdTime = 10800;
     return thresholdTime;
   } else {
     const thresholdTime = 1800;
