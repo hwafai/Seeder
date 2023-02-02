@@ -50,10 +50,11 @@ login(password, url, username)
     socket.on("connect", () => {
       console.log(`message: ${username} connected to userFeed`);
       if (username !== "mongoose") {
-        interval = setInterval(() => {
-          runIt(token, id, url);
-        }, 300000);
-        console.log(`Setting timer for interval: ${interval}`);
+        // interval = setInterval(() => {
+        //   runIt(token, id, url);
+        // }, 300000);
+        runIt(token, id, url);
+        // console.log(`Setting timer for interval: ${interval}`);
       }
     });
 
@@ -184,6 +185,7 @@ login(password, url, username)
                   username
                 );
                 const orders = concatOrders(mainOrders, ordersToReseed);
+                console.log({ orders });
                 await placeOrders(gameID, orders, token, url);
               }
             } else {
