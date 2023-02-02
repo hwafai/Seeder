@@ -8,14 +8,15 @@ const {
 
 function fetchOdds(league, eventOdds) {
   // console.log({eventOdds})
-  // const MLlimit = eventOdds.maxMoneyline,
-  // const spreadLimit = eventOdds.maxSpread,
-  // const totalLimit = eventOdds.maxTotal,
+  const MLlimit = eventOdds.maxMoneyline;
+  const spreadLimit = eventOdds.maxSpread;
+  const totalLimit = eventOdds.maxTotal;
   // may need to get home and way moneylines
   const moneylines = eventOdds.moneylines;
   const ML = {
     home: addLean(moneylines[0].odds, 1),
     away: addLean(moneylines[1].odds, 1),
+    limit: MLlimit,
   };
   // key for main spread, do not know if they have
   const homeMainSpread = eventOdds.mainSpread;
@@ -24,6 +25,7 @@ function fetchOdds(league, eventOdds) {
     hdp: homeMainSpread,
     home: addLean(eventOdds["spreads"][0].odds, 1),
     away: addLean(eventOdds["spreads"][1].odds, 1),
+    limit: spreadLimit,
   };
   const { spread1, spread2 } = getAlternativeSpreads(homeMainSpread);
   const awaySpread1 = -1 * spread1;
@@ -32,28 +34,33 @@ function fetchOdds(league, eventOdds) {
     hdp: spread1,
     home: addLean(eventOdds.homeSpreads[spread1][0].odds, 1),
     away: addLean(eventOdds.awaySpreads[awaySpread1][0].odds, 1),
+    limit: spreadLimit,
   };
   const altSpread2 = {
     hdp: spread2,
     home: addLean(eventOdds.homeSpreads[spread2][0].odds, 1),
     away: addLean(eventOdds.awaySpreads[awaySpread2][0].odds, 1),
+    limit: spreadLimit,
   };
 
   const mainTotal = {
     points: keyTotal,
     over: addLean(eventOdds["totals"][1].odds, 1),
     under: addLean(eventOdds["totals"][0].odds, 1),
+    limit: totalLimit,
   };
   const { total1, total2 } = getAlternativeTotals(keyTotal);
   const altTotal1 = {
     points: total1,
     over: addLean(eventOdds.over[total1][0].odds, 1),
     under: addLean(eventOdds.under[total1][0].odds, 1),
+    limit: totalLimit,
   };
   const altTotal2 = {
     points: total2,
     over: addLean(eventOdds.over[total2][0].odds, 1),
     under: addLean(eventOdds.under[total2][0].odds, 1),
+    limit: totalLimit,
   };
   if (league === "NBA" || league || "NFL" || league === "NCAAB") {
     return {
@@ -176,7 +183,24 @@ function ifReseed(game, league, id, eventOdds) {
   }
 }
 
+function leagueBasedAmount(limit, betAmount, league) {
+  if (league === "NFL") {
+    const amount = betAmount * limit > 500 ? 500 : betAmount * limit
+    return amount
+  } else if (league === "NBA") {
+    const amount = betAmount * limit > 333 ? 333 : betAmount * limit
+    return amount
+  } else if (league === "NCAAB") {
+    const amount = betAmount * limit > 155 ? 155 : betAmount * limit
+    return amount
+  } else if (league === "NHL") {
+    const amount = betAmount * limit > 222 ? 222 : betAmount * limit
+    return amount
+  }
+}
+
 function constructOrders(
+  league,
   MLsAlreadyBet,
   SpreadsAlreadyBet,
   TotalsAlreadyBet,
@@ -195,6 +219,8 @@ function constructOrders(
 ) {
   let orders = [];
   if (!MLsAlreadyBet.length) {
+    const limit = ML.limit
+    const amount = leagueBasedAmount(limit, betAmount, league)
     const type = "moneyline";
     const MLorders = properOrders(
       type,
@@ -202,7 +228,7 @@ function constructOrders(
       gameID,
       homeTeam,
       awayTeam,
-      betAmount,
+      amount,
       ML.away,
       ML.home,
       username
@@ -212,6 +238,8 @@ function constructOrders(
     console.log("Already Seeded ML or nothing to Seed");
   }
   if (SpreadsAlreadyBet && !SpreadsAlreadyBet.length) {
+    const limit = mainSpread.limit
+    const amount = leagueBasedAmount(limit, betAmount, league)
     const type = "spread";
     const spreadOrders = constructSpreadOrders(
       mainSpread,
@@ -221,7 +249,7 @@ function constructOrders(
       gameID,
       homeTeam,
       awayTeam,
-      betAmount,
+      amount,
       username
     );
     orders = orders.concat(spreadOrders);
@@ -229,6 +257,8 @@ function constructOrders(
     console.log("Already Seeded Spread or nothing to Seed");
   }
   if (TotalsAlreadyBet && !TotalsAlreadyBet.length) {
+    const limit = mainTotal.limit
+    const amount = leagueBasedAmount(limit, betAmount, league)
     const type = "total";
     const overSide = "under";
     const underSide = "over";
@@ -240,7 +270,7 @@ function constructOrders(
       gameID,
       overSide,
       underSide,
-      betAmount,
+      amount,
       username
     );
     orders = orders.concat(totalOrders);
