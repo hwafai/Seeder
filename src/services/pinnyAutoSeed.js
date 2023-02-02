@@ -61,6 +61,7 @@ async function runIt(token, id, url) {
               } = fetchOdds(league, eventOdds);
               console.log({ML, mainSpread, altSpread1, mainTotal, altTotal1})
               const orders = constructOrders(
+                league,
                 MLsAlreadyBet,
                 SpreadsAlreadyBet,
                 TotalsAlreadyBet,

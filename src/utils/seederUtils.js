@@ -362,10 +362,10 @@ function bestBet(odds1, odds2) {
 
 function getInitialSeedAmount(league) {
   if (league === "NFL") {
-    const betAmount = 250;
+    const betAmount = .01;
     return betAmount;
   } else if (league === "NBA") {
-    const betAmount = 200;
+    const betAmount = .01;
     return betAmount;
   } else if (league === "ATP") {
     const betAmount = 150;
@@ -377,10 +377,10 @@ function getInitialSeedAmount(league) {
     const betAmount = 200;
     return betAmount;
   } else if (league === "NCAAB") {
-    const betAmount = 100;
+    const betAmount = .005;
     return betAmount;
   } else if (league === "NHL") {
-    const betAmount = 200;
+    const betAmount = .01;
     return betAmount;
   }
 }
