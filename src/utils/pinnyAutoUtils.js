@@ -8,14 +8,15 @@ const {
 
 function fetchOdds(league, eventOdds) {
   // console.log({eventOdds})
-  // const MLlimit = eventOdds.maxMoneyline,
-  // const spreadLimit = eventOdds.maxSpread,
-  // const totalLimit = eventOdds.maxTotal,
+  const MLlimit = eventOdds.maxMoneyline;
+  const spreadLimit = eventOdds.maxSpread;
+  const totalLimit = eventOdds.maxTotal;
   // may need to get home and way moneylines
   const moneylines = eventOdds.moneylines;
   const ML = {
     home: addLean(moneylines[0].odds, 1),
     away: addLean(moneylines[1].odds, 1),
+    limit: MLlimit,
   };
   // key for main spread, do not know if they have
   const homeMainSpread = eventOdds.mainSpread;
@@ -24,6 +25,7 @@ function fetchOdds(league, eventOdds) {
     hdp: homeMainSpread,
     home: addLean(eventOdds["spreads"][0].odds, 1),
     away: addLean(eventOdds["spreads"][1].odds, 1),
+    limit: spreadLimit,
   };
   const { spread1, spread2 } = getAlternativeSpreads(homeMainSpread);
   const awaySpread1 = -1 * spread1;
@@ -32,28 +34,33 @@ function fetchOdds(league, eventOdds) {
     hdp: spread1,
     home: addLean(eventOdds.homeSpreads[spread1][0].odds, 1),
     away: addLean(eventOdds.awaySpreads[awaySpread1][0].odds, 1),
+    limit: spreadLimit,
   };
   const altSpread2 = {
     hdp: spread2,
     home: addLean(eventOdds.homeSpreads[spread2][0].odds, 1),
     away: addLean(eventOdds.awaySpreads[awaySpread2][0].odds, 1),
+    limit: spreadLimit,
   };
 
   const mainTotal = {
     points: keyTotal,
     over: addLean(eventOdds["totals"][1].odds, 1),
     under: addLean(eventOdds["totals"][0].odds, 1),
+    limit: totalLimit,
   };
   const { total1, total2 } = getAlternativeTotals(keyTotal);
   const altTotal1 = {
     points: total1,
     over: addLean(eventOdds.over[total1][0].odds, 1),
     under: addLean(eventOdds.under[total1][0].odds, 1),
+    limit: totalLimit,
   };
   const altTotal2 = {
     points: total2,
     over: addLean(eventOdds.over[total2][0].odds, 1),
     under: addLean(eventOdds.under[total2][0].odds, 1),
+    limit: totalLimit,
   };
   if (league === "NBA" || league || "NFL" || league === "NCAAB") {
     return {
