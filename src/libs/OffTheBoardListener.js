@@ -1,4 +1,4 @@
-const { redisSubscriber, redisPublisher } = require("../libs/redisClients");
+const { redisSubscriber, redisPublisher } = require("./redisClient");
 const EventEmitter = require("events");
 
 class offTheBoardListener extends EventEmitter {
