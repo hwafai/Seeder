@@ -23,13 +23,18 @@ async function login(password, url, username) {
 }
 
 async function cancelAllOrdersForGame(gameID, token, type, url) {
+  const data = {
+    gameID,
+  };
+
+  if (type) {
+    data.type = type;
+  }
+
   return callApi({
     url: `${url}/session/cancelAllOrdersForGame`,
     method: "POST",
-    data: {
-      gameID,
-      type,
-    },
+    data,
     headers: { authorization: token },
   });
 }

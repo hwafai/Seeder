@@ -100,7 +100,7 @@ function vigMap(league, timeToStart) {
       const desiredVig = 0.04;
       const equityToLockIn = 0.005;
       return { seedAmount, desiredVig, equityToLockIn };
-    } else if (league === '1H-NFL') {
+    } else if (league === "1H-NFL") {
       const seedAmount = 500;
       const desiredVig = 0.02;
       const equityToLockIn = 0.005;
@@ -132,7 +132,7 @@ function vigMap(league, timeToStart) {
       const desiredVig = 0.02;
       const equityToLockIn = 0.005;
       return { seedAmount, desiredVig, equityToLockIn };
-    } else if (league === '1H-NFL') {
+    } else if (league === "1H-NFL") {
       const seedAmount = 500;
       const desiredVig = 0.02;
       const equityToLockIn = 0.005;
