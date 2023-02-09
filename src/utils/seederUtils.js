@@ -581,7 +581,7 @@ function newSeeds(odds, desiredVig, equityToLockIn) {
   }
 }
 
-const leagues = ["FED-EX-500", "NCAAB", "NFL", "NBA", "ATP", "WTA", "NHL"];
+const leagues = ["FED-EX-500", "NCAAB", "NFL", "ATP", "WTA", "NHL"];
 
 module.exports = {
   convertToDecimal,
