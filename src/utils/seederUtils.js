@@ -21,7 +21,7 @@ function leagueWhenSeed(league) {
     const thresholdTime = 2000000000;
     return thresholdTime;
   } else if (league === "NBA") {
-    const thresholdTime = 28800;
+    const thresholdTime = 86400;
     return thresholdTime;
   } else if (
     league === "FED-EX-500" ||
@@ -581,7 +581,7 @@ function newSeeds(odds, desiredVig, equityToLockIn) {
   }
 }
 
-const leagues = ["FED-EX-500", "NCAAB", "NFL", "ATP", "WTA", "NHL"];
+const leagues = ["NBA", "FED-EX-500", "NCAAB", "NFL", "ATP", "WTA", "NHL"];
 
 module.exports = {
   convertToDecimal,
