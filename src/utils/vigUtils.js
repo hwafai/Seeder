@@ -90,7 +90,7 @@ const userVigMap = {
     },
     NBA: {
       86400: {
-        seedAmount: 100,
+        seedAmount: 150,
         desiredVig: 0.04,
         equityToLockIn: 0.01,
       },
@@ -134,44 +134,44 @@ const userVigMap = {
     },
     ATP: {
       86400: {
-        seedAmount: 100,
+        seedAmount: 250,
         desiredVig: 0.04,
         equityToLockIn: 0.01,
       },
       10800: {
-        seedAmount: 100,
+        seedAmount: 250,
         desiredVig: 0.04,
         equityToLockIn: 0.01,
       },
       1800: {
-        seedAmount: 200,
+        seedAmount: 250,
         desiredVig: 0.03,
         equityToLockIn: 0.01,
       },
       0: {
-        seedAmount: 300,
+        seedAmount: 250,
         desiredVig: 0.03,
         equityToLockIn: 0.01,
       },
     },
     WTA: {
       86400: {
-        seedAmount: 100,
+        seedAmount: 200,
         desiredVig: 0.04,
         equityToLockIn: 0.01,
       },
       10800: {
-        seedAmount: 100,
+        seedAmount: 200,
         desiredVig: 0.04,
         equityToLockIn: 0.01,
       },
       1800: {
-        seedAmount: 150,
+        seedAmount: 200,
         desiredVig: 0.04,
         equityToLockIn: 0.01,
       },
       0: {
-        seedAmount: 150,
+        seedAmount: 200,
         desiredVig: 0.04,
         equityToLockIn: 0.01,
       },
@@ -200,23 +200,23 @@ const userVigMap = {
     },
     NHL: {
       86400: {
-        seedAmount: 100,
+        seedAmount: 200,
         desiredVig: 0.04,
         equityToLockIn: 0.01,
       },
       10800: {
-        seedAmount: 100,
+        seedAmount: 200,
         desiredVig: 0.04,
         equityToLockIn: 0.01,
       },
       1800: {
         seedAmount: 200,
-        desiredVig: 0.025,
+        desiredVig: 0.03,
         equityToLockIn: 0.01,
       },
       0: {
         seedAmount: 250,
-        desiredVig: 0.025,
+        desiredVig: 0.03,
         equityToLockIn: 0.01,
       },
     },

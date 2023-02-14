@@ -189,7 +189,6 @@ login(password, url, username)
                   username
                 );
                 const orders = concatOrders(mainOrders, ordersToReseed);
-                console.log({ orders });
                 await placeOrders(gameID, orders, token, url);
               }
             } else {

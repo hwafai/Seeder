@@ -4,11 +4,13 @@ const {
   fetchOdds,
   ifReseed,
   findEvent,
+  triggerCancels,
   constructOrders,
 } = require("../utils/pinnyAutoUtils");
 
 const {
   timeToSeed,
+  getMaxLiability,
   getInitialSeedAmount,
   leagues,
 } = require("../utils/seederUtils");
@@ -18,7 +20,10 @@ const { FedExAutoSeed } = require("./FedExAutoSeed");
 const {
   getGames,
   getSingleOrderbook,
+  getOrderbook,
+  getGameLiability,
   getPs3838AlternateLines,
+  cancelAllOrdersForGame,
   placeOrders,
 } = require("../utils/apiUtils");
 
@@ -45,50 +50,78 @@ async function runIt(token, id, url, offTheBoardListener) {
                 username,
                 gameID
               );
-
             if (!otbStatus) {
-              const odds = await getSingleOrderbook(gameID, url, token);
-              const game = odds.data.game;
-              const eventName = game.eventName;
-              const eventOdds = findEvent(eventName, events);
-              if (eventOdds) {
-                const {
-                  homeTeam,
-                  awayTeam,
-                  MLsAlreadyBet,
-                  SpreadsAlreadyBet,
-                  TotalsAlreadyBet,
-                } = ifReseed(game, league, id, eventOdds);
-                const betAmount = getInitialSeedAmount(league);
-                const {
-                  ML,
-                  mainSpread,
-                  altSpread1,
-                  altSpread2,
-                  mainTotal,
-                  altTotal1,
-                  altTotal2,
-                } = fetchOdds(league, eventOdds);
-                const orders = constructOrders(
-                  MLsAlreadyBet,
-                  SpreadsAlreadyBet,
-                  TotalsAlreadyBet,
-                  ML,
-                  mainSpread,
-                  altSpread1,
-                  altSpread2,
-                  mainTotal,
-                  altTotal1,
-                  altTotal2,
-                  gameID,
-                  homeTeam,
-                  awayTeam,
-                  betAmount,
-                  username
-                );
-                await placeOrders(gameID, orders, token, url);
+              const gameLiability = await getGameLiability(url, token, gameID);
+              const maxLiability = getMaxLiability(league, username);
+              if (gameLiability.data.liability > maxLiability) {
+                const odds = await getSingleOrderbook(gameID, url, token);
+                const game = odds.data.game;
+                const eventName = game.eventName;
+                const eventOdds = findEvent(eventName, events);
+                if (eventOdds) {
+                  const {
+                    homeTeam,
+                    awayTeam,
+                    MLsAlreadyBet,
+                    SpreadsAlreadyBet,
+                    TotalsAlreadyBet,
+                  } = ifReseed(game, league, id, eventOdds);
+                  const betAmount = getInitialSeedAmount(league);
+                  const {
+                    ML,
+                    mainSpread,
+                    altSpread1,
+                    altSpread2,
+                    mainTotal,
+                    altTotal1,
+                    altTotal2,
+                  } = fetchOdds(league, eventOdds);
+                  const orders = await constructOrders(
+                    MLsAlreadyBet,
+                    SpreadsAlreadyBet,
+                    TotalsAlreadyBet,
+                    ML,
+                    mainSpread,
+                    altSpread1,
+                    altSpread2,
+                    mainTotal,
+                    altTotal1,
+                    altTotal2,
+                    gameID,
+                    homeTeam,
+                    awayTeam,
+                    betAmount,
+                    username
+                  );
+                  if (orders && orders.length) {
+                    const gameOB = await getOrderbook(gameID, url, token);
+                    const orderBook = gameOB.data.games;
+                    const { cancelSpread, cancelTotal } = triggerCancels(
+                      SpreadsAlreadyBet,
+                      mainSpread,
+                      TotalsAlreadyBet,
+                      mainTotal,
+                      orderBook,
+                      id
+                    );
+                    if (cancelSpread) {
+                      await cancelAllOrdersForGame(
+                        gameID,
+                        token,
+                        "spread",
+                        url
+                      );
+                    }
+                    if (cancelTotal) {
+                      await cancelAllOrdersForGame(gameID, token, "total", url);
+                    }
+                    await placeOrders(gameID, orders, token, url);
+                  }
+                } else {
+                  console.log("no event from pinnacle", league, eventName);
+                }
               } else {
-                console.log("no event from pinnacle", league);
+                console.log("Max Liability Exceeded");
               }
             } else {
               // log that game is off the board

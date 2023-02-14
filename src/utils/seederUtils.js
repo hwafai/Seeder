@@ -21,14 +21,15 @@ function leagueWhenSeed(league) {
     const thresholdTime = 2000000000;
     return thresholdTime;
   } else if (league === "NBA") {
-    const thresholdTime = 28800;
+    const thresholdTime = 86400;
     return thresholdTime;
-  } else if (
-    league === "FED-EX-500" ||
-    league === "ATP" ||
-    league === "WTA" ||
-    league === "NHL"
-  ) {
+  } else if (league === "FED-EX-500") {
+    const thresholdTime = 129600;
+    return thresholdTime;
+  } else if (league === "NHL") {
+    const thresholdTime = 18000;
+    return thresholdTime;
+  } else if (league === "ATP" || league === "WTA") {
     const thresholdTime = 10800;
     return thresholdTime;
   } else {
@@ -365,16 +366,16 @@ function getInitialSeedAmount(league) {
     const betAmount = 250;
     return betAmount;
   } else if (league === "NBA") {
-    const betAmount = 200;
-    return betAmount;
-  } else if (league === "ATP") {
     const betAmount = 150;
     return betAmount;
+  } else if (league === "ATP") {
+    const betAmount = 250;
+    return betAmount;
   } else if (league === "WTA") {
-    const betAmount = 100;
+    const betAmount = 200;
     return betAmount;
   } else if (league === "FED-EX-500") {
-    const betAmount = 200;
+    const betAmount = 300;
     return betAmount;
   } else if (league === "NCAAB") {
     const betAmount = 100;
@@ -581,7 +582,7 @@ function newSeeds(odds, desiredVig, equityToLockIn) {
   }
 }
 
-const leagues = ["FED-EX-500", "NCAAB", "NFL", "ATP", "WTA", "NHL"];
+const leagues = ["NBA", "FED-EX-500", "NCAAB", "ATP", "WTA", "NHL"];
 
 module.exports = {
   convertToDecimal,
