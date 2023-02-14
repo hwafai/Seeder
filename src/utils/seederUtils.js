@@ -23,12 +23,13 @@ function leagueWhenSeed(league) {
   } else if (league === "NBA") {
     const thresholdTime = 86400;
     return thresholdTime;
-  } else if (
-    league === "FED-EX-500" ||
-    league === "ATP" ||
-    league === "WTA" ||
-    league === "NHL"
-  ) {
+  } else if (league === "FED-EX-500") {
+    const thresholdTime = 129600;
+    return thresholdTime;
+  } else if (league === "NHL") {
+    const thresholdTime = 18000;
+    return thresholdTime;
+  } else if (league === "ATP" || league === "WTA") {
     const thresholdTime = 10800;
     return thresholdTime;
   } else {
