@@ -365,16 +365,16 @@ function getInitialSeedAmount(league) {
     const betAmount = 250;
     return betAmount;
   } else if (league === "NBA") {
-    const betAmount = 200;
-    return betAmount;
-  } else if (league === "ATP") {
     const betAmount = 150;
     return betAmount;
+  } else if (league === "ATP") {
+    const betAmount = 250;
+    return betAmount;
   } else if (league === "WTA") {
-    const betAmount = 100;
+    const betAmount = 200;
     return betAmount;
   } else if (league === "FED-EX-500") {
-    const betAmount = 200;
+    const betAmount = 300;
     return betAmount;
   } else if (league === "NCAAB") {
     const betAmount = 100;
@@ -581,7 +581,7 @@ function newSeeds(odds, desiredVig, equityToLockIn) {
   }
 }
 
-const leagues = ["NBA", "FED-EX-500", "NCAAB", "NFL", "ATP", "WTA", "NHL"];
+const leagues = ["NBA", "FED-EX-500", "NCAAB", "ATP", "WTA", "NHL"];
 
 module.exports = {
   convertToDecimal,

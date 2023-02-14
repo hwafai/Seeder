@@ -4,6 +4,7 @@ const {
   fetchOdds,
   ifReseed,
   findEvent,
+  triggerCancels,
   constructOrders,
 } = require("../utils/pinnyAutoUtils");
 
@@ -19,8 +20,10 @@ const { FedExAutoSeed } = require("./FedExAutoSeed");
 const {
   getGames,
   getSingleOrderbook,
+  getOrderbook,
   getGameLiability,
   getPs3838AlternateLines,
+  cancelAllOrdersForGame,
   placeOrders,
 } = require("../utils/apiUtils");
 
@@ -73,7 +76,7 @@ async function runIt(token, id, url, offTheBoardListener) {
                     altTotal1,
                     altTotal2,
                   } = fetchOdds(league, eventOdds);
-                  const orders = constructOrders(
+                  const orders = await constructOrders(
                     MLsAlreadyBet,
                     SpreadsAlreadyBet,
                     TotalsAlreadyBet,
@@ -90,10 +93,35 @@ async function runIt(token, id, url, offTheBoardListener) {
                     betAmount,
                     username
                   );
-                  await placeOrders(gameID, orders, token, url);
+                  if (orders && orders.length) {
+                    const gameOB = await getOrderbook(gameID, url, token);
+                    const orderBook = gameOB.data.games;
+                    const { cancelSpread, cancelTotal } = triggerCancels(
+                      SpreadsAlreadyBet,
+                      mainSpread,
+                      TotalsAlreadyBet,
+                      mainTotal,
+                      orderBook,
+                      id
+                    );
+                    if (cancelSpread) {
+                      await cancelAllOrdersForGame(
+                        gameID,
+                        token,
+                        "spread",
+                        url
+                      );
+                    }
+                    if (cancelTotal) {
+                      await cancelAllOrdersForGame(gameID, token, "total", url);
+                    }
+                    await placeOrders(gameID, orders, token, url);
+                  }
                 } else {
-                  console.log("no event from pinnacle", league);
+                  console.log("no event from pinnacle", league, eventName);
                 }
+              } else {
+                console.log("Max Liability Exceeded");
               }
             } else {
               // log that game is off the board

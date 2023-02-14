@@ -6,55 +6,102 @@ const {
   noReseedTotals,
 } = require("./seederUtils");
 
+function fetchML(moneylines) {
+  if (moneylines && moneylines.length) {
+    const ML = {
+      home: addLean(moneylines[0].odds, 1),
+      away: addLean(moneylines[1].odds, 1),
+    };
+    return ML;
+  } else {
+    const ML = null;
+    return ML;
+  }
+}
+
+function fetchSpreads(eventOdds, homeMainSpread) {
+  if (homeMainSpread && eventOdds["spreads"].length) {
+    const mainSpread = {
+      hdp: homeMainSpread,
+      home: addLean(eventOdds["spreads"][0].odds, 1),
+      away: addLean(eventOdds["spreads"][1].odds, 1),
+    };
+    const { spread1, spread2 } = getAlternativeSpreads(homeMainSpread);
+    const awaySpread1 = -1 * spread1;
+    const awaySpread2 = -1 * spread2;
+    if (eventOdds.homeSpreads[spread1]) {
+      const altSpread1 = {
+        hdp: spread1,
+        home: addLean(eventOdds.homeSpreads[spread1][0].odds, 1),
+        away: addLean(eventOdds.awaySpreads[awaySpread1][0].odds, 1),
+      };
+      const altSpread2 = {
+        hdp: spread2,
+        home: addLean(eventOdds.homeSpreads[spread2][0].odds, 1),
+        away: addLean(eventOdds.awaySpreads[awaySpread2][0].odds, 1),
+      };
+      return { mainSpread, altSpread1, altSpread2 };
+    } else {
+      const altSpread1 = null;
+      const altSpread2 = null;
+      return { mainSpread, altSpread1, altSpread2 };
+    }
+  } else {
+    const mainSpread = null;
+    const altSpread1 = null;
+    const altSpread2 = null;
+    return { mainSpread, altSpread1, altSpread2 };
+  }
+}
+
+function fetchTotals(eventOdds, keyTotal) {
+  if (keyTotal && eventOdds["totals"].length) {
+    const mainTotal = {
+      points: keyTotal,
+      over: addLean(eventOdds["totals"][1].odds, 1),
+      under: addLean(eventOdds["totals"][0].odds, 1),
+    };
+    const { total1, total2 } = getAlternativeTotals(keyTotal);
+    if (eventOdds.over[total1]) {
+      const altTotal1 = {
+        points: total1,
+        over: addLean(eventOdds.over[total1][0].odds, 1),
+        under: addLean(eventOdds.under[total1][0].odds, 1),
+      };
+      const altTotal2 = {
+        points: total2,
+        over: addLean(eventOdds.over[total2][0].odds, 1),
+        under: addLean(eventOdds.under[total2][0].odds, 1),
+      };
+      return { mainTotal, altTotal1, altTotal2 };
+    } else {
+      const altTotal1 = null;
+      const altTotal2 = null;
+      return { mainTotal, altTotal1, altTotal2 };
+    }
+  } else {
+    const mainTotal = null;
+    const altTotal1 = null;
+    const altTotal2 = null;
+    return { mainTotal, altTotal1, altTotal2 };
+  }
+}
+
 function fetchOdds(league, eventOdds) {
-  // console.log({eventOdds})
   // const MLlimit = eventOdds.maxMoneyline,
   // const spreadLimit = eventOdds.maxSpread,
   // const totalLimit = eventOdds.maxTotal,
   // may need to get home and way moneylines
   const moneylines = eventOdds.moneylines;
-  const ML = {
-    home: addLean(moneylines[0].odds, 1),
-    away: addLean(moneylines[1].odds, 1),
-  };
-  // key for main spread, do not know if they have
   const homeMainSpread = eventOdds.mainSpread;
   const keyTotal = eventOdds.mainTotal;
-  const mainSpread = {
-    hdp: homeMainSpread,
-    home: addLean(eventOdds["spreads"][0].odds, 1),
-    away: addLean(eventOdds["spreads"][1].odds, 1),
-  };
-  const { spread1, spread2 } = getAlternativeSpreads(homeMainSpread);
-  const awaySpread1 = -1 * spread1;
-  const awaySpread2 = -1 * spread2;
-  const altSpread1 = {
-    hdp: spread1,
-    home: addLean(eventOdds.homeSpreads[spread1][0].odds, 1),
-    away: addLean(eventOdds.awaySpreads[awaySpread1][0].odds, 1),
-  };
-  const altSpread2 = {
-    hdp: spread2,
-    home: addLean(eventOdds.homeSpreads[spread2][0].odds, 1),
-    away: addLean(eventOdds.awaySpreads[awaySpread2][0].odds, 1),
-  };
-
-  const mainTotal = {
-    points: keyTotal,
-    over: addLean(eventOdds["totals"][1].odds, 1),
-    under: addLean(eventOdds["totals"][0].odds, 1),
-  };
-  const { total1, total2 } = getAlternativeTotals(keyTotal);
-  const altTotal1 = {
-    points: total1,
-    over: addLean(eventOdds.over[total1][0].odds, 1),
-    under: addLean(eventOdds.under[total1][0].odds, 1),
-  };
-  const altTotal2 = {
-    points: total2,
-    over: addLean(eventOdds.over[total2][0].odds, 1),
-    under: addLean(eventOdds.under[total2][0].odds, 1),
-  };
+  const ML = fetchML(moneylines);
+  const { mainSpread, altSpread1, altSpread2 } = fetchSpreads(
+    eventOdds,
+    homeMainSpread
+  );
+  const { mainTotal, altTotal1, altTotal2 } = fetchTotals(eventOdds, keyTotal);
+  // key for main spread, do not know if they have
   if (league === "NBA" || league || "NFL" || league === "NCAAB") {
     return {
       ML,
@@ -176,7 +223,7 @@ function ifReseed(game, league, id, eventOdds) {
   }
 }
 
-function constructOrders(
+async function constructOrders(
   MLsAlreadyBet,
   SpreadsAlreadyBet,
   TotalsAlreadyBet,
@@ -194,7 +241,7 @@ function constructOrders(
   username
 ) {
   let orders = [];
-  if (!MLsAlreadyBet.length) {
+  if (ML && !MLsAlreadyBet.length) {
     const type = "moneyline";
     const MLorders = properOrders(
       type,
@@ -211,7 +258,7 @@ function constructOrders(
   } else {
     console.log("Already Seeded ML or nothing to Seed");
   }
-  if (SpreadsAlreadyBet && !SpreadsAlreadyBet.length) {
+  if (mainSpread && SpreadsAlreadyBet && !SpreadsAlreadyBet.length) {
     const type = "spread";
     const spreadOrders = constructSpreadOrders(
       mainSpread,
@@ -228,7 +275,7 @@ function constructOrders(
   } else {
     console.log("Already Seeded Spread or nothing to Seed");
   }
-  if (TotalsAlreadyBet && !TotalsAlreadyBet.length) {
+  if (mainTotal && TotalsAlreadyBet && !TotalsAlreadyBet.length) {
     const type = "total";
     const overSide = "under";
     const underSide = "over";
@@ -273,31 +320,94 @@ function constructTotalOrders(
     username
   );
   const altTotals = [];
-  const altTotal1Orders = properOrders(
-    type,
-    altTotal1.points,
-    gameID,
-    overSide,
-    underSide,
-    betAmount,
-    altTotal1.over,
-    altTotal1.under,
-    username
-  );
-  const altTotal2Orders = properOrders(
-    type,
-    altTotal2.points,
-    gameID,
-    overSide,
-    underSide,
-    betAmount,
-    altTotal2.over,
-    altTotal2.under,
-    username
-  );
-  altTotals.push(altTotal1Orders, altTotal2Orders);
-  const totalOrders = concatOrders(mainTotalOrders, altTotals);
-  return totalOrders;
+  if (altTotal1 && altTotal2) {
+    const altTotal1Orders = properOrders(
+      type,
+      altTotal1.points,
+      gameID,
+      overSide,
+      underSide,
+      betAmount,
+      altTotal1.over,
+      altTotal1.under,
+      username
+    );
+    const altTotal2Orders = properOrders(
+      type,
+      altTotal2.points,
+      gameID,
+      overSide,
+      underSide,
+      betAmount,
+      altTotal2.over,
+      altTotal2.under,
+      username
+    );
+    altTotals.push(altTotal1Orders, altTotal2Orders);
+    const totalOrders = concatOrders(mainTotalOrders, altTotals);
+    return totalOrders;
+  } else {
+    return mainTotalOrders;
+  }
+}
+
+function triggerCancels(
+  SpreadsAlreadyBet,
+  mainSpread,
+  TotalsAlreadyBet,
+  mainTotal,
+  orderBook,
+  id
+) {
+  let cancelSpread;
+  let cancelTotal;
+  const SpreadsAlready = [];
+  const TotalsAlready = [];
+  const awaySpreads = orderBook[0].awaySpreads;
+  const homeSpreads = orderBook[0].homeSpreads;
+  for (const awaySp of awaySpreads) {
+    if (awaySp.createdBy === id) {
+      SpreadsAlready.push(awaySp);
+    }
+  }
+  for (const homeSp of homeSpreads) {
+    if (homeSp.createdBy === id) {
+      SpreadsAlready.push(homeSp);
+    }
+  }
+  const overs = orderBook[0].over;
+  const unders = orderBook[0].under;
+  for (const over of overs) {
+    if (over.createdBy === id) {
+      TotalsAlready.push(over);
+    }
+  }
+  for (const under of unders) {
+    if (under.createdBy === id) {
+      TotalsAlready.push(under);
+    }
+  }
+  if (
+    SpreadsAlready.length &&
+    mainSpread &&
+    SpreadsAlreadyBet &&
+    !SpreadsAlreadyBet.length
+  ) {
+    cancelSpread = true;
+  } else {
+    cancelSpread = false;
+  }
+  if (
+    TotalsAlready.length &&
+    mainTotal &&
+    TotalsAlreadyBet &&
+    TotalsAlreadyBet.length
+  ) {
+    cancelTotal = true;
+  } else {
+    cancelTotal = false;
+  }
+  return { cancelSpread, cancelTotal };
 }
 
 function constructSpreadOrders(
@@ -323,36 +433,41 @@ function constructSpreadOrders(
     username
   );
   const altOrders = [];
-  const alt1Orders = properOrders(
-    type,
-    altSpread1.hdp,
-    gameID,
-    homeTeam,
-    awayTeam,
-    betAmount,
-    altSpread1.away,
-    altSpread1.home,
-    username
-  );
-  const alt2Orders = properOrders(
-    type,
-    altSpread2.hdp,
-    gameID,
-    homeTeam,
-    awayTeam,
-    betAmount,
-    altSpread2.away,
-    altSpread2.home,
-    username
-  );
-  altOrders.push(alt1Orders, alt2Orders);
-  const spreadOrders = concatOrders(mainSpreadOrders, altOrders);
-  return spreadOrders;
+  if (altSpread1 && altSpread2) {
+    const alt1Orders = properOrders(
+      type,
+      altSpread1.hdp,
+      gameID,
+      homeTeam,
+      awayTeam,
+      betAmount,
+      altSpread1.away,
+      altSpread1.home,
+      username
+    );
+    const alt2Orders = properOrders(
+      type,
+      altSpread2.hdp,
+      gameID,
+      homeTeam,
+      awayTeam,
+      betAmount,
+      altSpread2.away,
+      altSpread2.home,
+      username
+    );
+    altOrders.push(alt1Orders, alt2Orders);
+    const spreadOrders = concatOrders(mainSpreadOrders, altOrders);
+    return spreadOrders;
+  } else {
+    return mainSpreadOrders;
+  }
 }
 
 module.exports = {
   fetchOdds,
   ifReseed,
   findEvent,
+  triggerCancels,
   constructOrders,
 };
