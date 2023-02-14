@@ -32,13 +32,13 @@ function fetchSpreads(eventOdds, homeMainSpread) {
     if (eventOdds.homeSpreads[spread1]) {
       const altSpread1 = {
         hdp: spread1,
-        home: addLean(eventOdds.homeSpreads[spread1][0].odds, 1),
-        away: addLean(eventOdds.awaySpreads[awaySpread1][0].odds, 1),
+        home: addLean(eventOdds.homeSpreads[spread1][0].odds, -2),
+        away: addLean(eventOdds.awaySpreads[awaySpread1][0].odds, -2),
       };
       const altSpread2 = {
         hdp: spread2,
-        home: addLean(eventOdds.homeSpreads[spread2][0].odds, 1),
-        away: addLean(eventOdds.awaySpreads[awaySpread2][0].odds, 1),
+        home: addLean(eventOdds.homeSpreads[spread2][0].odds, -2),
+        away: addLean(eventOdds.awaySpreads[awaySpread2][0].odds, -2),
       };
       return { mainSpread, altSpread1, altSpread2 };
     } else {
@@ -65,13 +65,13 @@ function fetchTotals(eventOdds, keyTotal) {
     if (eventOdds.over[total1]) {
       const altTotal1 = {
         points: total1,
-        over: addLean(eventOdds.over[total1][0].odds, 1),
-        under: addLean(eventOdds.under[total1][0].odds, 1),
+        over: addLean(eventOdds.over[total1][0].odds, -2),
+        under: addLean(eventOdds.under[total1][0].odds, -2),
       };
       const altTotal2 = {
         points: total2,
-        over: addLean(eventOdds.over[total2][0].odds, 1),
-        under: addLean(eventOdds.under[total2][0].odds, 1),
+        over: addLean(eventOdds.over[total2][0].odds, -2),
+        under: addLean(eventOdds.under[total2][0].odds, -2),
       };
       return { mainTotal, altTotal1, altTotal2 };
     } else {
