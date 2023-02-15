@@ -87,7 +87,6 @@ login(password, url, username)
             formattedMessage.matched.odds
           );
         } else {
-          console.log({formattedMessage})
           const gameID = formattedMessage.gameID;
           const orderAmount = formattedMessage.unmatched.offered;
           const odds = formattedMessage.unmatched.odds;
