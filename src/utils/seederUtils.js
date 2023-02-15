@@ -21,7 +21,7 @@ function leagueWhenSeed(league) {
     const thresholdTime = 2000000000;
     return thresholdTime;
   } else if (league === "NBA") {
-    const thresholdTime = 86400;
+    const thresholdTime = 21600;
     return thresholdTime;
   } else if (league === "FED-EX-500") {
     const thresholdTime = 86400;
@@ -366,7 +366,7 @@ function getInitialSeedAmount(league) {
     const betAmount = 250;
     return betAmount;
   } else if (league === "NBA") {
-    const betAmount = 150;
+    const betAmount = 100;
     return betAmount;
   } else if (league === "ATP") {
     const betAmount = 250;
