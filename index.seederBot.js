@@ -72,8 +72,10 @@ login(password, url, username)
     socket.on("positionUpdate", async (msg) => {
       try {
         const formattedMessage = JSON.parse(msg);
+        const time = new Date()
         if (!formattedMessage.unmatched) {
           console.log(
+            time,
             `${username} took offer on`,
             formattedMessage.eventName,
             "for",
@@ -86,7 +88,6 @@ login(password, url, username)
           );
         } else {
           console.log({formattedMessage})
-          const time = new Date()
           const gameID = formattedMessage.gameID;
           const orderAmount = formattedMessage.unmatched.offered;
           const odds = formattedMessage.unmatched.odds;
@@ -120,6 +121,7 @@ login(password, url, username)
             );
           } else {
             console.log(
+              time,
               `${username} order on`,
               event,
               "matched for",
