@@ -85,6 +85,8 @@ login(password, url, username)
             formattedMessage.matched.odds
           );
         } else {
+          console.log({formattedMessage})
+          const time = new Date()
           const gameID = formattedMessage.gameID;
           const orderAmount = formattedMessage.unmatched.offered;
           const odds = formattedMessage.unmatched.odds;
@@ -95,10 +97,13 @@ login(password, url, username)
           const fillThreshold = 0.8;
           if (formattedMessage.unmatched.filled === 0 && orderAmount > 0) {
             console.log(
+              time,
               `${username} created offer on `,
               event,
               "on",
               type,
+              "at",
+              number,
               "for",
               orderAmount,
               "at",
