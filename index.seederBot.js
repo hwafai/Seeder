@@ -174,6 +174,7 @@ login(password, url, username)
                 );
                 await cancelAllOrdersForGame(gameID, token, type, url);
                 const { newSeedA, secondNewA } = newSeeds(
+                  type,
                   odds,
                   desiredVig,
                   equityToLockIn
