@@ -305,7 +305,7 @@ function constructReseedOrders(
     const takenOdds = reseed.odds;
     const odds = takenOdds * -1;
     const number = getNumber(type, reseed);
-    const { newSeedA, secondNewA } = newSeeds(odds, desiredVig, equityToLockIn);
+    const { newSeedA, secondNewA } = newSeeds(type, odds, desiredVig, equityToLockIn);
     const adjOrders = properOrders(
       type,
       number,
@@ -564,8 +564,26 @@ function properOrders(
   return [firstOrder, comebackOrders];
 }
 
+function altExposure(roundedA, roundedB, type) {
+  if (type === "moneyline") {
+    const newSeedA = roundedA;
+    const secondNewA = roundedB;
+    return { newSeedA, secondNewA };
+  } else if (type === "spread" || type === "total") {
+    let newSeedA = roundedA;
+    let secondNewA = roundedB;
+    if (roundedA > 104) {
+      newSeedA = 104;
+    }
+    if (roundedB > 104) {
+      secondNewA = 104;
+    }
+    return { newSeedA, secondNewA };
+  }
+}
+
 // equityToLockIn must be lower than desiredVig
-function newSeeds(odds, desiredVig, equityToLockIn) {
+function newSeeds(type, odds, desiredVig, equityToLockIn) {
   const priceMove = desiredVig - equityToLockIn;
   const price = -1 * (odds / 100);
   const percentOfBet = convertToPercent(price);
@@ -575,9 +593,10 @@ function newSeeds(odds, desiredVig, equityToLockIn) {
   } else {
     const secondSeed = 1 + desiredVig - otherSide;
     const newSeed = convertToDecimal(otherSide);
-    const newSeedA = -1 * Math.round(convertDecimalToAmerican(newSeed));
     const secondNew = convertToDecimal(secondSeed);
-    const secondNewA = -1 * Math.round(convertDecimalToAmerican(secondNew));
+    const roundedA = -1 * Math.round(convertDecimalToAmerican(newSeed));
+    const roundedB = -1 * Math.round(convertDecimalToAmerican(secondNew));
+    const { newSeedA, secondNewA } = altExposure(roundedA, roundedB, type) 
     return { newSeedA, secondNewA };
   }
 }
@@ -602,6 +621,7 @@ module.exports = {
   getMaxLiability,
   noReseedMLs,
   noReseedSpreads,
+  altExposure,
   noReseedTotals,
   convertDecimalToAmerican,
   findOtherSide,
