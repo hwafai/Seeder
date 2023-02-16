@@ -388,9 +388,7 @@ function triggerCancels(
     }
   }
   if (
-    SpreadsAlready.length &&
-    mainSpread &&
-    SpreadsAlreadyBet &&
+    SpreadsAlready.length && mainSpread &&
     !SpreadsAlreadyBet.length
   ) {
     cancelSpread = true;
@@ -398,10 +396,8 @@ function triggerCancels(
     cancelSpread = false;
   }
   if (
-    TotalsAlready.length &&
-    mainTotal &&
-    TotalsAlreadyBet &&
-    TotalsAlreadyBet.length
+    TotalsAlready.length && mainTotal &&
+    !TotalsAlreadyBet.length
   ) {
     cancelTotal = true;
   } else {
