@@ -132,6 +132,94 @@ const userVigMap = {
         equityToLockIn: 0.01,
       },
     },
+    "ROUND-1-FED-EX-500": {
+      86400: {
+        seedAmount: 100,
+        desiredVig: 0.04,
+        equityToLockIn: 0.01,
+      },
+      10800: {
+        seedAmount: 100,
+        desiredVig: 0.04,
+        equityToLockIn: 0.01,
+      },
+      1800: {
+        seedAmount: 200,
+        desiredVig: 0.04,
+        equityToLockIn: 0.01,
+      },
+      0: {
+        seedAmount: 300,
+        desiredVig: 0.04,
+        equityToLockIn: 0.01,
+      },
+    },
+    "ROUND-2-FED-EX-500": {
+      86400: {
+        seedAmount: 100,
+        desiredVig: 0.04,
+        equityToLockIn: 0.01,
+      },
+      10800: {
+        seedAmount: 100,
+        desiredVig: 0.04,
+        equityToLockIn: 0.01,
+      },
+      1800: {
+        seedAmount: 200,
+        desiredVig: 0.04,
+        equityToLockIn: 0.01,
+      },
+      0: {
+        seedAmount: 300,
+        desiredVig: 0.04,
+        equityToLockIn: 0.01,
+      },
+    },
+    "ROUND-3-FED-EX-500": {
+      86400: {
+        seedAmount: 100,
+        desiredVig: 0.04,
+        equityToLockIn: 0.01,
+      },
+      10800: {
+        seedAmount: 100,
+        desiredVig: 0.04,
+        equityToLockIn: 0.01,
+      },
+      1800: {
+        seedAmount: 200,
+        desiredVig: 0.04,
+        equityToLockIn: 0.01,
+      },
+      0: {
+        seedAmount: 300,
+        desiredVig: 0.04,
+        equityToLockIn: 0.01,
+      },
+    },
+    "ROUND-4-FED-EX-500": {
+      86400: {
+        seedAmount: 100,
+        desiredVig: 0.04,
+        equityToLockIn: 0.01,
+      },
+      10800: {
+        seedAmount: 100,
+        desiredVig: 0.04,
+        equityToLockIn: 0.01,
+      },
+      1800: {
+        seedAmount: 200,
+        desiredVig: 0.04,
+        equityToLockIn: 0.01,
+      },
+      0: {
+        seedAmount: 300,
+        desiredVig: 0.04,
+        equityToLockIn: 0.01,
+      },
+    },
     ATP: {
       86400: {
         seedAmount: 250,
