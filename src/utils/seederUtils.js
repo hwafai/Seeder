@@ -609,8 +609,7 @@ function newSeeds(type, odds, desiredVig, equityToLockIn) {
   }
 }
 
-// const leagues = ["NBA", "FED-EX-500", "NCAAB", "ATP", "WTA", "NHL", "CHAMPIONS-LEAGUE"];
-const leagues = ["CHAMPIONS-LEAGUE"];
+const leagues = ["NBA", "FED-EX-500", "NCAAB", "ATP", "WTA", "NHL", "CHAMPIONS-LEAGUE"];
 
 module.exports = {
   convertToDecimal,
