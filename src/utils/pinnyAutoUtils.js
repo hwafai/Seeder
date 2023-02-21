@@ -387,18 +387,12 @@ function triggerCancels(
       TotalsAlready.push(under);
     }
   }
-  if (
-    SpreadsAlready.length && mainSpread &&
-    !SpreadsAlreadyBet.length
-  ) {
+  if (SpreadsAlready.length && mainSpread && !SpreadsAlreadyBet.length) {
     cancelSpread = true;
   } else {
     cancelSpread = false;
   }
-  if (
-    TotalsAlready.length && mainTotal &&
-    !TotalsAlreadyBet.length
-  ) {
+  if (TotalsAlready.length && mainTotal && !TotalsAlreadyBet.length) {
     cancelTotal = true;
   } else {
     cancelTotal = false;

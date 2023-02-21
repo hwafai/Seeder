@@ -23,7 +23,7 @@ function leagueWhenSeed(league) {
   } else if (league === "NBA") {
     const thresholdTime = 21600;
     return thresholdTime;
-  } else if (league === "FED-EX-500") {
+  } else if (league === "FED-EX-500" || league === "CHAMPIONS-LEAGUE") {
     const thresholdTime = 86400;
     return thresholdTime;
   } else if (league === "NHL") {
@@ -305,7 +305,12 @@ function constructReseedOrders(
     const takenOdds = reseed.odds;
     const odds = takenOdds * -1;
     const number = getNumber(type, reseed);
-    const { newSeedA, secondNewA } = newSeeds(type, odds, desiredVig, equityToLockIn);
+    const { newSeedA, secondNewA } = newSeeds(
+      type,
+      odds,
+      desiredVig,
+      equityToLockIn
+    );
     const adjOrders = properOrders(
       type,
       number,
@@ -383,6 +388,9 @@ function getInitialSeedAmount(league) {
   } else if (league === "NHL") {
     const betAmount = 200;
     return betAmount;
+  } else if (league === "CHAMPIONS-LEAGUE") {
+    const betAmount = 200;
+    return betAmount;
   }
 }
 
@@ -449,7 +457,7 @@ function noReseedSpreads(
         SpreadsAlreadyBet.push(awaySP);
       }
     }
-    return SpreadsAlreadyBet;
+    return {SpreadsAlreadyBet, homeMain, awayMain};
   } else {
     return SpreadsAlreadyBet;
   }
@@ -470,7 +478,7 @@ function noReseedTotals(overs, unders, id, keyTotal) {
         TotalsAlreadyBet.push(under);
       }
     }
-    return TotalsAlreadyBet;
+    return {TotalsAlreadyBet, overMain, underMain};
   } else {
     return TotalsAlreadyBet;
   }
@@ -596,12 +604,13 @@ function newSeeds(type, odds, desiredVig, equityToLockIn) {
     const secondNew = convertToDecimal(secondSeed);
     const roundedA = -1 * Math.round(convertDecimalToAmerican(newSeed));
     const roundedB = -1 * Math.round(convertDecimalToAmerican(secondNew));
-    const { newSeedA, secondNewA } = altExposure(roundedA, roundedB, type) 
+    const { newSeedA, secondNewA } = altExposure(roundedA, roundedB, type);
     return { newSeedA, secondNewA };
   }
 }
 
-const leagues = ["NBA", "FED-EX-500", "NCAAB", "ATP", "WTA", "NHL"];
+// const leagues = ["NBA", "FED-EX-500", "NCAAB", "ATP", "WTA", "NHL", "CHAMPIONS-LEAGUE"];
+const leagues = ["CHAMPIONS-LEAGUE"];
 
 module.exports = {
   convertToDecimal,

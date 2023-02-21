@@ -72,7 +72,7 @@ login(password, url, username)
     socket.on("positionUpdate", async (msg) => {
       try {
         const formattedMessage = JSON.parse(msg);
-        const time = new Date()
+        const time = new Date();
         if (!formattedMessage.unmatched) {
           console.log(
             time,

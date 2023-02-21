@@ -33,7 +33,12 @@ const BACKGROUND_JOBS_URI = process.env.BACKGROUND_JOBS_URI;
 async function runIt(token, id, url, offTheBoardListener) {
   console.log(`message: ${username} connected to userFeed`);
   for (const league of leagues) {
-    if (league !== "FED-EX-500" && league !== "ATP" && league !== "WTA") {
+    if (
+      league !== "FED-EX-500" &&
+      league !== "ATP" &&
+      league !== "WTA" &&
+      league !== "CHAMPIONS-LEAGUE"
+    ) {
       const altLines = await getPs3838AlternateLines(
         league,
         BACKGROUND_JOBS_URI
@@ -119,7 +124,7 @@ async function runIt(token, id, url, offTheBoardListener) {
                   }
                 } else {
                   console.log("no event from pinnacle", league, eventName);
-                  await cancelAllOrdersForGame(gameID, token, url)
+                  await cancelAllOrdersForGame(gameID, token, url);
                 }
               } else {
                 console.log("Max Liability Exceeded");
@@ -138,7 +143,8 @@ async function runIt(token, id, url, offTheBoardListener) {
     } else if (
       league === "FED-EX-500" ||
       league === "ATP" ||
-      league === "WTA"
+      league === "WTA" ||
+      league === "CHAMPIONS-LEAGUE"
     ) {
       await FedExAutoSeed(url, token, id, league, username);
     }
