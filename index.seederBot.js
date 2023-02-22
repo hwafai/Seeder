@@ -59,8 +59,8 @@ login(password, url, username)
           interval = setInterval(() => {
             runIt(token, id, url, offTheBoardListener);
           }, 300000);
+          console.log(`Setting timer for interval: ${interval}`);
         });
-        console.log(`Setting timer for interval: ${interval}`);
       }
     });
 
