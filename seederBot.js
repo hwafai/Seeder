@@ -2,8 +2,8 @@ require("./loadEnv");
 const { Manager } = require("socket.io-client");
 
 // import off the board listener
-const OffTheBoardListener = require("./src/libs/OffTheBoardListener");
-const offTheBoardListener = new OffTheBoardListener();
+// const OffTheBoardListener = require("./src/libs/OffTheBoardListener");
+// const offTheBoardListener = new OffTheBoardListener();
 
 const {
   newSeeds,
@@ -142,35 +142,35 @@ login(password, url, username)
     });
 
     // listen for the off the board message emitted by the OTB Listener
-    offTheBoardListener.on("offTheBoardMessage", async (msg) => {
-      // parse the message
-      const parsedMessage = JSON.parse(msg);
-
-      const { offTheBoard, league, fourcasterGameID } = parsedMessage;
-
-      // if Off the Board is true, this game is off the board
-      if (offTheBoard) {
-        // first cancel all orders for the game
-        console.log(`Game OTB, cancelling orders for ${fourcasterGameID}`);
-        await cancelAllOrdersForGame(fourcasterGameID, token, null, url);
-        // then register the game as off the board by the seeder
-        await offTheBoardListener.setSeederOffTheBoardStatus(
-          username,
-          fourcasterGameID,
-          offTheBoard
-        );
-      } else {
-        console.log(
-          `Game ${fourcasterGameID} is back on the board, will reseed shortly`
-        );
-        // this game was off the board but is now back on
-        await offTheBoardListener.setSeederOffTheBoardStatus(
-          username,
-          fourcasterGameID,
-          offTheBoard
-        );
-      }
-    });
+    // offTheBoardListener.on("offTheBoardMessage", async (msg) => {
+    //   // parse the message
+    //   const parsedMessage = JSON.parse(msg);
+    //
+    //   const { offTheBoard, league, fourcasterGameID } = parsedMessage;
+    //
+    //   // if Off the Board is true, this game is off the board
+    //   if (offTheBoard) {
+    //     // first cancel all orders for the game
+    //     console.log(`Game OTB, cancelling orders for ${fourcasterGameID}`);
+    //     await cancelAllOrdersForGame(fourcasterGameID, token, null, url);
+    //     // then register the game as off the board by the seeder
+    //     await offTheBoardListener.setSeederOffTheBoardStatus(
+    //       username,
+    //       fourcasterGameID,
+    //       offTheBoard
+    //     );
+    //   } else {
+    //     console.log(
+    //       `Game ${fourcasterGameID} is back on the board, will reseed shortly`
+    //     );
+    //     // this game was off the board but is now back on
+    //     await offTheBoardListener.setSeederOffTheBoardStatus(
+    //       username,
+    //       fourcasterGameID,
+    //       offTheBoard
+    //     );
+    //   }
+    // });
   })
   .catch(function (error) {
     console.log(error);
