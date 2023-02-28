@@ -124,7 +124,7 @@ async function runIt(token, id, url, offTheBoardListener) {
                   }
                 } else {
                   console.log("no event from pinnacle", league, eventName);
-                  await cancelAllOrdersForGame(gameID, token, url);
+                  await cancelAllOrdersForGame(gameID, token, null, url);
                 }
               } else {
                 console.log("Max Liability Exceeded");
