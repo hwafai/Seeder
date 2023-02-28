@@ -241,7 +241,7 @@ async function constructOrders(
   username
 ) {
   let orders = [];
-  if (ML && !MLsAlreadyBet.length) {
+  if (ML && MLsAlreadyBet && !MLsAlreadyBet.length) {
     const type = "moneyline";
     const MLorders = properOrders(
       type,
