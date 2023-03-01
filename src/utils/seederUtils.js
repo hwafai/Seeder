@@ -20,8 +20,8 @@ function leagueWhenSeed(league) {
   if (league === "NFL") {
     const thresholdTime = 2000000000;
     return thresholdTime;
-  } else if (league === "NBA") {
-    const thresholdTime = 21600;
+  } else if (league === "NBA" || league === "NCAAB") {
+    const thresholdTime = 18000;
     return thresholdTime;
   } else if (league === "FED-EX-500" || league === "CHAMPIONS-LEAGUE") {
     const thresholdTime = 86400;

@@ -100,12 +100,12 @@ const userVigMap = {
         equityToLockIn: 0.01,
       },
       1800: {
-        seedAmount: 150,
+        seedAmount: 222,
         desiredVig: 0.03,
         equityToLockIn: 0.01,
       },
       0: {
-        seedAmount: 200,
+        seedAmount: 333,
         desiredVig: 0.025,
         equityToLockIn: 0.01,
       },
@@ -276,12 +276,12 @@ const userVigMap = {
         equityToLockIn: 0.01,
       },
       1800: {
-        seedAmount: 100,
+        seedAmount: 155,
         desiredVig: 0.03,
         equityToLockIn: 0.01,
       },
       0: {
-        seedAmount: 150,
+        seedAmount: 255,
         desiredVig: 0.03,
         equityToLockIn: 0.01,
       },
