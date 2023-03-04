@@ -23,10 +23,10 @@ function leagueWhenSeed(league) {
   } else if (league === "NBA" || league === "NCAAB") {
     const thresholdTime = 10800;
     return thresholdTime;
-  } else if (league === "FED-EX-500" || league === "CHAMPIONS-LEAGUE") {
+  } else if (league === "CHAMPIONS-LEAGUE") {
     const thresholdTime = 86400;
     return thresholdTime;
-  } else if (league === "NHL") {
+  } else if (league === "NHL" || league === "FED-EX-500") {
     const thresholdTime = 18000;
     return thresholdTime;
   } else if (league === "ATP" || league === "WTA") {
