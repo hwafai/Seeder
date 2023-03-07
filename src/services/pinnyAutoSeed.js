@@ -123,8 +123,12 @@ async function runIt(token, id, url, offTheBoardListener) {
                     await placeOrders(gameID, orders, token, url);
                   }
                 } else {
-                  // console.log("no event from pinnacle", league, eventName);
-                  await cancelAllOrdersForGame(gameID, token, null, url);
+                  console.log("no event from pinnacle", league, eventName);
+                  try {
+                    await cancelAllOrdersForGame(gameID, token, null, url);
+                  } catch (error){
+                    console.log(error)
+                  }
                 }
               } else {
                 // console.log("Max Liability Exceeded");
