@@ -123,22 +123,22 @@ async function runIt(token, id, url, offTheBoardListener) {
                     await placeOrders(gameID, orders, token, url);
                   }
                 } else {
-                  console.log("no event from pinnacle", league, eventName);
+                  // console.log("no event from pinnacle", league, eventName);
                   await cancelAllOrdersForGame(gameID, token, null, url);
                 }
               } else {
-                console.log("Max Liability Exceeded");
+                // console.log("Max Liability Exceeded");
               }
             } else {
               // log that game is off the board
-              console.log(`Game ${gameID} is Off The Board`);
+              // console.log(`Game ${gameID} is Off The Board`);
             }
           }
         } else {
-          console.log("No", league, "games to Seed");
+          // console.log("No", league, "games to Seed");
         }
       } else {
-        console.log("No Pinnacle Events", league);
+        // console.log("No Pinnacle Events", league);
       }
     } else if (
       league === "FED-EX-500" ||

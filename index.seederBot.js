@@ -53,21 +53,21 @@ login(password, url, username)
 
     let interval;
     socket.on("connect", () => {
-      console.log(`message: ${username} connected to userFeed`);
+      // console.log(`message: ${username} connected to userFeed`);
       if (username !== "mongoose") {
         runIt(token, id, url, offTheBoardListener).then(() => {
           interval = setInterval(() => {
             runIt(token, id, url, offTheBoardListener);
           }, 300000);
-          console.log(`Setting timer for interval: ${interval}`);
+          // console.log(`Setting timer for interval: ${interval}`);
         });
       }
     });
 
     socket.on("disconnect", () => {
-      console.log(
-        `Disconnected from the socket, cleared timer interval: ${interval}`
-      );
+      // console.log(
+      //   `Disconnected from the socket, cleared timer interval: ${interval}`
+      // );
       clearInterval(interval);
     });
 
@@ -98,40 +98,40 @@ login(password, url, username)
           const fillAmount = formattedMessage.unmatched.filled;
           const fillThreshold = 0.8;
           if (formattedMessage.unmatched.filled === 0 && orderAmount > 0) {
-            console.log(
-              time,
-              `${username} created offer on `,
-              event,
-              "on",
-              type,
-              "at",
-              number,
-              "for",
-              orderAmount,
-              "at",
-              odds
-            );
+            // console.log(
+            //   time,
+            //   `${username} created offer on `,
+            //   event,
+            //   "on",
+            //   type,
+            //   "at",
+            //   number,
+            //   "for",
+            //   orderAmount,
+            //   "at",
+            //   odds
+            // );
           } else if (orderAmount === 0) {
-            console.log(
-              `${username} canceled offer on`,
-              event,
-              "on",
-              type,
-              "at",
-              odds
-            );
+            // console.log(
+            //   `${username} canceled offer on`,
+            //   event,
+            //   "on",
+            //   type,
+            //   "at",
+            //   odds
+            // );
           } else {
-            console.log(
-              time,
-              `${username} order on`,
-              event,
-              "matched for",
-              fillAmount,
-              "on",
-              type,
-              "at",
-              odds
-            );
+            // console.log(
+            //   time,
+            //   `${username} order on`,
+            //   event,
+            //   "matched for",
+            //   fillAmount,
+            //   "on",
+            //   type,
+            //   "at",
+            //   odds
+            // );
             const gameLiability = await getGameLiability(url, token, gameID);
             const league = formattedMessage.league;
             const maxLiability = getMaxLiability(league, username);
@@ -144,7 +144,7 @@ login(password, url, username)
               const timeKey = getTimeKey(timeToStart);
               const { seedAmount, desiredVig, equityToLockIn } =
                 userVigMap[username][league][timeKey];
-              console.log({ seedAmount, desiredVig, equityToLockIn });
+              // console.log({ seedAmount, desiredVig, equityToLockIn });
               if (
                 !(
                   (formattedMessage.unmatched.offered -
@@ -181,11 +181,11 @@ login(password, url, username)
                   desiredVig,
                   equityToLockIn
                 );
-                console.log({
-                  odds,
-                  newSeedA,
-                  secondNewA,
-                });
+                // console.log({
+                //   odds,
+                //   newSeedA,
+                //   secondNewA,
+                // });
                 const mainOrders = properOrders(
                   type,
                   number,
@@ -201,7 +201,7 @@ login(password, url, username)
                 await placeOrders(gameID, orders, token, url);
               }
             } else {
-              console.log("Max liability for event exceeded");
+              // console.log("Max liability for event exceeded");
             }
           }
         }
@@ -222,7 +222,7 @@ login(password, url, username)
         // if Off the Board is true, this game is off the board
         if (offTheBoard) {
           // first cancel all orders for the game
-          console.log(`Game OTB, cancelling orders for ${fourcasterGameID}`);
+          // console.log(`Game OTB, cancelling orders for ${fourcasterGameID}`);
           await cancelAllOrdersForGame(fourcasterGameID, token, null, url);
           // then register the game as off the board by the seeder
           await offTheBoardListener.setSeederOffTheBoardStatus(
@@ -231,9 +231,9 @@ login(password, url, username)
             offTheBoard
           );
         } else {
-          console.log(
-            `Game ${fourcasterGameID} is back on the board, will reseed shortly`
-          );
+          // console.log(
+          //   `Game ${fourcasterGameID} is back on the board, will reseed shortly`
+          // );
           // this game was off the board but is now back on
           await offTheBoardListener.setSeederOffTheBoardStatus(
             username,

@@ -2,7 +2,6 @@ const {
   getSingleOrderbook,
   getGames,
   placeOrders,
-  getOrderbook,
 } = require("../utils/apiUtils");
 const {
   noReseedMLs,
@@ -53,7 +52,7 @@ async function FedExAutoSeed(url, token, id, league, username) {
       }
     }
   } else {
-    console.log("No", league, "games to Seed");
+    // console.log("No", league, "games to Seed");
   }
 }
 
