@@ -133,7 +133,7 @@ async function runIt(token, id, url, offTheBoardListener) {
                       await placeOrders(gameID, orders, token, url);
                     }
                   } else {
-                    console.log("no event from pinnacle", league, eventName);
+                    // console.log("no event from pinnacle", league, eventName);
                   }
                 } else {
                   // console.log("Max Liability Exceeded");
