@@ -50,7 +50,7 @@ async function runIt(token, id, url, offTheBoardListener) {
         const ready = timeToSeed(actuals, league);
         if (ready.length) {
           for (const gameID of ready) {
-            try {
+            
               const otbStatus =
                 await offTheBoardListener.checkSeederOffTheBoardStatus(
                   username,
@@ -133,8 +133,7 @@ async function runIt(token, id, url, offTheBoardListener) {
                       await placeOrders(gameID, orders, token, url);
                     }
                   } else {
-                    // console.log("no event from pinnacle", league, eventName);
-                    await cancelAllOrdersForGame(gameID, token, null, url);
+                    console.log("no event from pinnacle", league, eventName);
                   }
                 } else {
                   // console.log("Max Liability Exceeded");
@@ -143,9 +142,6 @@ async function runIt(token, id, url, offTheBoardListener) {
                 // log that game is off the board
                 // console.log(`Game ${gameID} is Off The Board`);
               }
-            } catch (error) {
-              console.log(error);
-            }
           }
         } else {
           // console.log("No", league, "games to Seed");

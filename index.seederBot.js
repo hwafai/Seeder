@@ -98,40 +98,40 @@ login(password, url, username)
           const fillAmount = formattedMessage.unmatched.filled;
           const fillThreshold = 0.8;
           if (formattedMessage.unmatched.filled === 0 && orderAmount > 0) {
-            // console.log(
-            //   time,
-            //   `${username} created offer on `,
-            //   event,
-            //   "on",
-            //   type,
-            //   "at",
-            //   number,
-            //   "for",
-            //   orderAmount,
-            //   "at",
-            //   odds
-            // );
+            console.log(
+              time,
+              `${username} created offer on `,
+              event,
+              "on",
+              type,
+              "at",
+              number,
+              "for",
+              orderAmount,
+              "at",
+              odds
+            );
           } else if (orderAmount === 0) {
-            // console.log(
-            //   `${username} canceled offer on`,
-            //   event,
-            //   "on",
-            //   type,
-            //   "at",
-            //   odds
-            // );
+            console.log(
+              `${username} canceled offer on`,
+              event,
+              "on",
+              type,
+              "at",
+              odds
+            );
           } else {
-            // console.log(
-            //   time,
-            //   `${username} order on`,
-            //   event,
-            //   "matched for",
-            //   fillAmount,
-            //   "on",
-            //   type,
-            //   "at",
-            //   odds
-            // );
+            console.log(
+              time,
+              `${username} order on`,
+              event,
+              "matched for",
+              fillAmount,
+              "on",
+              type,
+              "at",
+              odds
+            );
             const gameLiability = await getGameLiability(url, token, gameID);
             const league = formattedMessage.league;
             const maxLiability = getMaxLiability(league, username);
