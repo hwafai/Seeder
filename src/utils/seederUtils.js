@@ -457,7 +457,7 @@ function noReseedSpreads(
         SpreadsAlreadyBet.push(awaySP);
       }
     }
-    return {SpreadsAlreadyBet, homeMain, awayMain};
+    return { SpreadsAlreadyBet, homeMain, awayMain };
   } else {
     return SpreadsAlreadyBet;
   }
@@ -478,7 +478,7 @@ function noReseedTotals(overs, unders, id, keyTotal) {
         TotalsAlreadyBet.push(under);
       }
     }
-    return {TotalsAlreadyBet, overMain, underMain};
+    return { TotalsAlreadyBet, overMain, underMain };
   } else {
     return TotalsAlreadyBet;
   }
@@ -609,7 +609,15 @@ function newSeeds(type, odds, desiredVig, equityToLockIn) {
   }
 }
 
-const leagues = ["NBA", "FED-EX-500", "NCAAB", "ATP", "WTA", "NHL", "CHAMPIONS-LEAGUE"];
+const leagues = [
+  "NBA",
+  "FED-EX-500",
+  "NCAAB",
+  "ATP",
+  "WTA",
+  "NHL",
+  "CHAMPIONS-LEAGUE",
+];
 
 module.exports = {
   convertToDecimal,
