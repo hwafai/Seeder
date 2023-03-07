@@ -144,6 +144,7 @@ async function runIt(token, id, url, offTheBoardListener) {
                 // console.log(`Game ${gameID} is Off The Board`);
               }
             } catch (error) {
+              console.log("Error running runit");
               console.log(error);
             }
           }

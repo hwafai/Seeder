@@ -58,6 +58,7 @@ async function FedExAutoSeed(url, token, id, league, username) {
           await placeOrders(gameID, orders, token, url);
         }
       } catch (error) {
+        console.log("Error running FedExAuto Seed");
         console.log(error);
       }
     }
