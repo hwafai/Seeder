@@ -27,7 +27,7 @@ function leagueWhenSeed(league) {
     const thresholdTime = 86400;
     return thresholdTime;
   } else if (league === "NHL" || league === "FED-EX-500") {
-    const thresholdTime = 18000;
+    const thresholdTime = 86400;
     return thresholdTime;
   } else if (league === "ATP" || league === "WTA") {
     const thresholdTime = 10800;
@@ -611,7 +611,6 @@ function newSeeds(type, odds, desiredVig, equityToLockIn) {
 
 const leagues = [
   "NBA",
-  "FED-EX-500",
   "NCAAB",
   "ATP",
   "WTA",

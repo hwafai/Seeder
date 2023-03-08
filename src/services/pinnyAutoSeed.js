@@ -61,8 +61,7 @@ async function runIt(token, id, url, offTheBoardListener) {
               if (gameLiability.data.liability > maxLiability) {
                 const odds = await getSingleOrderbook(gameID, url, token);
                 const game = odds.data.game;
-                const eventName = game.eventName;
-                const eventOdds = findEvent(eventName, events);
+                const eventOdds = findEvent(game, events);
                 if (eventOdds) {
                   const {
                     homeTeam,

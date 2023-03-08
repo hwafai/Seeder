@@ -163,10 +163,20 @@ function getAlternativeTotals(keyTotal) {
   return { total1, total2 };
 }
 
-function findEvent(eventName, events) {
+function findRotNum(participants) {
+  for (const participant of participants) {
+    if (participant.homeAway === 'away') {
+      return participant.rotationNumber
+    }
+  }
+}
+
+function findEvent(game, events) {
+  const participants = game.participants
+  const visitorRotNum = findRotNum(participants)
   if (events) {
     for (const event of events) {
-      if (event.eventName === eventName) {
+      if (event.awayRotationNumber == visitorRotNum) {
         const eventOdds = event;
         return eventOdds;
       }
