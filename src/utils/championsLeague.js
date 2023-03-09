@@ -3,7 +3,6 @@ const {
   noReseedTotals,
   bestBet,
   getInitialSeedAmount,
-  leagues,
   properOrders,
 } = require("./seederUtils");
 
@@ -16,19 +15,12 @@ function ChampionsLeagueAuto(game, gameID, id, league, username) {
   const awaySpreads = game.awaySpreads;
   const overs = game.over;
   const unders = game.under;
-  const { SpreadsAlreadyBet, homeMain, awayMain } = noReseedSpreads(
-    homeSpreads,
-    awaySpreads,
-    id,
-    mainHomeSpread,
-    mainAwaySpread
-  );
-  const { TotalsAlreadyBet, overMain, underMain } = noReseedTotals(
-    overs,
-    unders,
-    id,
-    mainTotal
-  );
+  const homeMain = homeSpreads[mainHomeSpread];
+  const awayMain = awaySpreads[mainAwaySpread];
+  const SpreadsAlreadyBet = noReseedSpreads(homeMain, awayMain, id);
+  const overMain = overs[mainTotal];
+  const underMain = unders[mainTotal];
+  const TotalsAlreadyBet = noReseedTotals(overMain, underMain, id);
   if (homeMain && awayMain && !SpreadsAlreadyBet.length) {
     const homeOdds = homeMain[0].odds;
     const awayOdds = awayMain[0].odds;

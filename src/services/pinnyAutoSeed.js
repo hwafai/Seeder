@@ -33,120 +33,123 @@ const BACKGROUND_JOBS_URI = process.env.BACKGROUND_JOBS_URI;
 async function runIt(token, id, url, offTheBoardListener) {
   console.log(`message: ${username} connected to userFeed`);
   for (const league of leagues) {
-    if (
-      league !== "FED-EX-500" &&
-      league !== "ATP" &&
-      league !== "WTA" &&
-      league !== "CHAMPIONS-LEAGUE"
-    ) {
-      const altLines = await getPs3838AlternateLines(
-        league,
-        BACKGROUND_JOBS_URI
-      );
-      const events = altLines.data.games;
-      if (events && events.length) {
-        const games = await getGames(league, token, url);
-        const actuals = games.data.games;
-        const ready = timeToSeed(actuals, league);
-        if (ready.length) {
-          for (const gameID of ready) {
-            const otbStatus =
-              await offTheBoardListener.checkSeederOffTheBoardStatus(
-                username,
-                gameID
-              );
-            if (!otbStatus) {
-              const gameLiability = await getGameLiability(url, token, gameID);
-              const maxLiability = getMaxLiability(league, username);
-              if (gameLiability.data.liability > maxLiability) {
-                const odds = await getSingleOrderbook(gameID, url, token);
-                const game = odds.data.game;
-                const eventOdds = findEvent(game, events);
-                if (eventOdds) {
-                  const {
-                    homeTeam,
-                    awayTeam,
-                    MLsAlreadyBet,
-                    SpreadsAlreadyBet,
-                    TotalsAlreadyBet,
-                  } = ifReseed(game, league, id, eventOdds);
-                  // console.log({MLsAlreadyBet, SpreadsAlreadyBet, TotalsAlreadyBet})
-                  const betAmount = getInitialSeedAmount(league);
-                  const {
-                    ML,
-                    mainSpread,
-                    altSpread1,
-                    altSpread2,
-                    mainTotal,
-                    altTotal1,
-                    altTotal2,
-                  } = fetchOdds(league, eventOdds);
-                  const orders = await constructOrders(
-                    MLsAlreadyBet,
-                    SpreadsAlreadyBet,
-                    TotalsAlreadyBet,
-                    ML,
-                    mainSpread,
-                    altSpread1,
-                    altSpread2,
-                    mainTotal,
-                    altTotal1,
-                    altTotal2,
-                    gameID,
-                    homeTeam,
-                    awayTeam,
-                    betAmount,
-                    username
-                  );
-                  // console.log({orders})
-                  if (orders && orders.length) {
-                    const gameOB = await getOrderbook(gameID, url, token);
-                    const orderBook = gameOB.data.games;
-                    const { cancelSpread, cancelTotal } = triggerCancels(
+    try {
+      if (
+        league !== "FED-EX-500" &&
+        league !== "ATP" &&
+        league !== "WTA" &&
+        league !== "CHAMPIONS-LEAGUE"
+      ) {
+        const altLines = await getPs3838AlternateLines(
+          league,
+          BACKGROUND_JOBS_URI
+        );
+        const events = altLines.data.games;
+        if (events && events.length) {
+          const games = await getGames(league, token, url);
+          const actuals = games.data.games;
+          const ready = timeToSeed(actuals, league);
+          if (ready.length) {
+            for (const gameID of ready) {
+              const otbStatus =
+                await offTheBoardListener.checkSeederOffTheBoardStatus(
+                  username,
+                  gameID
+                );
+              if (!otbStatus) {
+                const gameLiability = await getGameLiability(url, token, gameID);
+                const maxLiability = getMaxLiability(league, username);
+                if (gameLiability.data.liability > maxLiability) {
+                  const odds = await getSingleOrderbook(gameID, url, token);
+                  const game = odds.data.game;
+                  const eventOdds = findEvent(game, events);
+                  if (eventOdds) {
+                    const {
+                      homeTeam,
+                      awayTeam,
+                      MLsAlreadyBet,
                       SpreadsAlreadyBet,
-                      mainSpread,
                       TotalsAlreadyBet,
+                    } = ifReseed(game, league, id, eventOdds);
+                    const betAmount = getInitialSeedAmount(league);
+                    const {
+                      ML,
+                      mainSpread,
+                      altSpread1,
+                      altSpread2,
                       mainTotal,
-                      orderBook,
-                      id
+                      altTotal1,
+                      altTotal2,
+                    } = fetchOdds(league, eventOdds);
+                    const orders = await constructOrders(
+                      MLsAlreadyBet,
+                      SpreadsAlreadyBet,
+                      TotalsAlreadyBet,
+                      ML,
+                      mainSpread,
+                      altSpread1,
+                      altSpread2,
+                      mainTotal,
+                      altTotal1,
+                      altTotal2,
+                      gameID,
+                      homeTeam,
+                      awayTeam,
+                      betAmount,
+                      username
                     );
-                    if (cancelSpread) {
-                      await cancelAllOrdersForGame(
-                        gameID,
-                        token,
-                        "spread",
-                        url
+                    // console.log({orders})
+                    if (orders && orders.length) {
+                      const gameOB = await getOrderbook(gameID, url, token);
+                      const orderBook = gameOB.data.games;
+                      const { cancelSpread, cancelTotal } = triggerCancels(
+                        SpreadsAlreadyBet,
+                        mainSpread,
+                        TotalsAlreadyBet,
+                        mainTotal,
+                        orderBook,
+                        id
                       );
+                      if (cancelSpread) {
+                        await cancelAllOrdersForGame(
+                          gameID,
+                          token,
+                          "spread",
+                          url
+                        );
+                      }
+                      if (cancelTotal) {
+                        await cancelAllOrdersForGame(gameID, token, "total", url);
+                      }
+                      await placeOrders(gameID, orders, token, url);
                     }
-                    if (cancelTotal) {
-                      await cancelAllOrdersForGame(gameID, token, "total", url);
-                    }
-                    await placeOrders(gameID, orders, token, url);
+                  } else {
+                    // console.log("no event from pinnacle", league, eventName);
                   }
                 } else {
-                  // console.log("no event from pinnacle", league, eventName);
+                  // console.log("Max Liability Exceeded");
                 }
               } else {
-                // console.log("Max Liability Exceeded");
+                // log that game is off the board
+                // console.log(`Game ${gameID} is Off The Board`);
               }
-            } else {
-              // log that game is off the board
-              // console.log(`Game ${gameID} is Off The Board`);
             }
+          } else {
+            // console.log("No", league, "games to Seed");
           }
         } else {
-          // console.log("No", league, "games to Seed");
+          // console.log("No Pinnacle Events", league);
         }
-      } else {
-        // console.log("No Pinnacle Events", league);
+      } else if (
+        league === "FED-EX-500" ||
+        league === "ATP" ||
+        league === "WTA" ||
+        league === "CHAMPIONS-LEAGUE"
+      ) {
+        await FedExAutoSeed(url, token, id, league, username);
       }
-    } else if (
-      league === "FED-EX-500" ||
-      league === "ATP" ||
-      league === "WTA" ||
-      league === "CHAMPIONS-LEAGUE"
-    ) {
-      await FedExAutoSeed(url, token, id, league, username);
+    } catch (error) {
+      console.log(error)
     }
     // bring altLines to list of games
   }

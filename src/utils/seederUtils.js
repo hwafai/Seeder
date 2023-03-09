@@ -24,7 +24,7 @@ function leagueWhenSeed(league) {
     const thresholdTime = 10800;
     return thresholdTime;
   } else if (league === "CHAMPIONS-LEAGUE") {
-    const thresholdTime = 86400;
+    const thresholdTime = 200000000000;
     return thresholdTime;
   } else if (league === "NHL" || league === "FED-EX-500") {
     const thresholdTime = 86400;
@@ -436,15 +436,7 @@ function noReseedMLs(homeMLs, awayMLs, id) {
   return MLsAlreadyBet;
 }
 
-function noReseedSpreads(
-  homeSpreads,
-  awaySpreads,
-  id,
-  mainHomeSpread,
-  mainAwaySpread
-) {
-  const homeMain = homeSpreads[mainHomeSpread];
-  const awayMain = awaySpreads[mainAwaySpread];
+function noReseedSpreads(homeMain, awayMain, id) {
   const SpreadsAlreadyBet = [];
   if (homeMain && awayMain) {
     for (const homeSP of homeMain) {
@@ -463,9 +455,7 @@ function noReseedSpreads(
   }
 }
 
-function noReseedTotals(overs, unders, id, keyTotal) {
-  const overMain = overs[keyTotal];
-  const underMain = unders[keyTotal];
+function noReseedTotals(overMain, underMain, id) {
   const TotalsAlreadyBet = [];
   if (overMain && underMain) {
     for (const over of overMain) {
@@ -609,14 +599,7 @@ function newSeeds(type, odds, desiredVig, equityToLockIn) {
   }
 }
 
-const leagues = [
-  "NBA",
-  "NCAAB",
-  "ATP",
-  "WTA",
-  "NHL",
-  "CHAMPIONS-LEAGUE",
-];
+const leagues = ["NBA", "NCAAB", "ATP", "WTA", "NHL", "CHAMPIONS-LEAGUE"];
 
 module.exports = {
   convertToDecimal,

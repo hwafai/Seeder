@@ -1,3 +1,4 @@
+const { nodeKeyToRedisOptions } = require("ioredis/built/cluster/util");
 const {
   properOrders,
   concatOrders,
@@ -165,15 +166,15 @@ function getAlternativeTotals(keyTotal) {
 
 function findRotNum(participants) {
   for (const participant of participants) {
-    if (participant.homeAway === 'away') {
-      return participant.rotationNumber
+    if (participant.homeAway === "away") {
+      return participant.rotationNumber;
     }
   }
 }
 
 function findEvent(game, events) {
-  const participants = game.participants
-  const visitorRotNum = findRotNum(participants)
+  const participants = game.participants;
+  const visitorRotNum = findRotNum(participants);
   if (events) {
     for (const event of events) {
       if (event.awayRotationNumber == visitorRotNum) {
@@ -213,15 +214,13 @@ function ifReseed(game, league, id, eventOdds) {
   const keyTotal = eventOdds.mainTotal;
   const MLsAlreadyBet = noReseedMLs(homeMLs, awayMLs, id);
   if (league === "NBA" || league === "NFL" || league === "NCAAB") {
-    const SpreadsAlreadyBet = noReseedSpreads(
-      homeSpreads,
-      awaySpreads,
-      id,
-      mainHomeSpread,
-      mainAwaySpread
-    );
+    const homeMain = homeSpreads[mainHomeSpread];
+    const awayMain = awaySpreads[mainAwaySpread];
+    const SpreadsAlreadyBet = noReseedSpreads(homeMain, awayMain, id);
     // console.log({SpreadsAlreadyBet})
-    const TotalsAlreadyBet = noReseedTotals(overs, unders, id, keyTotal);
+    const overMain = overs[keyTotal];
+    const underMain = unders[keyTotal];
+    const TotalsAlreadyBet = noReseedTotals(overMain, underMain, id);
     // console.log({TotalsAlreadyBet})
     return {
       homeTeam,
