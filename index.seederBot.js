@@ -41,8 +41,8 @@ login(password, url, username)
     const username = user.username;
     const token = user.auth;
     const id = user.id;
-    const runningUser = { username, id, token };
-    console.log(runningUser);
+    // const runningUser = { username, id, token };
+    // console.log(runningUser);
     const manager = new Manager(wsUrl, {
       reconnectionDelayMax: 1000,
       query: { token },
@@ -74,64 +74,64 @@ login(password, url, username)
     socket.on("positionUpdate", async (msg) => {
       try {
         const formattedMessage = JSON.parse(msg);
-        const time = new Date();
+        // const time = new Date();
         if (!formattedMessage.unmatched) {
-          console.log(
-            time,
-            `${username} took offer on`,
-            formattedMessage.eventName,
-            "for",
-            formattedMessage.matched.risk,
-            "on",
-            formattedMessage.matched.type,
-            formattedMessage.matched.number,
-            "at",
-            formattedMessage.matched.odds
-          );
+          // console.log(
+          //   time,
+          //   `${username} took offer on`,
+          //   formattedMessage.eventName,
+          //   "for",
+          //   formattedMessage.matched.risk,
+          //   "on",
+          //   formattedMessage.matched.type,
+          //   formattedMessage.matched.number,
+          //   "at",
+          //   formattedMessage.matched.odds
+          // );
         } else {
           const gameID = formattedMessage.gameID;
           const orderAmount = formattedMessage.unmatched.offered;
           const odds = formattedMessage.unmatched.odds;
           const number = formattedMessage.unmatched.number;
           const type = formattedMessage.unmatched.type;
-          const event = formattedMessage.eventName;
-          const fillAmount = formattedMessage.unmatched.filled;
+          // const event = formattedMessage.eventName;
+          // const fillAmount = formattedMessage.unmatched.filled;
           const fillThreshold = 0.8;
           if (formattedMessage.unmatched.filled === 0 && orderAmount > 0) {
-            console.log(
-              time,
-              `${username} created offer on `,
-              event,
-              "on",
-              type,
-              "at",
-              number,
-              "for",
-              orderAmount,
-              "at",
-              odds
-            );
+            // console.log(
+            //   time,
+            //   `${username} created offer on `,
+            //   event,
+            //   "on",
+            //   type,
+            //   "at",
+            //   number,
+            //   "for",
+            //   orderAmount,
+            //   "at",
+            //   odds
+            // );
           } else if (orderAmount === 0) {
-            console.log(
-              `${username} canceled offer on`,
-              event,
-              "on",
-              type,
-              "at",
-              odds
-            );
+            // console.log(
+            //   `${username} canceled offer on`,
+            //   event,
+            //   "on",
+            //   type,
+            //   "at",
+            //   odds
+            // );
           } else {
-            console.log(
-              time,
-              `${username} order on`,
-              event,
-              "matched for",
-              fillAmount,
-              "on",
-              type,
-              "at",
-              odds
-            );
+            // console.log(
+            //   time,
+            //   `${username} order on`,
+            //   event,
+            //   "matched for",
+            //   fillAmount,
+            //   "on",
+            //   type,
+            //   "at",
+            //   odds
+            // );
             const gameLiability = await getGameLiability(url, token, gameID);
             const league = formattedMessage.league;
             const maxLiability = getMaxLiability(league, username);

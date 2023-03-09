@@ -266,7 +266,7 @@ async function constructOrders(
     );
     orders = orders.concat(MLorders);
   } else {
-    console.log("Already Seeded ML or nothing to Seed");
+    // console.log("Already Seeded ML or nothing to Seed");
   }
   if (mainSpread && SpreadsAlreadyBet && !SpreadsAlreadyBet.length) {
     const type = "spread";
@@ -283,7 +283,7 @@ async function constructOrders(
     );
     orders = orders.concat(spreadOrders);
   } else {
-    console.log("Already Seeded Spread or nothing to Seed");
+    // console.log("Already Seeded Spread or nothing to Seed");
   }
   if (mainTotal && TotalsAlreadyBet && !TotalsAlreadyBet.length) {
     const type = "total";
@@ -302,7 +302,7 @@ async function constructOrders(
     );
     orders = orders.concat(totalOrders);
   } else {
-    console.log("Already Seeded Totals or nothing to Seed");
+    // console.log("Already Seeded Totals or nothing to Seed");
   }
   return orders;
 }
