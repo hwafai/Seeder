@@ -74,7 +74,7 @@ login(password, url, username)
     socket.on("positionUpdate", async (msg) => {
       try {
         const formattedMessage = JSON.parse(msg);
-        // const time = new Date();
+        const time = new Date();
         if (!formattedMessage.unmatched) {
           // console.log(
           //   time,
@@ -94,8 +94,8 @@ login(password, url, username)
           const odds = formattedMessage.unmatched.odds;
           const number = formattedMessage.unmatched.number;
           const type = formattedMessage.unmatched.type;
-          // const event = formattedMessage.eventName;
-          // const fillAmount = formattedMessage.unmatched.filled;
+          const event = formattedMessage.eventName;
+          const fillAmount = formattedMessage.unmatched.filled;
           const fillThreshold = 0.8;
           if (formattedMessage.unmatched.filled === 0 && orderAmount > 0) {
             // console.log(
@@ -117,7 +117,9 @@ login(password, url, username)
             //   event,
             //   "on",
             //   type,
-            //   "at",
+            //   "@",
+            //   number,
+            //   "@",
             //   odds
             // );
           } else {
@@ -129,7 +131,7 @@ login(password, url, username)
             //   fillAmount,
             //   "on",
             //   type,
-            //   "at",
+            //   "@",
             //   odds
             // );
             const gameLiability = await getGameLiability(url, token, gameID);

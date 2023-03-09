@@ -70,6 +70,7 @@ async function runIt(token, id, url, offTheBoardListener) {
                     SpreadsAlreadyBet,
                     TotalsAlreadyBet,
                   } = ifReseed(game, league, id, eventOdds);
+                  // console.log({MLsAlreadyBet, SpreadsAlreadyBet, TotalsAlreadyBet})
                   const betAmount = getInitialSeedAmount(league);
                   const {
                     ML,
@@ -97,6 +98,7 @@ async function runIt(token, id, url, offTheBoardListener) {
                     betAmount,
                     username
                   );
+                  // console.log({orders})
                   if (orders && orders.length) {
                     const gameOB = await getOrderbook(gameID, url, token);
                     const orderBook = gameOB.data.games;

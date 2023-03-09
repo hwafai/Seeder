@@ -220,7 +220,9 @@ function ifReseed(game, league, id, eventOdds) {
       mainHomeSpread,
       mainAwaySpread
     );
+    // console.log({SpreadsAlreadyBet})
     const TotalsAlreadyBet = noReseedTotals(overs, unders, id, keyTotal);
+    // console.log({TotalsAlreadyBet})
     return {
       homeTeam,
       awayTeam,
@@ -251,6 +253,7 @@ async function constructOrders(
   username
 ) {
   let orders = [];
+  // console.log({MLsAlreadyBet})
   if (ML && MLsAlreadyBet && !MLsAlreadyBet.length) {
     const type = "moneyline";
     const MLorders = properOrders(
@@ -268,6 +271,7 @@ async function constructOrders(
   } else {
     // console.log("Already Seeded ML or nothing to Seed");
   }
+  // console.log({SpreadsAlreadyBet})
   if (mainSpread && SpreadsAlreadyBet && !SpreadsAlreadyBet.length) {
     const type = "spread";
     const spreadOrders = constructSpreadOrders(
@@ -285,6 +289,7 @@ async function constructOrders(
   } else {
     // console.log("Already Seeded Spread or nothing to Seed");
   }
+  // console.log({TotalsAlreadyBet})
   if (mainTotal && TotalsAlreadyBet && !TotalsAlreadyBet.length) {
     const type = "total";
     const overSide = "under";

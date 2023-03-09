@@ -457,7 +457,7 @@ function noReseedSpreads(
         SpreadsAlreadyBet.push(awaySP);
       }
     }
-    return { SpreadsAlreadyBet, homeMain, awayMain };
+    return SpreadsAlreadyBet;
   } else {
     return SpreadsAlreadyBet;
   }
@@ -478,7 +478,7 @@ function noReseedTotals(overs, unders, id, keyTotal) {
         TotalsAlreadyBet.push(under);
       }
     }
-    return { TotalsAlreadyBet, overMain, underMain };
+    return TotalsAlreadyBet;
   } else {
     return TotalsAlreadyBet;
   }
