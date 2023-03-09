@@ -57,7 +57,11 @@ async function runIt(token, id, url, offTheBoardListener) {
                   gameID
                 );
               if (!otbStatus) {
-                const gameLiability = await getGameLiability(url, token, gameID);
+                const gameLiability = await getGameLiability(
+                  url,
+                  token,
+                  gameID
+                );
                 const maxLiability = getMaxLiability(league, username);
                 if (gameLiability.data.liability > maxLiability) {
                   const odds = await getSingleOrderbook(gameID, url, token);
@@ -119,7 +123,12 @@ async function runIt(token, id, url, offTheBoardListener) {
                         );
                       }
                       if (cancelTotal) {
-                        await cancelAllOrdersForGame(gameID, token, "total", url);
+                        await cancelAllOrdersForGame(
+                          gameID,
+                          token,
+                          "total",
+                          url
+                        );
                       }
                       await placeOrders(gameID, orders, token, url);
                     }
@@ -149,7 +158,7 @@ async function runIt(token, id, url, offTheBoardListener) {
         await FedExAutoSeed(url, token, id, league, username);
       }
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
     // bring altLines to list of games
   }
