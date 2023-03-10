@@ -148,7 +148,6 @@ async function runIt(token, id, url, offTheBoardListener) {
                       const games = odds.data.games
                       const Alts = gatherAltEdits(games, id, seedAmount)
                       const ordersToEdit = getTheGoods(Alts, editedOrders)
-                      console.log({ordersToEdit})
                       for (const order of ordersToEdit) {
                         await editOrder(url, order.sessionID, order.seedAmount, token)
                       }
