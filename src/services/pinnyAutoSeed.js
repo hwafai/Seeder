@@ -53,10 +53,8 @@ async function runIt(token, id, url, offTheBoardListener) {
           const actuals = games.data.games;
           // console.log({actuals})
           const ready = timeToSeed(actuals, league);
-          console.log({ready})
           if (ready.length) {
             for (const loadedGame of ready) {
-              console.log({loadedGame})
               const gameID = loadedGame.gameID
               const otbStatus =
                 await offTheBoardListener.checkSeederOffTheBoardStatus(
