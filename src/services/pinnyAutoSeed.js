@@ -5,6 +5,8 @@ const {
   ifReseed,
   findEvent,
   triggerCancels,
+  getTheGoods,
+  gatherAltEdits,
   constructOrders,
 } = require("../utils/pinnyAutoUtils");
 
@@ -24,6 +26,7 @@ const {
   getGameLiability,
   getPs3838AlternateLines,
   cancelAllOrdersForGame,
+  editOrder,
   placeOrders,
 } = require("../utils/apiUtils");
 
@@ -48,9 +51,11 @@ async function runIt(token, id, url, offTheBoardListener) {
         if (events && events.length) {
           const games = await getGames(league, token, url);
           const actuals = games.data.games;
+          // console.log({actuals})
           const ready = timeToSeed(actuals, league);
           if (ready.length) {
-            for (const gameID of ready) {
+            for (const loadedGame of ready) {
+              const gameID = loadedGame.gameID
               const otbStatus =
                 await offTheBoardListener.checkSeederOffTheBoardStatus(
                   username,
@@ -74,7 +79,7 @@ async function runIt(token, id, url, offTheBoardListener) {
                       MLsAlreadyBet,
                       SpreadsAlreadyBet,
                       TotalsAlreadyBet,
-                    } = ifReseed(game, league, id, eventOdds);
+                    } = ifReseed(game, league, id, eventOdds, loadedGame);
                     const betAmount = getInitialSeedAmount(league);
                     const {
                       ML,
@@ -85,7 +90,10 @@ async function runIt(token, id, url, offTheBoardListener) {
                       altTotal1,
                       altTotal2,
                     } = fetchOdds(league, eventOdds);
-                    const orders = await constructOrders(
+                    const {orders, editedOrders} = await constructOrders(
+                      league,
+                      username,
+                      loadedGame,
                       MLsAlreadyBet,
                       SpreadsAlreadyBet,
                       TotalsAlreadyBet,
@@ -131,6 +139,16 @@ async function runIt(token, id, url, offTheBoardListener) {
                         );
                       }
                       await placeOrders(gameID, orders, token, url);
+                    }
+                    if (editedOrders && editedOrders.length) {
+                      const seedAmount = editedOrders[0].seedAmount
+                      const odds = await getOrderbook(gameID, url, token)
+                      const games = odds.data.games
+                      const Alts = gatherAltEdits(games, id, seedAmount)
+                      const ordersToEdit = getTheGoods(Alts, editedOrders)
+                      for (const order of ordersToEdit) {
+                        await editOrder(url, order.sessionID, order.seedAmount, token)
+                      }
                     }
                   } else {
                     // console.log("no event from pinnacle", league, eventName);
