@@ -5,6 +5,8 @@ const {
   ifReseed,
   findEvent,
   triggerCancels,
+  getTheGoods,
+  gatherAltEdits,
   constructOrders,
 } = require("../utils/pinnyAutoUtils");
 
@@ -141,7 +143,13 @@ async function runIt(token, id, url, offTheBoardListener) {
                       await placeOrders(gameID, orders, token, url);
                     }
                     if (editedOrders && editedOrders.length) {
-                      for (const order of editedOrders) {
+                      const seedAmount = editedOrders[0].seedAmount
+                      const odds = await getOrderbook(gameID, url, token)
+                      const games = odds.data.games
+                      const Alts = gatherAltEdits(games, id, seedAmount)
+                      const ordersToEdit = getTheGoods(Alts, editedOrders)
+                      console.log({ordersToEdit})
+                      for (const order of ordersToEdit) {
                         await editOrder(url, order.sessionID, order.seedAmount, token)
                       }
                     }
