@@ -45,8 +45,10 @@ function timeToSeed(games, league) {
   const hala = new Date();
   for (const game of games) {
     const start = new Date(game.start);
-    if ((start - hala) / 1000 < thresholdTime && (start - hala) / 1000 > 0) {
-      ready.push(game.id);
+    const timeToStart = (start - hala) / 1000
+    if ((timeToStart) < thresholdTime && (timeToStart) > 0) {
+      const gameID = game.id
+      ready.push({gameID, timeToStart});
     }
   }
   return ready;

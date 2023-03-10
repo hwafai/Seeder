@@ -65,6 +65,18 @@ async function login(password, url, username) {
   });
 }
 
+async function editOrder(url, sessionID, volume, token) {
+  return callApi({
+    url: `${url}/session/editOrder`,
+    method: "POST",
+    data: {
+      sessionID,
+      orderVolume: volume,
+    },
+    headers: {authorization: token},
+  });
+}
+
 async function cancelAllOrdersForGame(gameID, token, type, url) {
   const data = {
     gameID,
@@ -102,5 +114,6 @@ module.exports = {
   getSingleOrderbook,
   getOrderbook,
   login,
+  editOrder,
   placeOrders,
 };

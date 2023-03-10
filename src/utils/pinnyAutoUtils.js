@@ -1,10 +1,11 @@
-const { nodeKeyToRedisOptions } = require("ioredis/built/cluster/util");
+const {userVigMap } = require("../utils/vigUtils")
 const {
   properOrders,
   concatOrders,
   noReseedMLs,
   noReseedSpreads,
   noReseedTotals,
+  getTimeKey,
 } = require("./seederUtils");
 
 function fetchML(moneylines) {
@@ -234,7 +235,26 @@ function ifReseed(game, league, id, eventOdds) {
   }
 }
 
+function triggeredReseed(AlreadyBet, loadedGame, league, username) {
+  const { timeToStart } = loadedGame;
+  const timeKey = getTimeKey(timeToStart);
+  const { seedAmount } = userVigMap[username][league][timeKey]
+  console.log({seedAmount})
+  const toBeEdited = []
+  for (const currentOrder of AlreadyBet) {
+    if (currentOrder.bet < (.98 * seedAmount)) {
+      const sessionID = currentOrder.id
+      const editedObject = { sessionID, seedAmount}
+      toBeEdited.push(editedObject)
+    }
+  }
+  return toBeEdited
+}
+
 async function constructOrders(
+  league,
+  username,
+  loadedGame,
   MLsAlreadyBet,
   SpreadsAlreadyBet,
   TotalsAlreadyBet,
@@ -251,6 +271,7 @@ async function constructOrders(
   betAmount,
   username
 ) {
+  let editedOrders = [];
   let orders = [];
   // console.log({MLsAlreadyBet})
   if (ML && MLsAlreadyBet && !MLsAlreadyBet.length) {
@@ -267,7 +288,9 @@ async function constructOrders(
       username
     );
     orders = orders.concat(MLorders);
-  } else {
+  } else if (MLsAlreadyBet.length) {
+    const toBeEdited = triggeredReseed(MLsAlreadyBet, loadedGame, league, username);
+    editedOrders = editedOrders.concat(toBeEdited)
     // console.log("Already Seeded ML or nothing to Seed");
   }
   // console.log({SpreadsAlreadyBet})
@@ -285,7 +308,9 @@ async function constructOrders(
       username
     );
     orders = orders.concat(spreadOrders);
-  } else {
+  } else if (SpreadsAlreadyBet.length) {
+    const toBeEdited = triggeredReseed(SpreadsAlreadyBet, loadedGame, league, username);
+    editedOrders = editedOrders.concat(toBeEdited)
     // console.log("Already Seeded Spread or nothing to Seed");
   }
   // console.log({TotalsAlreadyBet})
@@ -305,10 +330,12 @@ async function constructOrders(
       username
     );
     orders = orders.concat(totalOrders);
-  } else {
+  } else if (TotalsAlreadyBet.length) {
+    const toBeEdited = triggeredReseed(TotalsAlreadyBet, loadedGame, league, username);
+    editedOrders = editedOrders.concat(toBeEdited)
     // console.log("Already Seeded Totals or nothing to Seed");
   }
-  return orders;
+  return {orders, editedOrders};
 }
 
 function constructTotalOrders(
