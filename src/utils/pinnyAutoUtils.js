@@ -335,7 +335,7 @@ async function constructOrders(
       username
     );
     orders = orders.concat(spreadOrders);
-  } else if (SpreadsAlreadyBet.length) {
+  } else if (SpreadsAlreadyBet && SpreadsAlreadyBet.length) {
     const toBeEdited = triggeredReseed(SpreadsAlreadyBet, loadedGame, league, username);
     editedOrders = editedOrders.concat(toBeEdited)
     // console.log("Already Seeded Spread or nothing to Seed");
