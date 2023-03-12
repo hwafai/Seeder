@@ -315,7 +315,7 @@ async function constructOrders(
       username
     );
     orders = orders.concat(MLorders);
-  } else if (MLsAlreadyBet.length) {
+  } else if (MLsAlreadyBet && MLsAlreadyBet.length) {
     const toBeEdited = triggeredReseed(MLsAlreadyBet, loadedGame, league, username);
     editedOrders = editedOrders.concat(toBeEdited)
     // console.log("Already Seeded ML or nothing to Seed");
@@ -357,7 +357,7 @@ async function constructOrders(
       username
     );
     orders = orders.concat(totalOrders);
-  } else if (TotalsAlreadyBet.length) {
+  } else if (TotalsAlreadyBet && TotalsAlreadyBet.length) {
     const toBeEdited = triggeredReseed(TotalsAlreadyBet, loadedGame, league, username);
     editedOrders = editedOrders.concat(toBeEdited)
     // console.log("Already Seeded Totals or nothing to Seed");
