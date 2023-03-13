@@ -45,10 +45,10 @@ function timeToSeed(games, league) {
   const hala = new Date();
   for (const game of games) {
     const start = new Date(game.start);
-    const timeToStart = (start - hala) / 1000
-    if ((timeToStart) < thresholdTime && (timeToStart) > 0) {
-      const gameID = game.id
-      ready.push({gameID, timeToStart});
+    const timeToStart = (start - hala) / 1000;
+    if (timeToStart < thresholdTime && timeToStart > 0) {
+      const gameID = game.id;
+      ready.push({ gameID, timeToStart });
     }
   }
   return ready;
@@ -601,7 +601,15 @@ function newSeeds(type, odds, desiredVig, equityToLockIn) {
   }
 }
 
-const leagues = ["NBA", "NCAAB", "ATP", "WTA", "NHL", "CHAMPIONS-LEAGUE", "FED-EX-500"];
+const leagues = [
+  "NBA",
+  "NCAAB",
+  "ATP",
+  "WTA",
+  "NHL",
+  "CHAMPIONS-LEAGUE",
+  "FED-EX-500",
+];
 
 module.exports = {
   convertToDecimal,

@@ -1,4 +1,4 @@
-const {userVigMap } = require("../utils/vigUtils")
+const { userVigMap } = require("../utils/vigUtils");
 const {
   properOrders,
   concatOrders,
@@ -236,46 +236,56 @@ function ifReseed(game, league, id, eventOdds) {
 }
 
 function findOffered(offers, id, seedAmount) {
-  let toEdit = []
+  let toEdit = [];
   for (const offer of offers) {
     if (offer.createdBy === id) {
-      const sessionID = offer.id
-      toEdit.push({sessionID, seedAmount})
+      const sessionID = offer.id;
+      toEdit.push({ sessionID, seedAmount });
     }
   }
-  return toEdit
+  return toEdit;
 }
 
 function gatherAltEdits(games, id, seedAmount) {
-  let Alts = []
+  let Alts = [];
   const { awaySpreads, homeSpreads, over, under } = games[0];
-  const awaySpreadToEdit = findOffered(awaySpreads, id, seedAmount)
-  const homeSpreadToEdit = findOffered(homeSpreads, id, seedAmount)
-  const oversToEdit = findOffered(over, id, seedAmount)
-  const undersToEdit = findOffered(under, id, seedAmount)
-  Alts = Alts.concat(awaySpreadToEdit, homeSpreadToEdit, oversToEdit, undersToEdit)
-  return Alts
+  const awaySpreadToEdit = findOffered(awaySpreads, id, seedAmount);
+  const homeSpreadToEdit = findOffered(homeSpreads, id, seedAmount);
+  const oversToEdit = findOffered(over, id, seedAmount);
+  const undersToEdit = findOffered(under, id, seedAmount);
+  Alts = Alts.concat(
+    awaySpreadToEdit,
+    homeSpreadToEdit,
+    oversToEdit,
+    undersToEdit
+  );
+  return Alts;
 }
-
 
 function triggeredReseed(AlreadyBet, loadedGame, league, username) {
   const { timeToStart } = loadedGame;
   const timeKey = getTimeKey(timeToStart);
-  const { seedAmount } = userVigMap[username][league][timeKey]
-  const toBeEdited = []
+  const { seedAmount } = userVigMap[username][league][timeKey];
+  const toBeEdited = [];
   for (const currentOrder of AlreadyBet) {
-    if (currentOrder.bet < (.98 * seedAmount)) {
-      const sessionID = currentOrder.id
-      const editedObject = { sessionID, seedAmount}
-      toBeEdited.push(editedObject)
+    if (currentOrder.bet < 0.98 * seedAmount) {
+      const sessionID = currentOrder.id;
+      const editedObject = { sessionID, seedAmount };
+      toBeEdited.push(editedObject);
     }
   }
-  return toBeEdited
+  return toBeEdited;
 }
 
 function getTheGoods(Alts, editedOrders) {
-  const ordersToEdit = [...editedOrders, ...Alts.filter(({sessionID}) => !new Set(editedOrders.map(({sessionID}) => sessionID)).has(sessionID))];
-  return ordersToEdit
+  const ordersToEdit = [
+    ...editedOrders,
+    ...Alts.filter(
+      ({ sessionID }) =>
+        !new Set(editedOrders.map(({ sessionID }) => sessionID)).has(sessionID)
+    ),
+  ];
+  return ordersToEdit;
 }
 
 async function constructOrders(
@@ -316,8 +326,13 @@ async function constructOrders(
     );
     orders = orders.concat(MLorders);
   } else if (MLsAlreadyBet.length) {
-    const toBeEdited = triggeredReseed(MLsAlreadyBet, loadedGame, league, username);
-    editedOrders = editedOrders.concat(toBeEdited)
+    const toBeEdited = triggeredReseed(
+      MLsAlreadyBet,
+      loadedGame,
+      league,
+      username
+    );
+    editedOrders = editedOrders.concat(toBeEdited);
     // console.log("Already Seeded ML or nothing to Seed");
   }
   // console.log({SpreadsAlreadyBet})
@@ -336,8 +351,13 @@ async function constructOrders(
     );
     orders = orders.concat(spreadOrders);
   } else if (SpreadsAlreadyBet.length) {
-    const toBeEdited = triggeredReseed(SpreadsAlreadyBet, loadedGame, league, username);
-    editedOrders = editedOrders.concat(toBeEdited)
+    const toBeEdited = triggeredReseed(
+      SpreadsAlreadyBet,
+      loadedGame,
+      league,
+      username
+    );
+    editedOrders = editedOrders.concat(toBeEdited);
     // console.log("Already Seeded Spread or nothing to Seed");
   }
   // console.log({TotalsAlreadyBet})
@@ -358,11 +378,16 @@ async function constructOrders(
     );
     orders = orders.concat(totalOrders);
   } else if (TotalsAlreadyBet.length) {
-    const toBeEdited = triggeredReseed(TotalsAlreadyBet, loadedGame, league, username);
-    editedOrders = editedOrders.concat(toBeEdited)
+    const toBeEdited = triggeredReseed(
+      TotalsAlreadyBet,
+      loadedGame,
+      league,
+      username
+    );
+    editedOrders = editedOrders.concat(toBeEdited);
     // console.log("Already Seeded Totals or nothing to Seed");
   }
-  return {orders, editedOrders};
+  return { orders, editedOrders };
 }
 
 function constructTotalOrders(

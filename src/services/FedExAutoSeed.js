@@ -19,7 +19,7 @@ async function FedExAutoSeed(url, token, id, league, username) {
   if (ready.length) {
     for (const loadedGame of ready) {
       try {
-        const gameID = loadedGame.gameID
+        const gameID = loadedGame.gameID;
         const odds = await getSingleOrderbook(gameID, url, token);
         const game = odds.data.game;
         const eventName = game.eventName;

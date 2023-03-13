@@ -55,7 +55,7 @@ async function runIt(token, id, url, offTheBoardListener) {
           const ready = timeToSeed(actuals, league);
           if (ready.length) {
             for (const loadedGame of ready) {
-              const gameID = loadedGame.gameID
+              const gameID = loadedGame.gameID;
               const otbStatus =
                 await offTheBoardListener.checkSeederOffTheBoardStatus(
                   username,
@@ -90,7 +90,7 @@ async function runIt(token, id, url, offTheBoardListener) {
                       altTotal1,
                       altTotal2,
                     } = fetchOdds(league, eventOdds);
-                    const {orders, editedOrders} = await constructOrders(
+                    const { orders, editedOrders } = await constructOrders(
                       league,
                       username,
                       loadedGame,
@@ -141,13 +141,18 @@ async function runIt(token, id, url, offTheBoardListener) {
                       await placeOrders(gameID, orders, token, url);
                     }
                     if (editedOrders && editedOrders.length) {
-                      const seedAmount = editedOrders[0].seedAmount
-                      const odds = await getOrderbook(gameID, url, token)
-                      const games = odds.data.games
-                      const Alts = gatherAltEdits(games, id, seedAmount)
-                      const ordersToEdit = getTheGoods(Alts, editedOrders)
+                      const seedAmount = editedOrders[0].seedAmount;
+                      const odds = await getOrderbook(gameID, url, token);
+                      const games = odds.data.games;
+                      const Alts = gatherAltEdits(games, id, seedAmount);
+                      const ordersToEdit = getTheGoods(Alts, editedOrders);
                       for (const order of ordersToEdit) {
-                        await editOrder(url, order.sessionID, order.seedAmount, token)
+                        await editOrder(
+                          url,
+                          order.sessionID,
+                          order.seedAmount,
+                          token
+                        );
                       }
                     }
                   } else {
