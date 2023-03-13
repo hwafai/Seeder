@@ -36,10 +36,17 @@ const BACKGROUND_JOBS_URI = process.env.BACKGROUND_JOBS_URI;
 async function runIt(token, id, url, offTheBoardListener) {
   console.log(`message: ${username} connected to userFeed`);
   for (const league of leagues) {
+    console.log({league})
     try {
       if (
         league !== "FED-EX-500" &&
-        league !== "ATP" &&
+        league !== "ROUND-1-FED-EX-500" &&
+        league !== "ROUND-2-FED-EX-500" &&
+        league !== "ROUND-3-FED-EX-500" &&
+        league !== 'ROUND-4-FED-EX-500' &&
+        league !== "2H-NBA" &&
+        league !== "2H-NCAAB" &&
+        league !== "ATP" && 
         league !== "WTA" &&
         league !== "CHAMPIONS-LEAGUE"
       ) {
@@ -169,6 +176,12 @@ async function runIt(token, id, url, offTheBoardListener) {
         }
       } else if (
         league === "FED-EX-500" ||
+        league === "ROUND-1-FED-EX-500" ||
+        league === "ROUND-2-FED-EX-500" ||
+        league === "ROUND-3-FED-EX-500" ||
+        league === "ROUND-4-FED-EX-500" ||
+        league === "2H-NBA" || 
+        league === "2H-NCAAB" ||
         league === "ATP" ||
         league === "WTA" ||
         league === "CHAMPIONS-LEAGUE"

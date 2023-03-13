@@ -9,13 +9,19 @@ const {
   getInitialSeedAmount,
   properOrders,
   timeToSeed,
+  filterIfPGA,
 } = require("../utils/seederUtils");
 const { ChampionsLeagueAuto } = require("../utils/championsLeague");
 
 async function FedExAutoSeed(url, token, id, league, username) {
+
   const games = await getGames(league, token, url);
   const actuals = games.data.games;
-  const ready = timeToSeed(actuals, league);
+  console.log({actuals})
+  const partidos = filterIfPGA(actuals, league)
+  console.log({league, partidos})
+  const ready = timeToSeed(partidos, league);
+  console.log({ready})
   if (ready.length) {
     for (const loadedGame of ready) {
       try {
