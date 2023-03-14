@@ -417,10 +417,10 @@ function getMaxLiability(league, username) {
       const maxLiability = -3500;
       return maxLiability;
     } else if (league === "NBA") {
-      const maxLiability = -2500;
+      const maxLiability = -1500;
       return maxLiability;
     } else if (league === "NCAAB") {
-      const maxLiability = -2000;
+      const maxLiability = -1250;
       return maxLiability;
     } else if (league === "ATP") {
       const maxLiability = -1500;
