@@ -21,7 +21,7 @@ function leagueWhenSeed(league) {
     const thresholdTime = 2000000000;
     return thresholdTime;
   } else if (league === "NBA" || league === "NCAAB" || league === "NHL") {
-    const thresholdTime = 18000;
+    const thresholdTime = 10800;
     return thresholdTime;
   } else if (league === "CHAMPIONS-LEAGUE") {
     const thresholdTime = 86400;
@@ -646,8 +646,7 @@ function newSeeds(type, odds, desiredVig, equityToLockIn) {
   }
 }
 
-// const leagues = ["NBA", "NCAAB", "ATP", "WTA", "NHL", "CHAMPIONS-LEAGUE", "FED-EX-500", "ROUND-1-FED-EX-500", "ROUND-2-FED-EX-500", "ROUND-3-FED-EX-500", "ROUND-4-FED-EX-500", "2H-NBA", "2H-NCAAB"];
-const leagues = ["NCAAB"];
+const leagues = ["NCAAB", "ATP", "WTA", "CHAMPIONS-LEAGUE", "FED-EX-500", "ROUND-1-FED-EX-500", "ROUND-2-FED-EX-500", "ROUND-3-FED-EX-500", "ROUND-4-FED-EX-500", "2H-NCAAB"];
 module.exports = {
   convertToDecimal,
   convertToPercent,
