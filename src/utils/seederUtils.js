@@ -20,17 +20,28 @@ function leagueWhenSeed(league) {
   if (league === "NFL") {
     const thresholdTime = 2000000000;
     return thresholdTime;
-  } else if (league === "NBA" || league === "NCAAB") {
+  } else if (league === "NBA" || league === "NCAAB" || league === "NHL") {
     const thresholdTime = 10800;
     return thresholdTime;
   } else if (league === "CHAMPIONS-LEAGUE") {
-    const thresholdTime = 200000000000;
+    const thresholdTime = 86400;
     return thresholdTime;
   } else if (league === "NHL" || league === "FED-EX-500") {
     const thresholdTime = 86400;
     return thresholdTime;
+  } else if (
+    league === "ROUND-1-FED-EX-500" ||
+    league === "ROUND-2-FED-EX-500" ||
+    league === "ROUND-3-FED-EX-500" ||
+    league === "ROUND-4-FED-EX-500"
+  ) {
+    const thresholdTime = 18000;
+    return thresholdTime;
   } else if (league === "ATP" || league === "WTA") {
     const thresholdTime = 10800;
+    return thresholdTime;
+  } else if (league === "2H-NBA" || league === "2H-NCAAB") {
+    const thresholdTime = 420;
     return thresholdTime;
   } else {
     const thresholdTime = 1800;
@@ -45,10 +56,10 @@ function timeToSeed(games, league) {
   const hala = new Date();
   for (const game of games) {
     const start = new Date(game.start);
-    const timeToStart = (start - hala) / 1000
-    if ((timeToStart) < thresholdTime && (timeToStart) > 0) {
-      const gameID = game.id
-      ready.push({gameID, timeToStart});
+    const timeToStart = (start - hala) / 1000;
+    if (timeToStart < thresholdTime && timeToStart > 0) {
+      const gameID = game.id;
+      ready.push({ gameID, timeToStart });
     }
   }
   return ready;
@@ -382,7 +393,18 @@ function getInitialSeedAmount(league) {
     const betAmount = 200;
     return betAmount;
   } else if (league === "FED-EX-500") {
-    const betAmount = 300;
+    const betAmount = 250;
+    return betAmount;
+  } else if (
+    league === "ROUND-1-FED-EX-500" ||
+    league === "ROUND-2-FED-EX-500" ||
+    league === "ROUND-3-FED-EX-500" ||
+    league === "ROUND-4-FED-EX-500"
+  ) {
+    const betAmount = 200;
+    return betAmount;
+  } else if (league === "2H-NBA" || league === "2H-NCAAB") {
+    const betAmount = 100;
     return betAmount;
   } else if (league === "NCAAB") {
     const betAmount = 100;
@@ -405,10 +427,10 @@ function getMaxLiability(league, username) {
       const maxLiability = -3500;
       return maxLiability;
     } else if (league === "NBA") {
-      const maxLiability = -2500;
+      const maxLiability = -1500;
       return maxLiability;
     } else if (league === "NCAAB") {
-      const maxLiability = -2000;
+      const maxLiability = -1250;
       return maxLiability;
     } else if (league === "ATP") {
       const maxLiability = -1500;
@@ -495,6 +517,29 @@ function findOtherSide(participants, orderSide, type) {
     return participantIds.find((pId) => pId !== orderSide);
   }
   return ["over", "under"].find((side) => side !== orderSide);
+}
+
+function filterIfPGA(actuals, league) {
+  let partidos;
+  if (
+    league !== "FED-EX-500" &&
+    league !== "ROUND-1-FED-EX-500" &&
+    league !== "ROUND-2-FED-EX-500" &&
+    league !== "ROUND-3-FED-EX-500" &&
+    league !== "ROUND-4-FED-EX-500"
+  ) {
+    partidos = actuals;
+    return actuals;
+  } else {
+    const events = [];
+    for (const actual of actuals) {
+      if (actual.league === league) {
+        events.push(actual);
+      }
+    }
+    partidos = events;
+  }
+  return partidos;
 }
 
 function getTimeKey(timeToStart) {
@@ -601,8 +646,7 @@ function newSeeds(type, odds, desiredVig, equityToLockIn) {
   }
 }
 
-const leagues = ["NBA", "NCAAB", "ATP", "WTA", "NHL", "CHAMPIONS-LEAGUE", "FED-EX-500"];
-
+const leagues = ["NCAAB", "ATP", "WTA", "CHAMPIONS-LEAGUE", "FED-EX-500", "ROUND-1-FED-EX-500", "ROUND-2-FED-EX-500", "ROUND-3-FED-EX-500", "ROUND-4-FED-EX-500", "2H-NCAAB"];
 module.exports = {
   convertToDecimal,
   convertToPercent,
@@ -627,5 +671,6 @@ module.exports = {
   findOtherSide,
   newSeeds,
   properOrders,
+  filterIfPGA,
   leagues,
 };
