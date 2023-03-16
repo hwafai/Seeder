@@ -73,7 +73,7 @@ async function editOrder(url, sessionID, volume, token) {
       sessionID,
       orderVolume: volume,
     },
-    headers: { authorization: token} ,
+    headers: { authorization: token },
   });
 }
 

@@ -36,17 +36,18 @@ const BACKGROUND_JOBS_URI = process.env.BACKGROUND_JOBS_URI;
 async function runIt(token, id, url, offTheBoardListener) {
   console.log(`message: ${username} connected to userFeed`);
   for (const league of leagues) {
-    console.log({league})
+    console.log({ league });
     try {
       if (
         league !== "FED-EX-500" &&
         league !== "ROUND-1-FED-EX-500" &&
         league !== "ROUND-2-FED-EX-500" &&
         league !== "ROUND-3-FED-EX-500" &&
-        league !== 'ROUND-4-FED-EX-500' &&
+        league !== "ROUND-4-FED-EX-500" &&
         league !== "2H-NBA" &&
         league !== "2H-NCAAB" &&
-        league !== "ATP" && 
+        league !== "NCAAB" &&
+        league !== "ATP" &&
         league !== "WTA" &&
         league !== "CHAMPIONS-LEAGUE"
       ) {
@@ -62,7 +63,7 @@ async function runIt(token, id, url, offTheBoardListener) {
           const ready = timeToSeed(actuals, league);
           if (ready.length) {
             for (const loadedGame of ready) {
-              const gameID = loadedGame.gameID
+              const gameID = loadedGame.gameID;
               const otbStatus =
                 await offTheBoardListener.checkSeederOffTheBoardStatus(
                   username,
@@ -97,7 +98,7 @@ async function runIt(token, id, url, offTheBoardListener) {
                       altTotal1,
                       altTotal2,
                     } = fetchOdds(league, eventOdds);
-                    const {orders, editedOrders} = await constructOrders(
+                    const { orders, editedOrders } = await constructOrders(
                       league,
                       username,
                       loadedGame,
@@ -148,13 +149,18 @@ async function runIt(token, id, url, offTheBoardListener) {
                       await placeOrders(gameID, orders, token, url);
                     }
                     if (editedOrders && editedOrders.length) {
-                      const seedAmount = editedOrders[0].seedAmount
-                      const odds = await getOrderbook(gameID, url, token)
-                      const games = odds.data.games
-                      const Alts = gatherAltEdits(games, id, seedAmount)
-                      const ordersToEdit = getTheGoods(Alts, editedOrders)
+                      const seedAmount = editedOrders[0].seedAmount;
+                      const odds = await getOrderbook(gameID, url, token);
+                      const games = odds.data.games;
+                      const Alts = gatherAltEdits(games, id, seedAmount);
+                      const ordersToEdit = getTheGoods(Alts, editedOrders);
                       for (const order of ordersToEdit) {
-                        await editOrder(url, order.sessionID, order.seedAmount, token)
+                        await editOrder(
+                          url,
+                          order.sessionID,
+                          order.seedAmount,
+                          token
+                        );
                       }
                     }
                   } else {
@@ -180,8 +186,9 @@ async function runIt(token, id, url, offTheBoardListener) {
         league === "ROUND-2-FED-EX-500" ||
         league === "ROUND-3-FED-EX-500" ||
         league === "ROUND-4-FED-EX-500" ||
-        league === "2H-NBA" || 
+        league === "2H-NBA" ||
         league === "2H-NCAAB" ||
+        league === "NCAAB" ||
         league === "ATP" ||
         league === "WTA" ||
         league === "CHAMPIONS-LEAGUE"

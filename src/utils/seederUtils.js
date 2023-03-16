@@ -29,9 +29,14 @@ function leagueWhenSeed(league) {
   } else if (league === "NHL" || league === "FED-EX-500") {
     const thresholdTime = 86400;
     return thresholdTime;
-  } else if (league === "ROUND-1-FED-EX-500" || league === "ROUND-2-FED-EX-500" || league === "ROUND-3-FED-EX-500" || league === "ROUND-4-FED-EX-500") {
+  } else if (
+    league === "ROUND-1-FED-EX-500" ||
+    league === "ROUND-2-FED-EX-500" ||
+    league === "ROUND-3-FED-EX-500" ||
+    league === "ROUND-4-FED-EX-500"
+  ) {
     const thresholdTime = 18000;
-    return thresholdTime
+    return thresholdTime;
   } else if (league === "ATP" || league === "WTA") {
     const thresholdTime = 10800;
     return thresholdTime;
@@ -51,10 +56,10 @@ function timeToSeed(games, league) {
   const hala = new Date();
   for (const game of games) {
     const start = new Date(game.start);
-    const timeToStart = (start - hala) / 1000
-    if ((timeToStart) < thresholdTime && (timeToStart) > 0) {
-      const gameID = game.id
-      ready.push({gameID, timeToStart});
+    const timeToStart = (start - hala) / 1000;
+    if (timeToStart < thresholdTime && timeToStart > 0) {
+      const gameID = game.id;
+      ready.push({ gameID, timeToStart });
     }
   }
   return ready;
@@ -390,11 +395,16 @@ function getInitialSeedAmount(league) {
   } else if (league === "FED-EX-500") {
     const betAmount = 250;
     return betAmount;
-  } else if (league === "ROUND-1-FED-EX-500" || league === "ROUND-2-FED-EX-500" || league === "ROUND-3-FED-EX-500" || league === "ROUND-4-FED-EX-500") {
+  } else if (
+    league === "ROUND-1-FED-EX-500" ||
+    league === "ROUND-2-FED-EX-500" ||
+    league === "ROUND-3-FED-EX-500" ||
+    league === "ROUND-4-FED-EX-500"
+  ) {
     const betAmount = 200;
     return betAmount;
   } else if (league === "2H-NBA" || league === "2H-NCAAB") {
-    const betAmount = 150;
+    const betAmount = 100;
     return betAmount;
   } else if (league === "NCAAB") {
     const betAmount = 100;
@@ -510,20 +520,26 @@ function findOtherSide(participants, orderSide, type) {
 }
 
 function filterIfPGA(actuals, league) {
-  let partidos
-  if (league !== "FED-EX-500" && league !== "ROUND-1-FED-EX-500" && league !== "ROUND-2-FED-EX-500" && league !== "ROUND-3-FED-EX-500" && league !== "ROUND-4-FED-EX-500"){
-    partidos = actuals
-    return actuals
+  let partidos;
+  if (
+    league !== "FED-EX-500" &&
+    league !== "ROUND-1-FED-EX-500" &&
+    league !== "ROUND-2-FED-EX-500" &&
+    league !== "ROUND-3-FED-EX-500" &&
+    league !== "ROUND-4-FED-EX-500"
+  ) {
+    partidos = actuals;
+    return actuals;
   } else {
-    const events = []
+    const events = [];
     for (const actual of actuals) {
       if (actual.league === league) {
-        events.push(actual)
+        events.push(actual);
       }
     }
-    partidos = events
+    partidos = events;
   }
-  return partidos
+  return partidos;
 }
 
 function getTimeKey(timeToStart) {
@@ -630,7 +646,8 @@ function newSeeds(type, odds, desiredVig, equityToLockIn) {
   }
 }
 
-const leagues = ["NBA", "NCAAB", "ATP", "WTA", "NHL", "CHAMPIONS-LEAGUE", "FED-EX-500", "ROUND-1-FED-EX-500", "ROUND-2-FED-EX-500", "ROUND-3-FED-EX-500", "ROUND-4-FED-EX-500", "2H-NBA", "2H-NCAAB"];
+// const leagues = ["NBA", "NCAAB", "ATP", "WTA", "NHL", "CHAMPIONS-LEAGUE", "FED-EX-500", "ROUND-1-FED-EX-500", "ROUND-2-FED-EX-500", "ROUND-3-FED-EX-500", "ROUND-4-FED-EX-500", "2H-NBA", "2H-NCAAB"];
+const leagues = ["NCAAB"];
 module.exports = {
   convertToDecimal,
   convertToPercent,

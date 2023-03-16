@@ -113,23 +113,23 @@ const userVigMap = {
     "2H-NBA": {
       86400: {
         seedAmount: 200,
-        desiredVig: .04,
-        equityToLockIn: .01,
+        desiredVig: 0.04,
+        equityToLockIn: 0.01,
       },
       10800: {
         seedAmount: 200,
-        desiredVig: .04,
-        equityToLockIn: .01,
+        desiredVig: 0.04,
+        equityToLockIn: 0.01,
       },
       1800: {
         seedAmount: 200,
-        desiredVig: .04,
-        equityToLockIn: .01,
+        desiredVig: 0.04,
+        equityToLockIn: 0.01,
       },
       0: {
         seedAmount: 333,
-        desiredVig: .04,
-        equityToLockIn: .01,
+        desiredVig: 0.04,
+        equityToLockIn: 0.01,
       },
     },
     "FED-EX-500": {
@@ -298,12 +298,12 @@ const userVigMap = {
         equityToLockIn: 0.01,
       },
       1800: {
-        seedAmount: 155,
+        seedAmount: 222,
         desiredVig: 0.03,
         equityToLockIn: 0.01,
       },
       0: {
-        seedAmount: 222,
+        seedAmount: 333,
         desiredVig: 0.03,
         equityToLockIn: 0.01,
       },
@@ -311,23 +311,23 @@ const userVigMap = {
     "2H-NCAAB": {
       86400: {
         seedAmount: 150,
-        desiredVig: .04,
-        equityToLockIn: .01,
+        desiredVig: 0.04,
+        equityToLockIn: 0.01,
       },
       10800: {
         seedAmount: 150,
-        desiredVig: .04,
-        equityToLockIn: .01,
+        desiredVig: 0.04,
+        equityToLockIn: 0.01,
       },
       1800: {
         seedAmount: 150,
-        desiredVig: .04,
-        equityToLockIn: .01,
+        desiredVig: 0.04,
+        equityToLockIn: 0.01,
       },
       0: {
         seedAmount: 222,
-        desiredVig: .04,
-        equityToLockIn: .01,
+        desiredVig: 0.04,
+        equityToLockIn: 0.01,
       },
     },
     NHL: {
