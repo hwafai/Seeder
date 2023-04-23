@@ -101,9 +101,10 @@ login(password, url, username)
           const startTime = new Date(orderBook.data.games[0].start);
           const rightNow = new Date();
           const timeToStart = (startTime - rightNow) / 1000;
-          const league = formattedMessage.league;
+          const {league, sport} = formattedMessage;
           const { seedAmount, desiredVig, equityToLockIn } = vigMap(
             league,
+            sport,
             timeToStart
           );
           console.log(seedAmount, desiredVig, equityToLockIn);

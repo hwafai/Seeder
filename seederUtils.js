@@ -73,8 +73,13 @@ function properOrders(
   return [firstOrder, comebackOrders];
 }
 
-function vigMap(league, timeToStart) {
-  if (timeToStart < 86400) {
+function vigMap(league, sport, timeToStart) {
+  if (sport === 'soccer') {
+    const seedAmount = 250;
+    const desiredVig = 0.04;
+    const equityToLockIn = 0.02;
+    return { seedAmount, desiredVig, equityToLockIn };
+  } else if (timeToStart < 86400) {
     if (league === "NCAAF") {
       const seedAmount = 500;
       const desiredVig = 0.02;
