@@ -74,17 +74,10 @@ function properOrders(
 }
 
 function vigMap(league, sport) {
-  if (sport === "soccer") {
-    const seedAmount = 250;
-    const desiredVig = 0.04;
-    const equityToLockIn = 0.02;
-    return { seedAmount, desiredVig, equityToLockIn };
-  } else {
-    const seedAmount = 250;
-    const desiredVig = 0.04;
-    const equityToLockIn = 0.01;
-    return { seedAmount, desiredVig, equityToLockIn };
-  }
+  const seedAmount = 250;
+  const desiredVig = 0.04;
+  const equityToLockIn = 0.01;
+  return { seedAmount, desiredVig, equityToLockIn };
 }
 
 // equityToLockIn must be lower than desiredVig
