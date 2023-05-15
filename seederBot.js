@@ -35,6 +35,7 @@ login(password, url, username)
     const manager = new Manager(wsUrl, {
       reconnectionDelayMax: 1000,
       query: { token },
+      transports: ["websocket"],
     });
     const socket = manager.socket(`/v2/user/${username}`, {
       query: { token },
@@ -104,7 +105,7 @@ login(password, url, username)
           const { league, sport } = formattedMessage;
           const { seedAmount, desiredVig, equityToLockIn } = vigMap(
             league,
-            sport,
+            sport
           );
           console.log(seedAmount, desiredVig, equityToLockIn);
           if (
