@@ -81,22 +81,23 @@ function subtractAndCheck(newSeedA, x) {
   return result;
 }
 
-function switchSeedNumber(number, odds, type, newSeedA, secondNewA) {
+function switchSeedNumber(number, odds, type, newSeedA, side1) {
   let switchNumber = false;
   let newNumber = null;
   if (odds > 127) {
     switchNumber = true;
     if (type === "spread") {
-      console.log({number})
       newNumber = number + 0.25
-      console.log({newNumber})
-      const result = subtractAndCheck(newSeedA, 35);
-      console.log({ result });
+      const result = subtractAndCheck(newSeedA, 41);
       const newOdds = convertAmericanToPercent(result);
-      console.log({ newOdds });
       const otherSide = Math.round(applyVig(newOdds));
-      console.log({ otherSide });
       return { switchNumber, newNumber, result, otherSide };
+    } else if (type === "total") {
+      newNumber = side1 === 'over' ? number - .25 : number + .25
+      const result = subtractAndCheck(newSeedA, 41);
+      const newOdds = convertAmericanToPercent(result);
+      const otherSide = Math.round(applyVig(newOdds));
+      return { switchNumber, newNumber, result, otherSide }; 
     }
   } else {
     return { switchNumber, newNumber };
@@ -137,9 +138,9 @@ function properOrders(
       odds,
       type,
       newSeedA,
-      secondNewA
+      secondNewA,
+      side1
     );
-    console.log({ switchNumber });
     if (switchNumber) {
       firstOrder.number = newNumber;
       firstOrder.odds = -1 * result;
@@ -153,8 +154,23 @@ function properOrders(
       comebackOrders.number = secondNumber;
     }
   } else if (type === "total") {
-    firstOrder.number = number;
-    comebackOrders.number = number;
+    const { switchNumber, newNumber, result, otherSide} = switchSeedNumber(
+      number,
+      odds,
+      type,
+      newSeedA,
+      side1
+    )
+    if (switchNumber) {
+      firstOrder.number = newNumber;
+      firstOrder.odds = -1 * result;
+      comebackOrders.number = newNumber;
+      comebackOrders.odds = -1 * otherSide;
+      console.log({ firstOrder, comebackOrders });
+    } else {
+      firstOrder.number = number;
+      comebackOrders.number = number;
+    }
   }
   return [firstOrder, comebackOrders];
 }
