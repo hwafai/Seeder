@@ -88,16 +88,15 @@ function switchSeedNumber(number, odds, type, newSeedA, secondNewA) {
     switchNumber = true;
     if (type === "spread") {
       console.log({number})
-      if (number) {
-        newNumber = number > 0 ? number - 0.25 : number + .25;
-        const result = subtractAndCheck(newSeedA, 35);
-        console.log({result})
-        const newOdds = convertAmericanToPercent(result);
-        console.log({newOdds})
-        const otherSide = Math.round(applyVig(newOdds));
-        console.log({otherSide})
-        return { switchNumber, newNumber, result, otherSide };
-      }
+      newNumber = number + 0.25
+      console.log({newNumber})
+      const result = subtractAndCheck(newSeedA, 35);
+      console.log({ result });
+      const newOdds = convertAmericanToPercent(result);
+      console.log({ newOdds });
+      const otherSide = Math.round(applyVig(newOdds));
+      console.log({ otherSide });
+      return { switchNumber, newNumber, result, otherSide };
     }
   } else {
     return { switchNumber, newNumber };
@@ -140,14 +139,14 @@ function properOrders(
       newSeedA,
       secondNewA
     );
-    console.log({switchNumber})
+    console.log({ switchNumber });
     if (switchNumber) {
       firstOrder.number = newNumber;
       firstOrder.odds = -1 * result;
-      const secondNumber = - newNumber;
+      const secondNumber = -newNumber;
       comebackOrders.number = secondNumber;
       comebackOrders.odds = -1 * otherSide;
-      console.log({firstOrder, comebackOrders})
+      console.log({ firstOrder, comebackOrders });
     } else {
       firstOrder.number = number;
       const secondNumber = -1 * number;

@@ -140,7 +140,7 @@ login(password, url, username)
               odds,
               sport
             );
-            console.log({orders})
+            console.log({ orders });
             await placeOrders(gameID, orders, token, url);
           }
         }
