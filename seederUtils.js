@@ -3,6 +3,28 @@ function convertToDecimal(otherSide) {
   return newBase;
 }
 
+function convertPercentToAmerican(x) {
+  if (x > 0.5) {
+    const y = 1 - x;
+    const z = -1 * (x / y) * 100;
+    return z;
+  }
+  if (x < 0.5) {
+    const y = 1 - x;
+    const z = (y / x) * 100;
+    return z;
+  }
+  const z = 100;
+  return z;
+}
+
+function applyVig(newOdds) {
+  const pie = 1 + 0.04;
+  const otherSidePercent = pie - newOdds;
+  const otherSide = convertPercentToAmerican(otherSidePercent);
+  return otherSide;
+}
+
 function convertToPercent(price) {
   if (price > 0) {
     const percentOfBet = 1 / (price + 1);
@@ -12,6 +34,18 @@ function convertToPercent(price) {
     price = Math.abs(price);
     const percentOfBet = price / (price + 1);
     return percentOfBet;
+  }
+}
+
+function convertAmericanToPercent(x) {
+  const z = Number(x);
+  if (z > 0) {
+    const y = 100 / (z + 100);
+    return y;
+  }
+  if (z < 0) {
+    const y = z / (z - 100);
+    return y;
   }
 }
 
@@ -36,6 +70,40 @@ function findOtherSide(participants, orderSide, type) {
   return ["over", "under"].find((side) => side !== orderSide);
 }
 
+function subtractAndCheck(newSeedA, x) {
+  let result = newSeedA + x;
+
+  if (result > 0 && result < 100) {
+    let difference = 100 - result;
+    result = (result + difference) * -1;
+  }
+
+  return result;
+}
+
+function switchSeedNumber(number, odds, type, newSeedA, secondNewA) {
+  let switchNumber = false;
+  let newNumber = null;
+  if (odds > 127) {
+    switchNumber = true;
+    if (type === "spread") {
+      console.log({number})
+      if (number) {
+        newNumber = number > 0 ? number - 0.25 : number + .25;
+        const result = subtractAndCheck(newSeedA, 35);
+        console.log({result})
+        const newOdds = convertAmericanToPercent(result);
+        console.log({newOdds})
+        const otherSide = Math.round(applyVig(newOdds));
+        console.log({otherSide})
+        return { switchNumber, newNumber, result, otherSide };
+      }
+    }
+  } else {
+    return { switchNumber, newNumber };
+  }
+}
+
 function properOrders(
   type,
   number,
@@ -44,7 +112,9 @@ function properOrders(
   side2,
   seedAmount,
   newSeedA,
-  secondNewA
+  secondNewA,
+  odds,
+  sport
 ) {
   const firstOrder = {
     gameID,
@@ -63,9 +133,26 @@ function properOrders(
     expirationMinutes: 0,
   };
   if (type === "spread") {
-    firstOrder.number = number;
-    const secondNumber = -1 * number;
-    comebackOrders.number = secondNumber;
+    const { switchNumber, newNumber, result, otherSide } = switchSeedNumber(
+      number,
+      odds,
+      type,
+      newSeedA,
+      secondNewA
+    );
+    console.log({switchNumber})
+    if (switchNumber) {
+      firstOrder.number = newNumber;
+      firstOrder.odds = -1 * result;
+      const secondNumber = - newNumber;
+      comebackOrders.number = secondNumber;
+      comebackOrders.odds = -1 * otherSide;
+      console.log({firstOrder, comebackOrders})
+    } else {
+      firstOrder.number = number;
+      const secondNumber = -1 * number;
+      comebackOrders.number = secondNumber;
+    }
   } else if (type === "total") {
     firstOrder.number = number;
     comebackOrders.number = number;

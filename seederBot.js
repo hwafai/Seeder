@@ -98,6 +98,7 @@ login(password, url, username)
             "at",
             odds
           );
+          console.log({ odds });
           const orderBook = await getOrderbook(gameID, url, token);
           const startTime = new Date(orderBook.data.games[0].start);
           const rightNow = new Date();
@@ -117,6 +118,7 @@ login(password, url, username)
             )
           ) {
             await cancelAllOrdersForGame(gameID, token, type, url);
+
             const side1 = formattedMessage.unmatched.side;
             const { newSeedA, secondNewA } = newSeeds(
               odds,
@@ -134,8 +136,11 @@ login(password, url, username)
               side2,
               seedAmount,
               newSeedA,
-              secondNewA
+              secondNewA,
+              odds,
+              sport
             );
+            console.log({orders})
             await placeOrders(gameID, orders, token, url);
           }
         }
