@@ -2,11 +2,11 @@ const ptAdjustmentMap = {
   soccer: {
     "-1.25": {
       adjustment: 0.25,
-      difference: 36,
+      difference: 29,
     },
     "-1": {
       adjustment: 0.25,
-      difference: 42,
+      difference: 38,
     },
     "-0.75": {
       adjustment: 0.25,
@@ -14,23 +14,23 @@ const ptAdjustmentMap = {
     },
     "-0.5": {
       adjustment: 0.25,
-      difference: 36,
+      difference: 38,
     },
     "-0.25": {
       adjustment: 0.25,
-      difference: 45,
+      difference: 38,
     },
     0: {
       adjustment: 0.25,
-      difference: 56,
+      difference: 44,
     },
     0.25: {
       adjustment: 0.25,
-      difference: 45,
+      difference: 38,
     },
     0.5: {
       adjustment: 0.25,
-      difference: 36,
+      difference: 38,
     },
     0.75: {
       adjustment: 0.25,
@@ -38,11 +38,11 @@ const ptAdjustmentMap = {
     },
     1: {
       adjustment: 0.25,
-      difference: 42,
+      difference: 38,
     },
     1.25: {
       adjustment: 0.25,
-      difference: 36,
+      difference: 29,
     },
   },
   golf: {
