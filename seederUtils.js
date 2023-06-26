@@ -1,3 +1,6 @@
+const ptAdjustmentMap = require("./ptAdjustmentMap")
+
+
 function convertToDecimal(otherSide) {
   const newBase = otherSide / (1 - otherSide) + 1;
   return newBase;
@@ -87,8 +90,9 @@ function switchSeedNumber(number, odds, type, newSeedA, side1) {
   if (odds > 127) {
     switchNumber = true;
     if (type === "spread") {
-      newNumber = number + 0.25;
-      const result = subtractAndCheck(newSeedA, 41);
+      const { adjustment, difference } = ptAdjustmentMap[sport]
+      newNumber = number + adjustment;
+      const result = subtractAndCheck(newSeedA, difference);
       const newOdds = convertAmericanToPercent(result);
       const otherSide = Math.round(applyVig(newOdds));
       return { switchNumber, newNumber, result, otherSide };
