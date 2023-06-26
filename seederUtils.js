@@ -1,5 +1,4 @@
-const {ptAdjustmentMap} = require("./ptAdjustmentMap")
-
+const { ptAdjustmentMap } = require("./ptAdjustmentMap");
 
 function convertToDecimal(otherSide) {
   const newBase = otherSide / (1 - otherSide) + 1;
@@ -90,11 +89,11 @@ function switchSeedNumber(sport, number, odds, type, newSeedA, side1) {
   if (odds > 127) {
     switchNumber = true;
     if (type === "spread") {
-      console.log({number, sport})
-      console.log(ptAdjustmentMap[sport])
-      const { adjustment, difference } = ptAdjustmentMap[sport][number]
-      console.log({adjustment, difference})
-      newNumber = number + .25;
+      console.log({ number, sport });
+      console.log(ptAdjustmentMap[sport]);
+      const { adjustment, difference } = ptAdjustmentMap[sport][number];
+      console.log({ adjustment, difference });
+      newNumber = number + 0.25;
       const result = subtractAndCheck(newSeedA, 40);
       const newOdds = convertAmericanToPercent(result);
       const otherSide = Math.round(applyVig(newOdds));
@@ -140,7 +139,7 @@ function properOrders(
     expirationMinutes: 0,
   };
   if (sport === "soccer") {
-    console.log({sport})
+    console.log({ sport });
     if (type === "spread") {
       const { switchNumber, newNumber, result, otherSide } = switchSeedNumber(
         sport,
@@ -149,7 +148,7 @@ function properOrders(
         type,
         newSeedA,
         secondNewA,
-        side1,
+        side1
       );
       if (switchNumber) {
         firstOrder.number = newNumber;
@@ -170,7 +169,7 @@ function properOrders(
         odds,
         type,
         newSeedA,
-        side1,
+        side1
       );
       if (switchNumber) {
         firstOrder.number = newNumber;
