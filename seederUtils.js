@@ -99,8 +99,10 @@ function switchSeedNumber(sport, number, odds, type, newSeedA, side1) {
       const otherSide = Math.round(applyVig(newOdds));
       return { switchNumber, newNumber, result, otherSide };
     } else if (type === "total") {
-      newNumber = side1 === "over" ? number - 0.25 : number + 0.25;
-      const result = subtractAndCheck(newSeedA, 41);
+      const adjustedNumber = number - 2;
+      const { adjustment, difference } = ptAdjustmentMap[sport][adjustedNumber]
+      newNumber = side1 === "over" ? number - adjustment : number + adjustment;
+      const result = subtractAndCheck(newSeedA, difference);
       const newOdds = convertAmericanToPercent(result);
       const otherSide = Math.round(applyVig(newOdds));
       return { switchNumber, newNumber, result, otherSide };
