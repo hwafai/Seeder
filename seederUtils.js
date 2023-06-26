@@ -1,4 +1,7 @@
+require("./loadEnv");
+
 const { ptAdjustmentMap } = require("./ptAdjustmentMap");
+const oddsThreshold = process.env.ODDS_THRESHOLD
 
 function convertToDecimal(otherSide) {
   const newBase = otherSide / (1 - otherSide) + 1;
@@ -30,7 +33,6 @@ function applyVig(newOdds) {
 function convertToPercent(price) {
   if (price > 0) {
     const percentOfBet = 1 / (price + 1);
-    console.log(percentOfBet);
     return percentOfBet;
   } else {
     price = Math.abs(price);
@@ -86,15 +88,12 @@ function subtractAndCheck(newSeedA, x) {
 function switchSeedNumber(sport, number, odds, type, newSeedA, side1) {
   let switchNumber = false;
   let newNumber = null;
-  if (odds > 127) {
+  if (odds > oddsThreshold) {
     switchNumber = true;
     if (type === "spread") {
-      console.log({ number, sport });
-      console.log(ptAdjustmentMap[sport]);
       const { adjustment, difference } = ptAdjustmentMap[sport][number];
-      console.log({ adjustment, difference });
-      newNumber = number + 0.25;
-      const result = subtractAndCheck(newSeedA, 40);
+      newNumber = number + adjustment;
+      const result = subtractAndCheck(newSeedA, difference);
       const newOdds = convertAmericanToPercent(result);
       const otherSide = Math.round(applyVig(newOdds));
       return { switchNumber, newNumber, result, otherSide };
@@ -141,7 +140,6 @@ function properOrders(
     expirationMinutes: 0,
   };
   if (sport === "soccer") {
-    console.log({ sport });
     if (type === "spread") {
       const { switchNumber, newNumber, result, otherSide } = switchSeedNumber(
         sport,
@@ -158,7 +156,6 @@ function properOrders(
         const secondNumber = -newNumber;
         comebackOrders.number = secondNumber;
         comebackOrders.odds = -1 * otherSide;
-        console.log({ firstOrder, comebackOrders });
       } else {
         firstOrder.number = number;
         const secondNumber = -1 * number;
@@ -178,7 +175,6 @@ function properOrders(
         firstOrder.odds = -1 * result;
         comebackOrders.number = newNumber;
         comebackOrders.odds = -1 * otherSide;
-        console.log({ firstOrder, comebackOrders });
       } else {
         firstOrder.number = number;
         comebackOrders.number = number;

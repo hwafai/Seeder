@@ -98,7 +98,6 @@ login(password, url, username)
             "at",
             odds
           );
-          console.log({ odds });
           const orderBook = await getOrderbook(gameID, url, token);
           const startTime = new Date(orderBook.data.games[0].start);
           const rightNow = new Date();
@@ -125,7 +124,6 @@ login(password, url, username)
               desiredVig,
               equityToLockIn
             );
-            console.log({ newSeedA, secondNewA });
             const orderParticipants = orderBook.data.games[0].participants;
             const side2 = findOtherSide(orderParticipants, side1, type);
             const orders = properOrders(
@@ -140,7 +138,6 @@ login(password, url, username)
               odds,
               sport
             );
-            console.log({ orders });
             await placeOrders(gameID, orders, token, url);
           }
         }
