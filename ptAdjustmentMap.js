@@ -1,5 +1,17 @@
 const ptAdjustmentMap = {
   soccer: {
+    "-2": {
+      adjustment: 0.25,
+      difference: 29,
+    },
+    "-1.75": {
+      adjustment: 0.25,
+      difference: 29,
+    },
+    "-1.5": {
+      adjustment: 0.25,
+      difference: 29,
+    },
     "-1.25": {
       adjustment: 0.25,
       difference: 29,
@@ -44,6 +56,18 @@ const ptAdjustmentMap = {
       adjustment: 0.25,
       difference: 29,
     },
+    1.5: {
+      adjustment: 0.25,
+      difference: 29,
+    },
+    1.75: {
+      adjustment: 0.25,
+      difference: 29,
+    },
+    2: {
+      adjustment: 0.25,
+      difference: 29,
+    },
   },
   golf: {
     adjustment: 0.5,
@@ -57,7 +81,7 @@ const ptAdjustmentMap = {
 
 const sport = "soccer";
 const number = 1.75;
-const adjustedNumber = number - 2
+const adjustedNumber = number - 2;
 
 const { adjustment, difference } = ptAdjustmentMap[sport][adjustedNumber];
 console.log(ptAdjustmentMap[sport]);

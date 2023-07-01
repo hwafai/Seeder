@@ -1,7 +1,18 @@
 require("./loadEnv");
 
 const { ptAdjustmentMap } = require("./ptAdjustmentMap");
-const oddsThreshold = process.env.ODDS_THRESHOLD
+const oddsThreshold = process.env.ODDS_THRESHOLD;
+
+function getPtValue(sport, pt) {
+  if (ptAdjustmentMap[sport] && ptAdjustmentMap[sport][pt]) {
+    return ptAdjustmentMap[sport][pt];
+  } else {
+    return {
+      adjustment: 0.25,
+      difference: 27,
+    };
+  }
+}
 
 function convertToDecimal(otherSide) {
   const newBase = otherSide / (1 - otherSide) + 1;
@@ -91,7 +102,7 @@ function switchSeedNumber(sport, number, odds, type, newSeedA, side1) {
   if (odds > oddsThreshold) {
     switchNumber = true;
     if (type === "spread") {
-      const { adjustment, difference } = ptAdjustmentMap[sport][number];
+      const { adjustment, difference } = getPtValue(sport, number);
       newNumber = number + adjustment;
       const result = subtractAndCheck(newSeedA, difference);
       const newOdds = convertAmericanToPercent(result);
@@ -99,7 +110,7 @@ function switchSeedNumber(sport, number, odds, type, newSeedA, side1) {
       return { switchNumber, newNumber, result, otherSide };
     } else if (type === "total") {
       const adjustedNumber = number - 2;
-      const { adjustment, difference } = ptAdjustmentMap[sport][adjustedNumber]
+      const { adjustment, difference } = getPtValue(sport, adjustedNumber);
       newNumber = side1 === "over" ? number - adjustment : number + adjustment;
       const result = subtractAndCheck(newSeedA, difference);
       const newOdds = convertAmericanToPercent(result);
