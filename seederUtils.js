@@ -150,48 +150,57 @@ function properOrders(
     odds: -1 * secondNewA,
     expirationMinutes: 0,
   };
-  if (sport === "soccer") {
     if (type === "spread") {
-      const { switchNumber, newNumber, result, otherSide } = switchSeedNumber(
-        sport,
-        number,
-        odds,
-        type,
-        newSeedA,
-        secondNewA,
-        side1
-      );
-      if (switchNumber) {
-        firstOrder.number = newNumber;
-        firstOrder.odds = -1 * result;
-        const secondNumber = -newNumber;
-        comebackOrders.number = secondNumber;
-        comebackOrders.odds = -1 * otherSide;
+      if (sport === "soccer") {
+        const { switchNumber, newNumber, result, otherSide } = switchSeedNumber(
+          sport,
+          number,
+          odds,
+          type,
+          newSeedA,
+          secondNewA,
+          side1
+        );
+        if (switchNumber) {
+          firstOrder.number = newNumber;
+          firstOrder.odds = -1 * result;
+          const secondNumber = -newNumber;
+          comebackOrders.number = secondNumber;
+          comebackOrders.odds = -1 * otherSide;
+        } else {
+          firstOrder.number = number;
+          const secondNumber = -1 * number;
+          comebackOrders.number = secondNumber;
+        }
       } else {
         firstOrder.number = number;
         const secondNumber = -1 * number;
-        comebackOrders.number = secondNumber;
+        comebackOrders.number = secondNumber
       }
     } else if (type === "total") {
-      const { switchNumber, newNumber, result, otherSide } = switchSeedNumber(
-        sport,
-        number,
-        odds,
-        type,
-        newSeedA,
-        side1
-      );
-      if (switchNumber) {
-        firstOrder.number = newNumber;
-        firstOrder.odds = -1 * result;
-        comebackOrders.number = newNumber;
-        comebackOrders.odds = -1 * otherSide;
+      if (sport === "soccer") {
+        const { switchNumber, newNumber, result, otherSide } = switchSeedNumber(
+          sport,
+          number,
+          odds,
+          type,
+          newSeedA,
+          side1
+        );
+        if (switchNumber) {
+          firstOrder.number = newNumber;
+          firstOrder.odds = -1 * result;
+          comebackOrders.number = newNumber;
+          comebackOrders.odds = -1 * otherSide;
+        } else {
+          firstOrder.number = number;
+          comebackOrders.number = number;
+        }
       } else {
         firstOrder.number = number;
-        comebackOrders.number = number;
+        comebackOrders.number = number
       }
     }
-  }
   return [firstOrder, comebackOrders];
 }
 
