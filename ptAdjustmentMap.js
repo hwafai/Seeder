@@ -69,14 +69,6 @@ const ptAdjustmentMap = {
       difference: 29,
     },
   },
-  golf: {
-    adjustment: 0.5,
-    difference: 35,
-  },
-  basketball: {
-    adjustment: 0.5,
-    difference: 9,
-  },
 };
 
 const sport = "soccer";
