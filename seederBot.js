@@ -58,6 +58,56 @@ login(password, url, username)
           "at",
           formattedMessage.matched.odds
         );
+        const gameID = formattedMessage.gameID;
+        const orderAmount = formattedMessage.matched.amount;
+        const odds = formattedMessage.matched.odds;
+        const number = formattedMessage.matched.number;
+        const type = formattedMessage.matched.type;
+        const fillAmount = formattedMessage.matched.risk;
+        const fillThreshold = 0.395;
+        const orderBook = await getOrderbook(gameID, url, token);
+        const startTime = new Date(orderBook.data.games[0].start);
+        const rightNow = new Date();
+        const timeToStart = (startTime - rightNow) / 1000;
+        const { league, sport } = formattedMessage;
+        const { seedAmount, desiredVig, equityToLockIn } = vigMap(
+          league,
+          sport
+        );
+        console.log(seedAmount, desiredVig, equityToLockIn);
+        if (
+          !(
+            (formattedMessage.matched.risk) /
+              250 <
+            fillThreshold
+          )
+        ) {
+          await cancelAllOrdersForGame(gameID, token, type, url);
+
+          const side1 = formattedMessage.matched.side;
+          const { newSeedA, secondNewA } = newSeeds(
+            odds,
+            desiredVig,
+            equityToLockIn
+          );
+          console.log({ newSeedA, secondNewA });
+          const orderParticipants = orderBook.data.games[0].participants;
+          const side2 = findOtherSide(orderParticipants, side1, type);
+          const orders = properOrders(
+            type,
+            number,
+            gameID,
+            side1,
+            side2,
+            seedAmount,
+            newSeedA,
+            secondNewA,
+            odds,
+            sport,
+            "take"
+          );
+          await placeOrders(gameID, orders, token, url);
+        }
       } else {
         const gameID = formattedMessage.gameID;
         const orderAmount = formattedMessage.unmatched.offered;
@@ -124,7 +174,7 @@ login(password, url, username)
               desiredVig,
               equityToLockIn
             );
-            console.log({newSeedA, secondNewA})
+            console.log({ newSeedA, secondNewA });
             const orderParticipants = orderBook.data.games[0].participants;
             const side2 = findOtherSide(orderParticipants, side1, type);
             const orders = properOrders(
@@ -137,9 +187,9 @@ login(password, url, username)
               newSeedA,
               secondNewA,
               odds,
-              sport
+              sport,
+              "make"
             );
-            console.log({orders})
             await placeOrders(gameID, orders, token, url);
           }
         }
