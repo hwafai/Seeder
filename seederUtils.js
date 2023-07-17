@@ -111,7 +111,8 @@ function switchSeedNumber(sport, number, odds, type, newSeedA, side1, betType) {
     switchNumber = true;
     if (type === "spread") {
       const { adjustment, difference } = getPtValue(sport, number);
-      newNumber =  betType === "make" ? number + adjustment : number - adjustment;
+      console.log({number})
+      newNumber =  betType === "make" ? number - adjustment : number + adjustment;
       const result = subtractAndCheck(newSeedA, difference);
       const newOdds = convertAmericanToPercent(result);
       const otherSide = Math.round(applyVig(newOdds));
