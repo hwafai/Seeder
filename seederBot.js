@@ -82,8 +82,11 @@ login(password, url, username)
             fillThreshold
           )
         ) {
-          await cancelAllOrdersForGame(gameID, token, type, url);
-
+          try {
+            await cancelAllOrdersForGame(gameID, token, type, url);
+          } catch (e) {
+            console.log(e)
+          }
           const side1 = formattedMessage.matched.side;
           const { newSeedA, secondNewA } = newSeeds(
             odds,
