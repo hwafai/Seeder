@@ -96,14 +96,23 @@ function subtractAndCheck(newSeedA, x) {
   return result;
 }
 
-function switchSeedNumber(sport, number, odds, type, newSeedA, side1) {
+// function typeBasedAdjustment(adjustment, betType) {
+//   if (betType === "make") {
+//     return adjustment
+//   } else if (betType === "take") {
+//     return -adjustment
+//   }
+// }
+
+function switchSeedNumber(sport, number, odds, type, newSeedA, side1, betType) {
   let switchNumber = false;
   let newNumber = null;
   if (odds > oddsThreshold) {
     switchNumber = true;
     if (type === "spread") {
       const { adjustment, difference } = getPtValue(sport, number);
-      newNumber = number + adjustment;
+      console.log({number})
+      newNumber =  betType === "make" ? number - adjustment : number + adjustment;
       const result = subtractAndCheck(newSeedA, difference);
       const newOdds = convertAmericanToPercent(result);
       const otherSide = Math.round(applyVig(newOdds));
@@ -132,7 +141,8 @@ function properOrders(
   newSeedA,
   secondNewA,
   odds,
-  sport
+  sport,
+  betType
 ) {
   const firstOrder = {
     gameID,
@@ -150,57 +160,59 @@ function properOrders(
     odds: -1 * secondNewA,
     expirationMinutes: 0,
   };
-    if (type === "spread") {
-      if (sport === "soccer") {
-        const { switchNumber, newNumber, result, otherSide } = switchSeedNumber(
-          sport,
-          number,
-          odds,
-          type,
-          newSeedA,
-          secondNewA,
-          side1
-        );
-        if (switchNumber) {
-          firstOrder.number = newNumber;
-          firstOrder.odds = -1 * result;
-          const secondNumber = -newNumber;
-          comebackOrders.number = secondNumber;
-          comebackOrders.odds = -1 * otherSide;
-        } else {
-          firstOrder.number = number;
-          const secondNumber = -1 * number;
-          comebackOrders.number = secondNumber;
-        }
+  if (type === "spread") {
+    if (sport === "soccer") {
+      const { switchNumber, newNumber, result, otherSide } = switchSeedNumber(
+        sport,
+        number,
+        odds,
+        type,
+        newSeedA,
+        secondNewA,
+        side1,
+        betType
+      );
+      if (switchNumber) {
+        firstOrder.number = newNumber;
+        firstOrder.odds = -1 * result;
+        const secondNumber = -newNumber;
+        comebackOrders.number = secondNumber;
+        comebackOrders.odds = -1 * otherSide;
       } else {
         firstOrder.number = number;
         const secondNumber = -1 * number;
-        comebackOrders.number = secondNumber
+        comebackOrders.number = secondNumber;
       }
-    } else if (type === "total") {
-      if (sport === "soccer") {
-        const { switchNumber, newNumber, result, otherSide } = switchSeedNumber(
-          sport,
-          number,
-          odds,
-          type,
-          newSeedA,
-          side1
-        );
-        if (switchNumber) {
-          firstOrder.number = newNumber;
-          firstOrder.odds = -1 * result;
-          comebackOrders.number = newNumber;
-          comebackOrders.odds = -1 * otherSide;
-        } else {
-          firstOrder.number = number;
-          comebackOrders.number = number;
-        }
+    } else {
+      firstOrder.number = number;
+      const secondNumber = -1 * number;
+      comebackOrders.number = secondNumber;
+    }
+  } else if (type === "total") {
+    if (sport === "soccer") {
+      const { switchNumber, newNumber, result, otherSide } = switchSeedNumber(
+        sport,
+        number,
+        odds,
+        type,
+        newSeedA,
+        side1,
+        betType
+      );
+      if (switchNumber) {
+        firstOrder.number = newNumber;
+        firstOrder.odds = -1 * result;
+        comebackOrders.number = newNumber;
+        comebackOrders.odds = -1 * otherSide;
       } else {
         firstOrder.number = number;
-        comebackOrders.number = number
+        comebackOrders.number = number;
       }
+    } else {
+      firstOrder.number = number;
+      comebackOrders.number = number;
     }
+  }
   return [firstOrder, comebackOrders];
 }
 
