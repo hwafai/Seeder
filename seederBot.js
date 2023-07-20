@@ -75,17 +75,11 @@ login(password, url, username)
           sport
         );
         console.log(seedAmount, desiredVig, equityToLockIn);
-        if (
-          !(
-            (formattedMessage.matched.risk) /
-              250 <
-            fillThreshold
-          )
-        ) {
+        if (!(formattedMessage.matched.risk / 250 < fillThreshold)) {
           try {
             await cancelAllOrdersForGame(gameID, token, type, url);
           } catch (e) {
-            console.log(e)
+            console.log(e);
           }
           const side1 = formattedMessage.matched.side;
           const { newSeedA, secondNewA } = newSeeds(

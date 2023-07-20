@@ -1,7 +1,7 @@
 require("./loadEnv");
 
 const { ptAdjustmentMap } = require("./ptAdjustmentMap");
-const oddsThreshold = process.env.ODDS_THRESHOLD;
+const oddsThreshold = Number(process.env.ODDS_THRESHOLD);
 
 function getPtValue(sport, pt) {
   if (ptAdjustmentMap[sport] && ptAdjustmentMap[sport][pt]) {
@@ -85,15 +85,22 @@ function findOtherSide(participants, orderSide, type) {
   return ["over", "under"].find((side) => side !== orderSide);
 }
 
-function subtractAndCheck(newSeedA, x) {
-  let result = newSeedA + x;
-
-  if (result > 0 && result < 100) {
-    let difference = 100 - result;
-    result = (result + difference) * -1;
+function subtractAndCheck(americanOdds, lean) {
+  let leanCopy = lean;
+  if (!leanCopy) {
+    leanCopy = -1;
   }
-
-  return result;
+  const leanedOdds = parseFloat(americanOdds) + parseFloat(leanCopy);
+  if (Math.abs(leanedOdds) >= 100) {
+    return leanedOdds;
+  }
+  if (Math.sign(americanOdds) > 0 && Math.abs(leanedOdds) < 100) {
+    // odds are positive
+    return leanedOdds - 200;
+  }
+  if (Math.sign(americanOdds) < 0 && Math.abs(leanedOdds) < 100) {
+    return 200 + leanedOdds;
+  }
 }
 
 // function typeBasedAdjustment(adjustment, betType) {
@@ -111,8 +118,8 @@ function switchSeedNumber(sport, number, odds, type, newSeedA, side1, betType) {
     switchNumber = true;
     if (type === "spread") {
       const { adjustment, difference } = getPtValue(sport, number);
-      console.log({number})
-      newNumber =  betType === "make" ? number - adjustment : number + adjustment;
+      newNumber =
+        betType === "make" ? number - adjustment : number + adjustment;
       const result = subtractAndCheck(newSeedA, difference);
       const newOdds = convertAmericanToPercent(result);
       const otherSide = Math.round(applyVig(newOdds));
