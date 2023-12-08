@@ -75,7 +75,7 @@ login(password, url, username)
           sport
         );
         console.log(seedAmount, desiredVig, equityToLockIn);
-        if (!(formattedMessage.matched.risk / 250 < fillThreshold)) {
+        if (!(formattedMessage.matched.risk / 100 < fillThreshold)) {
           try {
             await cancelAllOrdersForGame(gameID, token, type, url);
           } catch (e) {
@@ -113,7 +113,7 @@ login(password, url, username)
         const type = formattedMessage.unmatched.type;
         const event = formattedMessage.eventName;
         const fillAmount = formattedMessage.unmatched.filled;
-        const fillThreshold = 0.945;
+        const fillThreshold = 0.495;
         if (formattedMessage.unmatched.filled === 0 && orderAmount > 0) {
           console.log(
             `${username} created offer on `,

@@ -168,65 +168,20 @@ function properOrders(
     expirationMinutes: 0,
   };
   if (type === "spread") {
-    if (sport === "soccer") {
-      const { switchNumber, newNumber, result, otherSide } = switchSeedNumber(
-        sport,
-        number,
-        odds,
-        type,
-        newSeedA,
-        secondNewA,
-        side1,
-        betType
-      );
-      if (switchNumber) {
-        firstOrder.number = newNumber;
-        firstOrder.odds = -1 * result;
-        const secondNumber = -newNumber;
-        comebackOrders.number = secondNumber;
-        comebackOrders.odds = -1 * otherSide;
-      } else {
-        firstOrder.number = number;
-        const secondNumber = -1 * number;
-        comebackOrders.number = secondNumber;
-      }
-    } else {
-      firstOrder.number = number;
-      const secondNumber = -1 * number;
-      comebackOrders.number = secondNumber;
-    }
+    firstOrder.number = number;
+    const secondNumber = -1 * number;
+    comebackOrders.number = secondNumber;
   } else if (type === "total") {
-    if (sport === "soccer") {
-      const { switchNumber, newNumber, result, otherSide } = switchSeedNumber(
-        sport,
-        number,
-        odds,
-        type,
-        newSeedA,
-        side1,
-        betType
-      );
-      if (switchNumber) {
-        firstOrder.number = newNumber;
-        firstOrder.odds = -1 * result;
-        comebackOrders.number = newNumber;
-        comebackOrders.odds = -1 * otherSide;
-      } else {
-        firstOrder.number = number;
-        comebackOrders.number = number;
-      }
-    } else {
-      firstOrder.number = number;
-      comebackOrders.number = number;
-    }
+    firstOrder.number = number;
+    comebackOrders.number = number;
   }
   return [firstOrder, comebackOrders];
 }
 
 function vigMap(league, sport) {
-  const seedAmount = 250;
-  const desiredVig = 0.04;
-  const equityToLockIn = 0.005;
+  const seedAmount = 100;
+  const desiredVig = 0.02;
+  const equityToLockIn = 0.01;
   return { seedAmount, desiredVig, equityToLockIn };
 }
 
