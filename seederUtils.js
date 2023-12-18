@@ -138,6 +138,13 @@ function switchSeedNumber(sport, number, odds, type, newSeedA, side1, betType) {
   }
 }
 
+function returnBaseAmount(bet, odds) {
+  if (odds > 0) {
+    return bet
+  }
+  return bet * (Math.abs(odds) / 100)
+}
+
 function properOrders(
   type,
   number,
@@ -151,22 +158,30 @@ function properOrders(
   sport,
   betType
 ) {
+  const firstOrderOdds = -1 * newSeedA
   const firstOrder = {
     gameID,
     type,
     side: side1,
-    bet: seedAmount,
-    odds: -1 * newSeedA,
+    bet: returnBaseAmount(seedAmount, firstOrderOdds),
+    odds: firstOrderOdds,
     expirationMinutes: 0,
   };
+
+  console.log("firstOrder", firstOrder.bet, firstOrder.odds);
+
+  const secondOrderOdds = -1 * secondNewA
   const comebackOrders = {
     gameID,
     type,
     side: side2,
-    bet: seedAmount,
-    odds: -1 * secondNewA,
+    bet: returnBaseAmount(seedAmount, secondOrderOdds),
+    odds: secondOrderOdds,
     expirationMinutes: 0,
   };
+
+  console.log("comebackOrders", comebackOrders.bet, comebackOrders.odds);
+
   if (type === "spread") {
     if (sport === "soccer") {
       const { switchNumber, newNumber, result, otherSide } = switchSeedNumber(
