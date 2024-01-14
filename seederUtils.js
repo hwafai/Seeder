@@ -186,8 +186,8 @@ function properOrders(
 
 function vigMap(league, sport) {
   const seedAmount = 100;
-  const desiredVig = 0.02;
-  const equityToLockIn = 0.01;
+  const desiredVig = 0.04;
+  const equityToLockIn = 0.02;
   return { seedAmount, desiredVig, equityToLockIn };
 }
 
