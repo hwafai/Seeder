@@ -114,6 +114,10 @@ function subtractAndCheck(americanOdds, lean) {
 function switchSeedNumber(sport, number, odds, type, newSeedA, side1, betType) {
   let switchNumber = false;
   let newNumber = null;
+  console.log({
+    odds,
+    oddsThreshold,
+  })
   if (odds > oddsThreshold) {
     switchNumber = true;
     if (type === "spread") {
