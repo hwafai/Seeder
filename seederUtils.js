@@ -239,7 +239,7 @@ function properOrders(
 }
 
 function vigMap(league, sport) {
-  const seedAmount = 250;
+  const seedAmount = 100;
   const desiredVig = 0.04;
   const equityToLockIn = 0.005;
   return { seedAmount, desiredVig, equityToLockIn };
