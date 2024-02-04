@@ -1,6 +1,6 @@
 require("./loadEnv");
 
-const { ptAdjustmentMap } = require("./ptAdjustmentMap");
+const { ptAdjustmentMap, getQuarterGoalValue } = require("./ptAdjustmentMap");
 const oddsThreshold = Number(process.env.ODDS_THRESHOLD);
 
 function getPtValue(sport, pt) {
@@ -12,6 +12,14 @@ function getPtValue(sport, pt) {
       difference: 27,
     };
   }
+}
+
+function getSpreadPtValue(pt, total) {
+  const goalValue = getQuarterGoalValue(total);
+  return {
+    adjustment: 0.25,
+    difference: goalValue,
+  };
 }
 
 function convertToDecimal(otherSide) {
@@ -111,19 +119,32 @@ function subtractAndCheck(americanOdds, lean) {
 //   }
 // }
 
-function switchSeedNumber(sport, number, odds, type, newSeedA, side1, betType) {
+function switchSeedNumber(
+  sport,
+  number,
+  odds,
+  type,
+  newSeedA,
+  side1,
+  betType,
+  total = 2.5
+) {
   let switchNumber = false;
   let newNumber = null;
   console.log({
     odds,
     oddsThreshold,
-  })
+    newSeedA
+  });
   if (odds > oddsThreshold) {
     switchNumber = true;
     if (type === "spread") {
-      const { adjustment, difference } = getPtValue(sport, number);
+      // const { adjustment, difference } = getPtValue(sport, number);
+
+      const { adjustment, difference } = getSpreadPtValue(number, total);
+      console.log(adjustment, difference, betType);
       newNumber =
-        betType === "make" ? number - adjustment : number + adjustment;
+        betType === "take" ? number - adjustment : number + adjustment;
       const result = subtractAndCheck(newSeedA, difference);
       const newOdds = convertAmericanToPercent(result);
       const otherSide = Math.round(applyVig(newOdds));
@@ -144,9 +165,9 @@ function switchSeedNumber(sport, number, odds, type, newSeedA, side1, betType) {
 
 function returnBaseAmount(bet, odds) {
   if (odds > 0) {
-    return bet
+    return bet;
   }
-  return bet * (Math.abs(odds) / 100)
+  return bet * (Math.abs(odds) / 100);
 }
 
 function properOrders(
@@ -160,9 +181,10 @@ function properOrders(
   secondNewA,
   odds,
   sport,
-  betType
+  betType,
+  total
 ) {
-  const firstOrderOdds = -1 * newSeedA
+  const firstOrderOdds = -1 * newSeedA;
   const firstOrder = {
     gameID,
     type,
@@ -174,7 +196,7 @@ function properOrders(
 
   console.log("firstOrder", firstOrder.bet, firstOrder.odds);
 
-  const secondOrderOdds = -1 * secondNewA
+  const secondOrderOdds = -1 * secondNewA;
   const comebackOrders = {
     gameID,
     type,
@@ -194,9 +216,9 @@ function properOrders(
         odds,
         type,
         newSeedA,
-        secondNewA,
         side1,
-        betType
+        betType,
+        total
       );
       if (switchNumber) {
         firstOrder.number = newNumber;

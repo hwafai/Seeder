@@ -2,7 +2,7 @@ const callApi = require("./callApi");
 
 async function getOrderbook(gameID, url, token) {
   return callApi({
-    url: `${url}/exchange/v2/getOrderbook`,
+    url: `${url}/exchange/getSingleOrderbook`,
     method: "GET",
     params: {
       gameID,

@@ -66,7 +66,7 @@ login(password, url, username)
         const fillAmount = formattedMessage.matched.risk;
         const fillThreshold = 0.325;
         const orderBook = await getOrderbook(gameID, url, token);
-        const startTime = new Date(orderBook.data.games[0].start);
+        const startTime = new Date(orderBook.data.game.start);
         const rightNow = new Date();
         const timeToStart = (startTime - rightNow) / 1000;
         const { league, sport } = formattedMessage;
@@ -88,7 +88,7 @@ login(password, url, username)
             equityToLockIn
           );
           console.log({ newSeedA, secondNewA });
-          const orderParticipants = orderBook.data.games[0].participants;
+          const orderParticipants = orderBook.data.game.participants;
           const side2 = findOtherSide(orderParticipants, side1, type);
           const orders = properOrders(
             type,
@@ -101,7 +101,8 @@ login(password, url, username)
             secondNewA,
             odds,
             sport,
-            "take"
+            "take",
+            orderBook.data.game.mainTotal
           );
           await placeOrders(gameID, orders, token, url);
         }
@@ -146,7 +147,7 @@ login(password, url, username)
             odds
           );
           const orderBook = await getOrderbook(gameID, url, token);
-          const startTime = new Date(orderBook.data.games[0].start);
+          const startTime = new Date(orderBook.data.game.start);
           const rightNow = new Date();
           const timeToStart = (startTime - rightNow) / 1000;
           const { league, sport } = formattedMessage;
@@ -172,7 +173,7 @@ login(password, url, username)
               equityToLockIn
             );
             console.log({ newSeedA, secondNewA });
-            const orderParticipants = orderBook.data.games[0].participants;
+            const orderParticipants = orderBook.data.game.participants;
             const side2 = findOtherSide(orderParticipants, side1, type);
             const orders = properOrders(
               type,
@@ -185,7 +186,8 @@ login(password, url, username)
               secondNewA,
               odds,
               sport,
-              "make"
+              "make",
+              orderBook.data.game.mainTotal
             );
             await placeOrders(gameID, orders, token, url);
           }
@@ -227,3 +229,9 @@ login(password, url, username)
   .catch(function (error) {
     console.log(error);
   });
+
+
+process.on('unhandledRejection', (reason, p) => {
+    console.log('Unhandled Rejection at:', p, 'reason:', reason);
+    // application specific logging, throwing an error, or other logic here
+});
