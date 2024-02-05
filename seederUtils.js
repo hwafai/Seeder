@@ -142,7 +142,11 @@ function switchSeedNumber(
       // const { adjustment, difference } = getPtValue(sport, number);
 
       const { adjustment, difference } = getSpreadPtValue(number, total);
-      console.log(adjustment, difference, betType);
+      console.log({
+        adjustment,
+        difference,
+        betType,
+      });
       newNumber =
         betType === "take" ? number - adjustment : number + adjustment;
       const result = subtractAndCheck(newSeedA, difference);
