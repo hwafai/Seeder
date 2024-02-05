@@ -134,7 +134,7 @@ function switchSeedNumber(
   console.log({
     odds,
     oddsThreshold,
-    newSeedA
+    newSeedA,
   });
   if (odds > oddsThreshold) {
     switchNumber = true;
