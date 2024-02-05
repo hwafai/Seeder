@@ -96,8 +96,8 @@ module.exports = {
 function getQuarterGoalValue(total) {
   const value = spreadTotalAdjustmentMap[total];
 
-  console.log("total", total);
-  console.log("value", value);
+  console.log("Main Total", total);
+  console.log("Value Per Point", value);
 
   if (value) {
     return value;
