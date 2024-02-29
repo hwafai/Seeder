@@ -127,7 +127,7 @@ function switchSeedNumber(
   newSeedA,
   side1,
   betType,
-  total = 2.5
+  total = 2.5,
 ) {
   let switchNumber = false;
   let newNumber = null;
@@ -186,7 +186,7 @@ function properOrders(
   odds,
   sport,
   betType,
-  total
+  total,
 ) {
   const firstOrderOdds = -1 * newSeedA;
   const firstOrder = {
@@ -222,7 +222,7 @@ function properOrders(
         newSeedA,
         side1,
         betType,
-        total
+        total,
       );
       if (switchNumber) {
         firstOrder.number = newNumber;
@@ -249,7 +249,7 @@ function properOrders(
         type,
         newSeedA,
         side1,
-        betType
+        betType,
       );
       if (switchNumber) {
         firstOrder.number = newNumber;
