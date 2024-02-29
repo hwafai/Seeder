@@ -112,7 +112,3 @@ function getQuarterGoalValue(total) {
     return 58;
   }
 }
-
-// console.log(getQuarterGoalValue(2.25))
-// console.log(getQuarterGoalValue(5.25))
-// console.log(getQuarterGoalValue(1))

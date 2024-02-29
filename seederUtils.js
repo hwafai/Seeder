@@ -227,9 +227,11 @@ function properOrders(
       if (switchNumber) {
         firstOrder.number = newNumber;
         firstOrder.odds = -1 * result;
+        firstOrder.bet = returnBaseAmount(seedAmount, firstOrder.odds);
         const secondNumber = -newNumber;
         comebackOrders.number = secondNumber;
         comebackOrders.odds = -1 * otherSide;
+        comebackOrders.bet = returnBaseAmount(seedAmount, comebackOrders.odds);
       } else {
         firstOrder.number = number;
         const secondNumber = -1 * number;
@@ -254,8 +256,10 @@ function properOrders(
       if (switchNumber) {
         firstOrder.number = newNumber;
         firstOrder.odds = -1 * result;
+        firstOrder.bet = returnBaseAmount(seedAmount, firstOrder.odds);
         comebackOrders.number = newNumber;
         comebackOrders.odds = -1 * otherSide;
+        comebackOrders.bet = returnBaseAmount(seedAmount, comebackOrders.odds);
       } else {
         firstOrder.number = number;
         comebackOrders.number = number;
