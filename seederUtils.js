@@ -140,9 +140,9 @@ function switchSeedNumber(sport, number, odds, type, newSeedA, side1, betType) {
 
 function returnBaseAmount(bet, odds) {
   if (odds > 0) {
-    return bet
+    return bet;
   }
-  return bet * (Math.abs(odds) / 100)
+  return bet * (Math.abs(odds) / 100);
 }
 
 function properOrders(

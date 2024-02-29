@@ -56,7 +56,7 @@ login(password, url, username)
           formattedMessage.matched.type,
           formattedMessage.matched.number,
           "at",
-          formattedMessage.matched.odds
+          formattedMessage.matched.odds,
         );
         const gameID = formattedMessage.gameID;
         const orderAmount = formattedMessage.matched.amount;
@@ -72,7 +72,7 @@ login(password, url, username)
         const { league, sport } = formattedMessage;
         const { seedAmount, desiredVig, equityToLockIn } = vigMap(
           league,
-          sport
+          sport,
         );
         console.log(seedAmount, desiredVig, equityToLockIn);
         if (!(formattedMessage.matched.risk / 100 < fillThreshold)) {
@@ -85,7 +85,7 @@ login(password, url, username)
           const { newSeedA, secondNewA } = newSeeds(
             odds,
             desiredVig,
-            equityToLockIn
+            equityToLockIn,
           );
           console.log({ newSeedA, secondNewA });
           const orderParticipants = orderBook.data.games[0].participants;
@@ -101,7 +101,7 @@ login(password, url, username)
             secondNewA,
             odds,
             sport,
-            "take"
+            "take",
           );
           await placeOrders(gameID, orders, token, url);
         }
@@ -123,7 +123,7 @@ login(password, url, username)
             "for",
             orderAmount,
             "at",
-            odds
+            odds,
           );
         } else if (orderAmount === 0) {
           console.log(
@@ -132,7 +132,7 @@ login(password, url, username)
             "on",
             type,
             "at",
-            odds
+            odds,
           );
         } else {
           console.log(
@@ -143,7 +143,7 @@ login(password, url, username)
             "on",
             type,
             "at",
-            odds
+            odds,
           );
           const orderBook = await getOrderbook(gameID, url, token);
           const startTime = new Date(orderBook.data.games[0].start);
@@ -152,7 +152,7 @@ login(password, url, username)
           const { league, sport } = formattedMessage;
           const { seedAmount, desiredVig, equityToLockIn } = vigMap(
             league,
-            sport
+            sport,
           );
           console.log(seedAmount, desiredVig, equityToLockIn);
           if (
@@ -169,7 +169,7 @@ login(password, url, username)
             const { newSeedA, secondNewA } = newSeeds(
               odds,
               desiredVig,
-              equityToLockIn
+              equityToLockIn,
             );
             console.log({ newSeedA, secondNewA });
             const orderParticipants = orderBook.data.games[0].participants;
@@ -185,7 +185,7 @@ login(password, url, username)
               secondNewA,
               odds,
               sport,
-              "make"
+              "make",
             );
             await placeOrders(gameID, orders, token, url);
           }
