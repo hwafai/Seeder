@@ -43,7 +43,7 @@ function convertPercentToAmerican(x) {
 }
 
 function applyVig(newOdds) {
-  const pie = 1 + 0.04;
+  const pie = 1 + 0.05;
   const otherSidePercent = pie - newOdds;
   const otherSide = convertPercentToAmerican(otherSidePercent);
   return otherSide;
@@ -274,7 +274,7 @@ function properOrders(
 
 function vigMap(league, sport) {
   const seedAmount = 100;
-  const desiredVig = 0.04;
+  const desiredVig = 0.05;
   const equityToLockIn = 0.005;
   return { seedAmount, desiredVig, equityToLockIn };
 }
