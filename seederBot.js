@@ -79,7 +79,9 @@ login(password, url, username)
           try {
             await cancelAllOrdersForGame(gameID, token, type, url);
           } catch (e) {
-            console.log(e);
+            if (e.response && e.response.data) {
+              console.log(e.response.data);
+            }
           }
           const side1 = formattedMessage.matched.side;
           const { newSeedA, secondNewA } = newSeeds(
@@ -164,8 +166,13 @@ login(password, url, username)
               fillThreshold
             )
           ) {
-            await cancelAllOrdersForGame(gameID, token, type, url);
-
+            try {
+              await cancelAllOrdersForGame(gameID, token, type, url);
+            } catch (e) {
+              if (e.response && e.response.data) {
+                console.log(e.response.data);
+              }
+            }
             const side1 = formattedMessage.unmatched.side;
             const { newSeedA, secondNewA } = newSeeds(
               odds,
