@@ -213,7 +213,7 @@ function properOrders(
   console.log("comebackOrders", comebackOrders.bet, comebackOrders.odds);
 
   if (type === "spread") {
-    if (sport === "soccer") {
+    if (sport === "soccer5") {
       const { switchNumber, newNumber, result, otherSide } = switchSeedNumber(
         sport,
         number,
@@ -243,7 +243,7 @@ function properOrders(
       comebackOrders.number = secondNumber;
     }
   } else if (type === "total") {
-    if (sport === "soccer") {
+    if (sport === "soccer5") {
       const { switchNumber, newNumber, result, otherSide } = switchSeedNumber(
         sport,
         number,
