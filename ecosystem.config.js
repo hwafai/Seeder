@@ -6,5 +6,11 @@ module.exports = {
       args: "run start",
       max_memory_restart: "100M",
     },
+    {
+      name: "ZIPPER",
+      script: "npm",
+      args: "run start",
+      max_memory_restart: "100M",
+    },
   ],
 };
