@@ -1,3 +1,5 @@
+const { getBetSize, getVigPercent, getEquityLock } = require("./redisClient");
+
 function convertToDecimal(otherSide) {
   const newBase = otherSide / (1 - otherSide) + 1;
   return newBase;
@@ -36,8 +38,6 @@ function findOtherSide(participants, orderSide, type) {
   return ["over", "under"].find((side) => side !== orderSide);
 }
 
-
-
 function properOrders(
   type,
   number,
@@ -75,40 +75,38 @@ function properOrders(
   return [firstOrder, comebackOrders];
 }
 
-function vigMap(league) {
-  if (league === 'NCAAF'){
-    const seedAmount = 30
-    const desiredVig = .04
-    const equityToLockIn = .01
-    return {seedAmount, desiredVig, equityToLockIn}
-  } else if (league === 'PREMIER-LEAGUE'){
-    const seedAmount = 50
-    const desiredVig = .05
-    const equityToLockIn = .01
-    return {seedAmount, desiredVig, equityToLockIn}
-  } else {
-    const seedAmount = 25
-    const desiredVig = .03
-    const equityToLockIn = .01
-    return {seedAmount, desiredVig, equityToLockIn}
+async function vigMap(league) {
+  let seedAmount = await getBetSize(league);
+  let desiredVig = await getVigPercent(league);
+  let equityToLockIn = await getEquityLock(league);
+  if (!seedAmount) {
+    seedAmount = 25;
   }
+  if (!desiredVig) {
+    desiredVig = 0.04;
+  }
+  if (!equityToLockIn) {
+    equityToLockIn = 0.01;
+  }
+
+  return { seedAmount, desiredVig, equityToLockIn };
 }
 
 // equityToLockIn must be lower than desiredVig
-function newSeeds(odds, desiredVig, equityToLockIn){
-  const priceMove = desiredVig - equityToLockIn
+function newSeeds(odds, desiredVig, equityToLockIn) {
+  const priceMove = desiredVig - equityToLockIn;
   const price = -1 * (odds / 100);
   const percentOfBet = convertToPercent(price);
   const otherSide = percentOfBet + priceMove;
-  if (priceMove === 0){
-    throw new Error('Will seed at same price')
+  if (priceMove === 0) {
+    throw new Error("Will seed at same price");
   } else {
     const secondSeed = 1 + desiredVig - otherSide;
     const newSeed = convertToDecimal(otherSide);
     const newSeedA = -1 * Math.round(convertDecimalToAmerican(newSeed));
     const secondNew = convertToDecimal(secondSeed);
     const secondNewA = -1 * Math.round(convertDecimalToAmerican(secondNew));
-    return {newSeedA, secondNewA}
+    return { newSeedA, secondNewA };
   }
 }
 
