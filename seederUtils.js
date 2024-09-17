@@ -76,9 +76,9 @@ function properOrders(
 }
 
 async function vigMap() {
-  let seedAmount = await getBetSize(league);
-  let desiredVig = await getVigPercent(league);
-  let equityToLockIn = await getEquityLock(league);
+  let seedAmount = await getBetSize();
+  let desiredVig = await getVigPercent();
+  let equityToLockIn = await getEquityLock();
   return { seedAmount, desiredVig, equityToLockIn };
 }
 
