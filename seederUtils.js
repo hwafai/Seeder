@@ -1,6 +1,9 @@
 require("./loadEnv");
 
 const { ptAdjustmentMap, getQuarterGoalValue } = require("./ptAdjustmentMap");
+
+const { getSeederAttributes } = require("./redisClient");
+
 const oddsThreshold = Number(process.env.ODDS_THRESHOLD);
 
 function getPtValue(sport, pt) {
@@ -131,22 +134,10 @@ function switchSeedNumber(
 ) {
   let switchNumber = false;
   let newNumber = null;
-  console.log({
-    odds,
-    oddsThreshold,
-    newSeedA,
-  });
   if (odds > oddsThreshold) {
     switchNumber = true;
     if (type === "spread") {
-      // const { adjustment, difference } = getPtValue(sport, number);
-
       const { adjustment, difference } = getSpreadPtValue(number, total);
-      console.log({
-        adjustment,
-        difference,
-        betType,
-      });
       newNumber =
         betType === "take" ? number - adjustment : number + adjustment;
       const result = subtractAndCheck(newSeedA, difference);
@@ -198,8 +189,6 @@ function properOrders(
     expirationMinutes: 0,
   };
 
-  console.log("firstOrder", firstOrder.bet, firstOrder.odds);
-
   const secondOrderOdds = -1 * secondNewA;
   const comebackOrders = {
     gameID,
@@ -209,8 +198,6 @@ function properOrders(
     odds: secondOrderOdds,
     expirationMinutes: 0,
   };
-
-  console.log("comebackOrders", comebackOrders.bet, comebackOrders.odds);
 
   if (type === "spread") {
     if (sport === "soccer5") {
@@ -272,10 +259,11 @@ function properOrders(
   return [firstOrder, comebackOrders];
 }
 
-function vigMap(league, sport) {
-  const seedAmount = 100;
-  const desiredVig = 0.04;
-  const equityToLockIn = 0.02;
+async function vigMap() {
+  const attributes = await getSeederAttributes();
+  const seedAmount = attributes.betSize;
+  const desiredVig = attributes.vigPercent;
+  const equityToLockIn = attributes.equityLock;
   return { seedAmount, desiredVig, equityToLockIn };
 }
 
