@@ -95,10 +95,7 @@ login(password, url, username)
             "at",
             odds
           );
-          const league = formattedMessage.league;
-          const { seedAmount, desiredVig, equityToLockIn } = await vigMap(
-            league
-          );
+          const { seedAmount, desiredVig, equityToLockIn } = await vigMap();
           console.log({ seedAmount, desiredVig, equityToLockIn });
           if (
             !(

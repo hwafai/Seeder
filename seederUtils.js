@@ -75,20 +75,10 @@ function properOrders(
   return [firstOrder, comebackOrders];
 }
 
-async function vigMap(league) {
+async function vigMap() {
   let seedAmount = await getBetSize(league);
   let desiredVig = await getVigPercent(league);
   let equityToLockIn = await getEquityLock(league);
-  if (!seedAmount) {
-    seedAmount = 25;
-  }
-  if (!desiredVig) {
-    desiredVig = 0.04;
-  }
-  if (!equityToLockIn) {
-    equityToLockIn = 0.01;
-  }
-
   return { seedAmount, desiredVig, equityToLockIn };
 }
 
