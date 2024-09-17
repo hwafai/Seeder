@@ -19,7 +19,6 @@ const url = process.env.FOURCASTER_API_URI;
 const wsUrl = process.env.FOURCASTER_WS_API_URI;
 const username = process.env.FOURCASTER_USERNAME;
 const password = process.env.FOURCASTER_PASSWORD;
-console.log({ url, wsUrl, username, password });
 
 login(password, url, username)
   .then((response) => {
