@@ -1,7 +1,6 @@
 require("./loadEnv");
 const Redis = require("ioredis");
 const RedisURI = process.env.REDIS_URI;
-console.log({ RedisURI });
 
 const connection = {
   host: RedisURI,
@@ -22,14 +21,3 @@ const getSeederAttributes = async () => {
 module.exports = {
   getSeederAttributes,
 };
-
-// async function testRedis() {
-//   await setBetSize(1000);
-//   const betSize = await getBetSize();
-//   console.log({ betSize });
-// }
-
-// // Wrap in an async function
-// (async () => {
-//   await testRedis();
-// })();
