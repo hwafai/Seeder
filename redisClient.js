@@ -14,17 +14,17 @@ const redisClient = {
 };
 
 // Define the function to get the bet size
-async function getBetSize(league) {
-  return redisClient.redisPublisher.get(`betSize:${league}`);
+async function getBetSize() {
+  return redisClient.redisPublisher.get(`betSize`);
 }
 
 // Define the function to get the vig percent
-async function getVigPercent(league) {
-  return redisClient.redisPublisher.get(`vigPercent:${league}`);
+async function getVigPercent() {
+  return redisClient.redisPublisher.get(`vigPercent`);
 }
 
-async function getEquityLock(league) {
-  return redisClient.redisPublisher.get(`equityLock:${league}`);
+async function getEquityLock() {
+  return redisClient.redisPublisher.get(`equityLock`);
 }
 
 module.exports = {
