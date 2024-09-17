@@ -14,23 +14,13 @@ const redisClient = {
 };
 
 // Define the function to get the bet size
-async function getBetSize() {
-  return redisClient.redisPublisher.get(`betSize`);
-}
-
-// Define the function to get the vig percent
-async function getVigPercent() {
-  return redisClient.redisPublisher.get(`vigPercent`);
-}
-
-async function getEquityLock() {
-  return redisClient.redisPublisher.get(`equityLock`);
-}
+const getSeederAttributes = async () => {
+  const data = await redisClient.redisPublisher.get("SeederAttributes");
+  return data ? JSON.parse(data) : null;
+};
 
 module.exports = {
-  getBetSize,
-  getVigPercent,
-  getEquityLock,
+  getSeederAttributes,
 };
 
 // async function testRedis() {

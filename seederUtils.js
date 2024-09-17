@@ -1,4 +1,4 @@
-const { getBetSize, getVigPercent, getEquityLock } = require("./redisClient");
+const { getSeederAttributes } = require("./redisClient");
 
 function convertToDecimal(otherSide) {
   const newBase = otherSide / (1 - otherSide) + 1;
@@ -8,7 +8,6 @@ function convertToDecimal(otherSide) {
 function convertToPercent(price) {
   if (price > 0) {
     const percentOfBet = 1 / (price + 1);
-    console.log(percentOfBet);
     return percentOfBet;
   } else {
     price = Math.abs(price);
@@ -76,9 +75,10 @@ function properOrders(
 }
 
 async function vigMap() {
-  let seedAmount = await getBetSize();
-  let desiredVig = await getVigPercent();
-  let equityToLockIn = await getEquityLock();
+  const attributes = await getSeederAttributes();
+  const seedAmount = attributes.betSize;
+  const desiredVig = attributes.vigPercent;
+  const equityToLockIn = attributes.equityLock;
   return { seedAmount, desiredVig, equityToLockIn };
 }
 

@@ -96,7 +96,6 @@ login(password, url, username)
             odds
           );
           const { seedAmount, desiredVig, equityToLockIn } = await vigMap();
-          console.log({ seedAmount, desiredVig, equityToLockIn });
           if (
             !(
               (formattedMessage.unmatched.offered -
@@ -111,7 +110,6 @@ login(password, url, username)
               desiredVig,
               equityToLockIn
             );
-            console.log({ newSeedA, secondNewA });
             await cancelAllOrdersForGame(gameID, token, type, url);
             const orderBook = await getOrderbook(gameID, url, token);
             const orderParticipants = orderBook.data.games[0].participants;
