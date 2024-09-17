@@ -59,22 +59,13 @@ login(password, url, username)
           formattedMessage.matched.odds,
         );
         const gameID = formattedMessage.gameID;
-        const orderAmount = formattedMessage.matched.amount;
         const odds = formattedMessage.matched.odds;
         const number = formattedMessage.matched.number;
         const type = formattedMessage.matched.type;
-        const fillAmount = formattedMessage.matched.risk;
         const fillThreshold = 0.325;
         const orderBook = await getOrderbook(gameID, url, token);
-        const startTime = new Date(orderBook.data.game.start);
-        const rightNow = new Date();
-        const timeToStart = (startTime - rightNow) / 1000;
-        const { league, sport } = formattedMessage;
-        const { seedAmount, desiredVig, equityToLockIn } = vigMap(
-          league,
-          sport,
-        );
-        console.log(seedAmount, desiredVig, equityToLockIn);
+        const { sport } = formattedMessage;
+        const { seedAmount, desiredVig, equityToLockIn } = await vigMap();
         if (!(formattedMessage.matched.risk / 100 < fillThreshold)) {
           try {
             await cancelAllOrdersForGame(gameID, token, type, url);
@@ -89,7 +80,6 @@ login(password, url, username)
             desiredVig,
             equityToLockIn,
           );
-          console.log({ newSeedA, secondNewA });
           const orderParticipants = orderBook.data.game.participants;
           const side2 = findOtherSide(orderParticipants, side1, type);
           const orders = properOrders(
@@ -149,15 +139,8 @@ login(password, url, username)
             odds,
           );
           const orderBook = await getOrderbook(gameID, url, token);
-          const startTime = new Date(orderBook.data.game.start);
-          const rightNow = new Date();
-          const timeToStart = (startTime - rightNow) / 1000;
-          const { league, sport } = formattedMessage;
-          const { seedAmount, desiredVig, equityToLockIn } = vigMap(
-            league,
-            sport,
-          );
-          console.log(seedAmount, desiredVig, equityToLockIn);
+          const { sport } = formattedMessage;
+          const { seedAmount, desiredVig, equityToLockIn } = await vigMap();
           if (
             !(
               (formattedMessage.unmatched.offered -
@@ -179,7 +162,6 @@ login(password, url, username)
               desiredVig,
               equityToLockIn,
             );
-            console.log({ newSeedA, secondNewA });
             const orderParticipants = orderBook.data.game.participants;
             const side2 = findOtherSide(orderParticipants, side1, type);
             const orders = properOrders(
@@ -201,37 +183,6 @@ login(password, url, username)
         }
       }
     });
-
-    // listen for the off the board message emitted by the OTB Listener
-    // offTheBoardListener.on("offTheBoardMessage", async (msg) => {
-    //   // parse the message
-    //   const parsedMessage = JSON.parse(msg);
-    //
-    //   const { offTheBoard, league, fourcasterGameID } = parsedMessage;
-    //
-    //   // if Off the Board is true, this game is off the board
-    //   if (offTheBoard) {
-    //     // first cancel all orders for the game
-    //     console.log(`Game OTB, cancelling orders for ${fourcasterGameID}`);
-    //     await cancelAllOrdersForGame(fourcasterGameID, token, null, url);
-    //     // then register the game as off the board by the seeder
-    //     await offTheBoardListener.setSeederOffTheBoardStatus(
-    //       username,
-    //       fourcasterGameID,
-    //       offTheBoard
-    //     );
-    //   } else {
-    //     console.log(
-    //       `Game ${fourcasterGameID} is back on the board, will reseed shortly`
-    //     );
-    //     // this game was off the board but is now back on
-    //     await offTheBoardListener.setSeederOffTheBoardStatus(
-    //       username,
-    //       fourcasterGameID,
-    //       offTheBoard
-    //     );
-    //   }
-    // });
   })
   .catch(function (error) {
     console.log(error);
