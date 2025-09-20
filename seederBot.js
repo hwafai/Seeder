@@ -62,7 +62,7 @@ login(password, url, username)
         const odds = formattedMessage.matched.odds;
         const number = formattedMessage.matched.number;
         const type = formattedMessage.matched.type;
-        const fillThreshold = 0.325;
+        const fillThreshold = 0.666;
         const orderBook = await getOrderbook(gameID, url, token);
         const { sport } = formattedMessage;
         const { seedAmount, desiredVig, equityToLockIn } = await vigMap();
@@ -106,7 +106,7 @@ login(password, url, username)
         const type = formattedMessage.unmatched.type;
         const event = formattedMessage.eventName;
         const fillAmount = formattedMessage.unmatched.filled;
-        const fillThreshold = 0.32;
+        const fillThreshold = 0.666;
         if (formattedMessage.unmatched.filled === 0 && orderAmount > 0) {
           console.log(
             `${username} created offer on `,

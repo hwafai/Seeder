@@ -260,10 +260,10 @@ function properOrders(
 }
 
 async function vigMap() {
-  const attributes = await getSeederAttributes();
-  const seedAmount = attributes.betSize;
-  const desiredVig = attributes.vigPercent;
-  const equityToLockIn = attributes.equityLock;
+  // const attributes = await getSeederAttributes();
+  const seedAmount = 100;
+  const desiredVig = 0.01;
+  const equityToLockIn = 0.005;
   return { seedAmount, desiredVig, equityToLockIn };
 }
 
