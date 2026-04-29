@@ -262,8 +262,8 @@ function properOrders(
 async function vigMap() {
   // const attributes = await getSeederAttributes();
   const seedAmount = 100;
-  const desiredVig = 0.01;
-  const equityToLockIn = 0.005;
+  const desiredVig = 0.02;
+  const equityToLockIn = 0.01;
   return { seedAmount, desiredVig, equityToLockIn };
 }
 
