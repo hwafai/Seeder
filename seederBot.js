@@ -24,14 +24,52 @@ const wsUrl = process.env.FOURCASTER_WS_API_URI;
 const username = process.env.FOURCASTER_USERNAME;
 const password = process.env.FOURCASTER_PASSWORD;
 
+// The API rotates any login token older than 30 days and hands the replacement
+// back in an X-Auth-Token header we never read, so a long-lived process ends up
+// authenticating with a token that no longer exists. Re-login well inside that
+// window and keep the fresh token. Login is additive (each one mints a new
+// token without deleting the old), so this does not disturb the live socket.
+const TOKEN_REFRESH_MS = 10 * 24 * 60 * 60 * 1000;
+
+// Held in an object so the socket handlers below read the current token on each
+// call rather than closing over the value that was current at startup.
+const auth = { token: null };
+
+function scheduleTokenRefresh() {
+  const timer = setTimeout(async () => {
+    try {
+      const response = await login(password, url, username);
+      const refreshed = response.data.user.auth;
+      if (refreshed) {
+        auth.token = refreshed;
+        console.log(`${username} refreshed auth token`);
+      } else {
+        console.log(`${username} token refresh returned no token, keeping old`);
+      }
+    } catch (e) {
+      // Keep the existing token and try again on the next tick; it stays valid
+      // until it hits 30 days, so a transient login failure is not fatal.
+      console.log(
+        `${username} token refresh failed:`,
+        (e.response && e.response.data) || e.message,
+      );
+    }
+    scheduleTokenRefresh();
+  }, TOKEN_REFRESH_MS);
+  // Do not hold the event loop open for the timer alone.
+  if (timer.unref) timer.unref();
+}
+
 login(password, url, username)
   .then((response) => {
     const { user } = response.data;
     const username = user.username;
     const token = user.auth;
     const id = user.id;
+    auth.token = token;
     const runningUser = { username, id, token };
     console.log(runningUser);
+    scheduleTokenRefresh();
     const manager = new Manager(wsUrl, {
       reconnectionDelayMax: 1000,
       query: { token },
@@ -63,12 +101,12 @@ login(password, url, username)
         const number = formattedMessage.matched.number;
         const type = formattedMessage.matched.type;
         const fillThreshold = 0.333;
-        const orderBook = await getOrderbook(gameID, url, token);
+        const orderBook = await getOrderbook(gameID, url, auth.token);
         const { sport } = formattedMessage;
         const { seedAmount, desiredVig, equityToLockIn } = await vigMap();
         if (!(formattedMessage.matched.risk / 100 < fillThreshold)) {
           try {
-            await cancelAllOrdersForGame(gameID, token, type, url);
+            await cancelAllOrdersForGame(gameID, auth.token, type, url);
           } catch (e) {
             if (e.response && e.response.data) {
               console.log(e.response.data);
@@ -96,7 +134,7 @@ login(password, url, username)
             "take",
             orderBook.data.game.mainTotal,
           );
-          await placeOrders(gameID, orders, token, url);
+          await placeOrders(gameID, orders, auth.token, url);
         }
       } else {
         const gameID = formattedMessage.gameID;
@@ -138,7 +176,7 @@ login(password, url, username)
             "at",
             odds,
           );
-          const orderBook = await getOrderbook(gameID, url, token);
+          const orderBook = await getOrderbook(gameID, url, auth.token);
           const { sport } = formattedMessage;
           const { seedAmount, desiredVig, equityToLockIn } = await vigMap();
           if (
@@ -150,7 +188,7 @@ login(password, url, username)
             )
           ) {
             try {
-              await cancelAllOrdersForGame(gameID, token, type, url);
+              await cancelAllOrdersForGame(gameID, auth.token, type, url);
             } catch (e) {
               if (e.response && e.response.data) {
                 console.log(e.response.data);
@@ -178,7 +216,7 @@ login(password, url, username)
               "make",
               orderBook.data.game.mainTotal,
             );
-            await placeOrders(gameID, orders, token, url);
+            await placeOrders(gameID, orders, auth.token, url);
           }
         }
       }
